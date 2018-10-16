@@ -7,13 +7,6 @@
               accordion
               @node-click="handleNodeClick">
       </el-tree>
-        <!--<div v-for="(item,index) in $store.state.itemList" :key="index">-->
-          <!--<img class="iconimg" :src="'./static/images/'+item.icon+'.png'" alt=""/>-->
-          <!--<span class="labeltitle point">{{item.menuName}}</span>-->
-          <!--<div class="itemlist">-->
-            <!--<p  class="point" v-for="i in $store.state.itemList[index].list" @click="activeClick(i.menuId,i.menuHref)" :class="pathActive==i.menuId?'active':''">{{i.menuName}}</p>-->
-          <!--</div>-->
-        <!--</div>-->
       </div>
 </template>
 
@@ -22,13 +15,13 @@
         name: "Left",
         data:function () {
           return{
-            activeNum:0,
-            itemList:[],
-            pathActive:localStorage.getItem('activePath')||'index',
+              itemList:[],
               defaultProps: {
                   children: 'list',
                   label: 'menuName'
-              }
+              },
+              activePath:'index'
+
           }
         },
         created(){
@@ -37,15 +30,12 @@
           }
         },
         methods:{
-            handleNodeClick(){
-
+            handleNodeClick(a,b,c){
+                if(a.path){
+                    this.$router.push('/'+a.path)
+                }
             },
-          activeClick(path,menuHref){
-            if(this.pathActive==path) return
-            this.pathActive = path
-            localStorage.setItem('activePath',path)
-            this.$router.push('/'+menuHref)
-          }
+
         },
     }
 </script>
