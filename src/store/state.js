@@ -1,62 +1,268 @@
 const state = {
   isLogin:localStorage.getItem('LOGINDATA') ? true : false,
   //#409eff
-  itemList:'',
+  // itemList:'',
   loadingShow:false,
-    // [
-    // {
-    //   name: '首页',
-    //   path:'index',
-    //   icon:'index',
-    //   hashChidArr:['index'],
-    //   list: [{
-    //     name: '首页',
-    //     path: 'index',
-    //     hashChidArr:['index'],
-    //   }]
-    // },
-    // {
-    //   name: '资产管理',
-    //   path:'index',
-    //   icon:'asset',
-    //   hashChidArr:['assetlist','scrappedlist','uselist'],
-    //   list: [
-    //     {
-    //       name: '资产列表',
-    //       path: 'assetlist',
-    //       hashChidArr:['assetlist'],
-    //
-    //   },{
-    //       name: '报废记录',
-    //       path: 'scrappedlist',
-    //       hashChidArr:['scrappedlist'],
-    //   },{
-    //       name: '领用记录',
-    //       path: 'uselist',
-    //       hashChidArr:['uselist'],
-    //   }]
-    // },
-    // {
-    //   name: '系统管理',
-    //   path:'index',
-    //   icon:'system',
-    //   hashChidArr:['classifymanage','codemanage','templateset'],
-    //   list: [{
-    //     name: '资产分类管理',
-    //     path: 'classifymanage',
-    //     hashChidArr:['classifymanage'],
-    //   },{
-    //     name: '资产编码规则',
-    //     path: 'codemanage',
-    //     hashChidArr:['codemanage'],
-    //   },{
-    //     name: '标签模板设置',
-    //     path: 'templateset',
-    //     hashChidArr:['templateset'],
-    //   }]
-    // }
-  // ]
-
+    itemList:[
+    {
+        menuName: '首页',
+      path:'index',
+      icon:'index',
+      hashChidArr:['index'],
+      list: [{
+          menuName: '首页',
+        path: 'index',
+        hashChidArr:['index'],
+      }]
+    },
+    //    医院主管
+        {
+            menuName: '医院主管-我的事项',
+            hashChidArr:['HSMyWarranty'],
+            list: [{
+                menuName: '我的报修',
+                path: 'HSMyWarranty',
+            }]
+        },{
+            menuName: '医院主管-设备管理',
+            hashChidArr:['HSMtList','HSMtmanage','HSGdManage','HSEtList','HSSpList','HSDlList','HSTaList'],
+            list: [{
+                menuName: '设备列表',
+                path: 'HSMtList',
+            },{
+                menuName: '设备管理员',
+                path: 'HSMtmanage',
+            },{
+                menuName: '维保公司管理',
+                path: 'HSGdManage',
+            },{
+                menuName: '延期记录',
+                path: 'HSEtList',
+            },{
+                menuName: '报废记录',
+                path: 'HSSpList',
+            },{
+                menuName: '报废到期处理记录',
+                path: 'HSDlList',
+            },{
+                menuName: '管理任务分配',
+                path: 'HSTaList',
+            },]
+        },{
+            menuName: '医院主管-维保管理',
+            hashChidArr:['HSPlanTask','HSWorkOrder','HSMtTask'],
+            list: [{
+                menuName: '计划任务',
+                path: 'HSPlanTask',
+            },{
+                menuName: '维修工单',
+                path: 'HSWorkOrder',
+            },{
+                menuName: '保养任务',
+                path: 'HSMtTask',
+            }]
+        },{
+            menuName: '医院主管-统计分析',
+            hashChidArr:['HSSaList'],
+            list: [{
+                menuName: '统计分析',
+                path: 'HSSaList',
+            }]
+        },
+    //    医院设备管理
+        {
+            menuName: '医院设备管理员-我的事项',
+            hashChidArr:['HMWaitTask','HMPlanReview','HMLifeEx','HMWarrEx','HMMyRepair'],
+            list: [
+                {
+                    menuName: '待办工作',
+                    path: 'HMWaitTask',
+                },
+                {
+                    menuName: '计划审核',
+                    path: 'HMPlanReview',
+                },
+                {
+                    menuName: '寿命到期',
+                    path: 'HMLifeEx',
+                },
+                {
+                    menuName: '质保到期',
+                    path: 'HMWarrEx',
+                },
+                {
+                    menuName: '我的报修',
+                    path: 'HMMyRepair',
+                },
+            ]
+        },
+        {
+            menuName: '医院设备管理员-设备管理',
+            hashChidArr:['HMMtList','HMGdManage','HMEtList','HMSpList','HMDlList','HMTaList','HMExRemind'],
+            list: [
+                {
+                    menuName: '设备列表',
+                    path: 'HMMtList',
+                },
+                {
+                    menuName: '维保公司管理',
+                    path: 'HMGdManage',
+                },
+                {
+                    menuName: '延期记录',
+                    path: 'HMEtList',
+                },
+                {
+                    menuName: '报废记录',
+                    path: 'HMSpList',
+                },
+                {
+                    menuName: '质保到期处理记录',
+                    path: 'HMDlList',
+                },
+                {
+                    menuName: '责任归属分配',
+                    path: 'HMTaList',
+                },
+                {
+                    menuName: '到期提醒设置',
+                    path: 'HMExRemind',
+                },
+            ]
+        },
+        {
+            menuName: '医院设备管理员-维保管理',
+            hashChidArr:['HMPlanTask','HMWorkOrder','HMMtTask'],
+            list: [
+                {
+                    menuName: '计划任务',
+                    path: 'HMPlanTask',
+                },
+                {
+                    menuName: '维修工单',
+                    path: 'HMWorkOrder',
+                },
+                {
+                    menuName: '保养任务',
+                    path: 'HMMtTask',
+                },
+            ]
+        },
+        {
+            menuName: '医院设备管理员-统计分析',
+            hashChidArr:['HMSaList'],
+            list: [{
+                menuName: '统计分析',
+                path: 'HMSaList',
+            }]
+        },
+    //    物业主管
+        {
+            menuName: '物业主管-我的事项',
+            hashChidArr:['PMMyRepair'],
+            list: [
+                {
+                    menuName: '我的报修',
+                    path: 'PMMyRepair',
+                },
+            ]
+        },
+        {
+            menuName: '物业主管-设备管理',
+            hashChidArr:['PMMtList'],
+            list: [
+                {
+                    menuName: '设备列表',
+                    path: 'PMMtList',
+                },
+            ]
+        },
+        {
+            menuName: '物业主管-维保管理',
+            hashChidArr:['PMPlanTask','PMWorkOrder','PMMtTask'],
+            list: [
+                {
+                    menuName: '计划任务',
+                    path: 'PMPlanTask',
+                },
+                {
+                    menuName: '维修工单',
+                    path: 'PMWorkOrder',
+                },
+                {
+                    menuName: '保养任务',
+                    path: 'PMMtTask',
+                },
+            ]
+        },
+        {
+            menuName: '物业主管-统计分析',
+            hashChidArr:['PMSaList'],
+            list: [{
+                menuName: '统计分析',
+                path: 'PMSaList',
+            }]
+        },
+    //    物业业务经理
+        {
+            menuName: '物业业务经理-我的事项',
+            hashChidArr:['PBMyRepair','PBMtPlan','PBMtItem'],
+            list: [
+                {
+                    menuName: '保养计划',
+                    path: 'PBMtPlan',
+                },
+                {
+                    menuName: '保养项目',
+                    path: 'PBMtItem',
+                },
+                {
+                    menuName: '我的报修',
+                    path: 'PBMyRepair',
+                },
+            ]
+        },
+        {
+            menuName: '物业业务经理-设备管理',
+            hashChidArr:['PBMtList','PBTeamManage'],
+            list: [
+                {
+                    menuName: '设备列表',
+                    path: 'PBMtList',
+                },
+                {
+                    menuName: '班组管理',
+                    path: 'PBTeamManage',
+                },
+            ]
+        },
+        {
+            menuName: '物业业务经理-维保管理',
+            hashChidArr:['PBPlanTask','PBWorkOrder','PBMtTask'],
+            list: [
+                {
+                    menuName: '计划任务',
+                    path: 'PBPlanTask',
+                },
+                {
+                    menuName: '维修工单',
+                    path: 'PBWorkOrder',
+                },
+                {
+                    menuName: '保养任务',
+                    path: 'PBMtTask',
+                },
+            ]
+        },
+        {
+            menuName: '物业业务经理-统计分析',
+            hashChidArr:['PBSaList'],
+            list: [{
+                menuName: '统计分析',
+                path: 'PBSaList',
+            }]
+        },
+    ]
 }
 
 export default state
