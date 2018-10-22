@@ -28,7 +28,10 @@ const mutations = {
   },
   spinShowSet(state,bool){
     state.loadingShow = bool
-  }
+  },
+    leftShowHandle(state,bool){
+        state.leftShow = bool
+    }
 }
 
 export default mutations

@@ -1,6 +1,8 @@
 const state = {
   isLogin:localStorage.getItem('LOGINDATA') ? true : false,
-  //#409eff
+    leftShow:true,
+
+    //#409eff
   // itemList:'',
   loadingShow:false,
     itemList:[
@@ -8,6 +10,7 @@ const state = {
         menuName: '首页',
       path:'index',
       icon:'index',
+        id:1,
       hashChidArr:['index'],
       list: [{
           menuName: '首页',
@@ -18,6 +21,7 @@ const state = {
         {
             menuName: '用户管理',
             hashChidArr:['usermanage'],
+            id:2,
             list: [{
                 menuName: '用户管理',
                 path: 'usermanage',
@@ -29,12 +33,14 @@ const state = {
             menuName: '医院主管-我的事项',
             // path:'HSMyWarranty',
             hashChidArr:['HSMyWarranty'],
+            id:3,
             list: [{
                 menuName: '我的报修',
                 path: 'HSMyWarranty',
             }]
         },{
             menuName: '医院主管-设备管理',
+            id:4,
             // path:'HSMtList',
             hashChidArr:['HSMtList','HSMtmanage','HSGdManage','HSEtList','HSSpList','HSDlList','HSTaList'],
             list: [{
@@ -61,6 +67,7 @@ const state = {
             },]
         },{
             menuName: '医院主管-维保管理',
+            id:5,
             // path:'HSPlanTask',
             hashChidArr:['HSPlanTask','HSWorkOrder','HSMtTask'],
             list: [{
@@ -75,6 +82,7 @@ const state = {
             }]
         },{
             menuName: '医院主管-统计分析',
+            id:6,
             // path:'HSSaList',
             hashChidArr:['HSSaList'],
             list: [{
@@ -85,6 +93,7 @@ const state = {
     //    医院设备管理
         {
             menuName: '医院设备管理员-我的事项',
+            id:7,
             // path:'HMWaitTask',
             hashChidArr:['HMWaitTask','HMPlanReview','HMLifeEx','HMWarrEx','HMMyRepair'],
             list: [
@@ -112,6 +121,7 @@ const state = {
         },
         {
             menuName: '医院设备管理员-设备管理',
+            id:8,
             // path:'HMMtList',
             hashChidArr:['HMMtList','HMGdManage','HMEtList','HMSpList','HMDlList','HMTaList','HMExRemind'],
             list: [
@@ -147,6 +157,7 @@ const state = {
         },
         {
             menuName: '医院设备管理员-维保管理',
+            id:9,
             // path:'HMPlanTask',
             hashChidArr:['HMPlanTask','HMWorkOrder','HMMtTask'],
             list: [
@@ -166,6 +177,7 @@ const state = {
         },
         {
             menuName: '医院设备管理员-统计分析',
+            id:10,
             // path:'HMSaList',
             hashChidArr:['HMSaList'],
             list: [{
@@ -176,6 +188,7 @@ const state = {
     //    物业主管
         {
             menuName: '物业主管-我的事项',
+            id:11,
             // path:'PMMyRepair',
             hashChidArr:['PMMyRepair'],
             list: [
@@ -187,6 +200,7 @@ const state = {
         },
         {
             menuName: '物业主管-设备管理',
+            id:12,
             // path:'PMMtList',
             hashChidArr:['PMMtList'],
             list: [
@@ -198,6 +212,7 @@ const state = {
         },
         {
             menuName: '物业主管-维保管理',
+            id:13,
             // path:'PMPlanTask',
             hashChidArr:['PMPlanTask','PMWorkOrder','PMMtTask'],
             list: [
@@ -218,6 +233,7 @@ const state = {
         {
             menuName: '物业主管-统计分析',
             hashChidArr:['PMSaList'],
+            id:14,
             // path:'PMSaList',
             list: [{
                 menuName: '统计分析',
@@ -227,6 +243,7 @@ const state = {
     //    物业业务经理
         {
             menuName: '物业业务经理-我的事项',
+            id:15,
             // path:'PBMyRepair',
             hashChidArr:['PBMyRepair','PBMtPlan','PBMtItem'],
             list: [
@@ -247,6 +264,7 @@ const state = {
         {
             menuName: '物业业务经理-设备管理',
             // path:'PBMtList',
+            id:16,
             hashChidArr:['PBMtList','PBTeamManage'],
             list: [
                 {
@@ -261,6 +279,7 @@ const state = {
         },
         {
             menuName: '物业业务经理-维保管理',
+            id:17,
             // path:'PBPlanTask',
             hashChidArr:['PBPlanTask','PBWorkOrder','PBMtTask'],
             list: [
@@ -280,6 +299,7 @@ const state = {
         },
         {
             menuName: '物业业务经理-统计分析',
+            id:18,
             // path:'PBSaList',
             hashChidArr:['PBSaList'],
             list: [{

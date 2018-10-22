@@ -7,12 +7,14 @@
         <Top></Top>
       </el-header>
       <el-container>
-        <el-aside width="200px" class="left" style="background: linear-gradient(top, #3b6179 0%,#6e808b 80% ,#7d757a 100%);">
+        <el-aside v-if="showLeftValue" width="200px" class="left" style="background: linear-gradient(top, #3b6179 0%,#6e808b 80% ,#7d757a 100%);">
           <Left></Left>
         </el-aside>
         <el-main>
           <router-view v-if="isLoginjudge"/>
-
+          <div :class="showLeftValue?'power':'powerl'">
+            Copyright @ 2018 SINOMIS. All Rights Reserved
+          </div>
         </el-main>
       </el-container>
     </el-container>
@@ -29,7 +31,9 @@
         data:function () {
             return{
                 isLoginjudge:localStorage.getItem('LOGINDATA'),
-                loading:false
+                loading:false,
+                showLeftValue:true
+
             }
         },
         computed:{
@@ -38,6 +42,9 @@
             },
             isLoading(){
                 return this.$store.state.loadingShow
+            },
+            isShowLeft(){
+                return this.$store.state.leftShow
             }
         },
         watch:{
@@ -46,6 +53,9 @@
             },
             isLoading:function (val) {
                 this.loading = val
+            },
+            isShowLeft(val){
+                this.showLeftValue = val
             }
         },
         components:{
@@ -97,6 +107,30 @@
 
     .el-container:nth-child(7) .el-aside {
       line-height: 320px;
+    }
+    .power{
+      height: 40px;
+      line-height: 40px;
+      background-color: #fff;
+      font-size: 12px;
+      position: absolute;
+      bottom: 0;
+      left: 200px;
+      width: calc(100% - 198px);
+      box-shadow: 0 -2px 5px #999;
+      z-index: 9999;
+    }
+    .powerl{
+      height: 40px;
+      line-height: 40px;
+      background-color: #fff;
+      font-size: 12px;
+      position: absolute;
+      bottom: 0;
+      left: 0px;
+      width: 100%;
+      box-shadow: 0 -2px 5px #999;
+      z-index: 9999;
     }
   }
 </style>

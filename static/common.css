@@ -63,3 +63,11 @@ html,body{width: 100%;height: 100%;overflow: hidden;}
 .filterright{
   text-align: right;
 }
+.el-carousel__mask, .el-cascader-menu, .el-cascader-menu__item.is-disabled:hover, .el-collapse-item__header, .el-collapse-item__wrap{
+  background-color: #27435f !important;
+  border: none !important;
+  color: #fff !important;
+}
+.el-collapse-item__content{
+  padding: 0 !important;
+}
