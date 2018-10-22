@@ -15,6 +15,15 @@ const state = {
         hashChidArr:['index'],
       }]
     },
+        {
+            menuName: '用户管理',
+            hashChidArr:['usermanage'],
+            list: [{
+                menuName: '用户管理',
+                path: 'usermanage',
+                hashChidArr:['usermanage'],
+            }]
+        },
     //    医院主管
         {
             menuName: '医院主管-我的事项',

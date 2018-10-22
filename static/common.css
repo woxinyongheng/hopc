@@ -47,3 +47,19 @@ html,body{width: 100%;height: 100%;overflow: hidden;}
   color: #66a3ff;
 }
 
+.banner .bannerleft{
+  text-align: left;
+}
+.banner .bannerright{
+  text-align: right;
+}
+.content{
+  margin-top: 30px;
+}
+.paginationbox{
+  text-align: right;
+  margin: 20px 0;
+}
+.filterright{
+  text-align: right;
+}
