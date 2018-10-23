@@ -1,21 +1,31 @@
 <template>
     <div class="left">
-      <!--<el-tree-->
-              <!--class="itemsource"-->
-              <!--:data="$store.state.itemList"-->
-              <!--:props="defaultProps"-->
-              <!--accordion-->
-              <!--@node-click="handleNodeClick">-->
-      <!--</el-tree>-->
-        <el-collapse v-model="activeTitle"  class="itemsource"  @change="handleChange">
-            <el-collapse-item v-for="(item,index) in $store.state.itemList" :key="index" :name="item.id">
+        <!--<el-collapse v-model="activeTitle"  class="itemsource"  @change="handleChange">-->
+            <!--<el-collapse-item v-for="(item,index) in $store.state.itemList" :key="index" :name="item.id">-->
+                <!--<template slot="title">-->
+                    <!--<img class="leftlistimg" src="../../../static/images/list.png" alt="">-->
+                    <!--<span class="lefttitle">{{item.menuName}}</span>-->
+                <!--</template>-->
+                <!--<div v-for="(i,ii) in item.list" :key="ii" class="leftlist" :class="activePath==i.path?'active':''" @click="handleNodeClick(i.path,item.id)">{{i.menuName}}</div>-->
+            <!--</el-collapse-item>-->
+        <!--</el-collapse>-->
+        <el-menu
+                :default-active="activePath"
+                class="el-menu-vertical-demo"
+                @select="handleNodeClick"
+                background-color="#27435f"
+                text-color="#fff"
+                active-text-color="#66a3ff">
+            <el-submenu v-for="item in $store.state.itemList" :index="item.id+''">
                 <template slot="title">
                     <img class="leftlistimg" src="../../../static/images/list.png" alt="">
-                    <span class="lefttitle">{{item.menuName}}</span>
+                    <span>{{item.menuName}}</span>
                 </template>
-                <div v-for="(i,ii) in item.list" :key="ii" class="leftlist" :class="activePath==i.path?'active':''" @click="handleNodeClick(i.path,item.id)">{{i.menuName}}</div>
-            </el-collapse-item>
-        </el-collapse>
+                <el-menu-item-group v-for="it in item.list">
+                    <el-menu-item :index="it.path">{{it.menuName}}</el-menu-item>
+                </el-menu-item-group>
+            </el-submenu>
+        </el-menu>
       </div>
 </template>
 
@@ -30,7 +40,6 @@
                   label: 'menuName'
               },
               activePath:sessionStorage.getItem('activePath') || 'index',
-              activeTitle:sessionStorage.getItem('activeTitle')?JSON.parse(sessionStorage.getItem('activeTitle')):['1']
 
           }
         },
@@ -43,17 +52,9 @@
             handleNodeClick(a,i){
                 this.activePath = a
                 sessionStorage.setItem('activePath',a)
-
-
                 this.$router.push('/'+a)
             },
-            handleChange(val){
-                if(!val){
-                    val=[]
-                }
-                this.activeTitle = val
-                sessionStorage.setItem('activeTitle',JSON.stringify(val))
-            }
+
 
         },
     }
@@ -66,6 +67,9 @@
     font-size: 14px;
     height: 100%;
     width: 100%;
+      .leftleft{
+          height: 100%;
+      }
       .leftlistimg{
           width: 14px;
           height: 14px;

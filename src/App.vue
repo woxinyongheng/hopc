@@ -69,7 +69,6 @@
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-align: center;
     color: #2c3e50;
     height: 100%;
     .el-header, .el-footer {
@@ -82,12 +81,13 @@
     }
 
     .el-aside {
-      background:-moz-linear-gradient(top, #3b6179 0%,#6e808b 80% ,#7d757a 100%);
+      background:-moz-linear-gradient(top, #27435f 0%,#27435f 80% ,#3b6179 100%);
 
-      background: -webkit-linear-gradient(top, #3b6179 0%,#6e808b 80% ,#7d757a 100%);
-      /*background-color: #D3DCE6;*/
+      background: -webkit-linear-gradient(top, #27435f 0%,#27435f 80% ,#3b6179 100%);
+      /*!*background-color: #D3DCE6;*!*/
       color: #fff;
       height: 100%;
+      text-align: left;
     }
 
     .el-main {

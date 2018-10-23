@@ -92,7 +92,7 @@ const state = {
         },
     //    医院设备管理
         {
-            menuName: '医院设备管理员-我的事项',
+            menuName: '医院设备-我的事项',
             id:7,
             // path:'HMWaitTask',
             hashChidArr:['HMWaitTask','HMPlanReview','HMLifeEx','HMWarrEx','HMMyRepair'],
@@ -120,7 +120,7 @@ const state = {
             ]
         },
         {
-            menuName: '医院设备管理员-设备管理',
+            menuName: '医院设备-设备管理',
             id:8,
             // path:'HMMtList',
             hashChidArr:['HMMtList','HMGdManage','HMEtList','HMSpList','HMDlList','HMTaList','HMExRemind'],
@@ -156,7 +156,7 @@ const state = {
             ]
         },
         {
-            menuName: '医院设备管理员-维保管理',
+            menuName: '医院设备-维保管理',
             id:9,
             // path:'HMPlanTask',
             hashChidArr:['HMPlanTask','HMWorkOrder','HMMtTask'],
@@ -176,7 +176,7 @@ const state = {
             ]
         },
         {
-            menuName: '医院设备管理员-统计分析',
+            menuName: '医院设备-统计分析',
             id:10,
             // path:'HMSaList',
             hashChidArr:['HMSaList'],
@@ -242,7 +242,7 @@ const state = {
         },
     //    物业业务经理
         {
-            menuName: '物业业务经理-我的事项',
+            menuName: '物业经理-我的事项',
             id:15,
             // path:'PBMyRepair',
             hashChidArr:['PBMyRepair','PBMtPlan','PBMtItem'],
@@ -262,7 +262,7 @@ const state = {
             ]
         },
         {
-            menuName: '物业业务经理-设备管理',
+            menuName: '物业经理-设备管理',
             // path:'PBMtList',
             id:16,
             hashChidArr:['PBMtList','PBTeamManage'],
@@ -278,7 +278,7 @@ const state = {
             ]
         },
         {
-            menuName: '物业业务经理-维保管理',
+            menuName: '物业经理-维保管理',
             id:17,
             // path:'PBPlanTask',
             hashChidArr:['PBPlanTask','PBWorkOrder','PBMtTask'],
@@ -298,7 +298,7 @@ const state = {
             ]
         },
         {
-            menuName: '物业业务经理-统计分析',
+            menuName: '物业经理-统计分析',
             id:18,
             // path:'PBSaList',
             hashChidArr:['PBSaList'],
