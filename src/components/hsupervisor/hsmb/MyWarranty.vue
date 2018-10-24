@@ -40,6 +40,9 @@
                         <el-form-item label="设备编号">
                             <el-input v-model="formInline.user" placeholder="记录单号"></el-input>
                         </el-form-item>
+                        <el-form-item label="报修人">
+                            <el-input v-model="formInline.user" placeholder="报修人"></el-input>
+                        </el-form-item>
                         <el-form-item label="设备名称">
                             <el-input v-model="formInline.user" placeholder="记录单号"></el-input>
                         </el-form-item>
@@ -118,7 +121,7 @@
                         show-overflow-tooltip
                         label="设备编号">
                     <template slot-scope="scope">
-                        <span  @click="showshebeiInfo(scope.row,scope.row.id)" class="tableactive">{{scope.row.name}}</span>
+                        <span  @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.name}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -172,17 +175,28 @@
                 title="查看页面"
                 :visible.sync="jiludanhaoShow"
                 @close="closeHandle"
-                width="70%">
+                width="1000px">
             <span slot="title" class="dialogtitle">
                 查看页面
               </span>
-            <jiludanhao></jiludanhao>
+            <jiludanhao @closeOrderHandle="jiludanhaoShow=false"></jiludanhao>
+        </el-dialog>
+        <el-dialog
+                title="设备查看"
+                :visible.sync="shebeichakanShow"
+                @close="closeShebeiHandle"
+                width="1000px">
+            <span slot="title" class="dialogtitle">
+                查看页面
+              </span>
+            <shebeichakan @closeShebeiHandle="shebeichakanShow=false" ></shebeichakan>
         </el-dialog>
     </div>
 </template>
 
 <script>
     import jiludanhao from '@/components/globaltem/Jiludanhao'
+    import shebeichakan from '@/components/globaltem/Shebeichakan'
     export default {
         name: "MyWarranty",
         data:function () {
@@ -220,7 +234,8 @@
                     name: '王小虎',
                     address: '上海市普陀区金沙江路 1516 弄'
                 }],
-                jiludanhaoShow:false
+                jiludanhaoShow:false,
+                shebeichakanShow:false
 
             }
         },
@@ -233,11 +248,15 @@
 
             },
             showshebeiInfo(){//设备编号
+                this.shebeichakanShow=true
+            },
+            closeShebeiHandle(){
+                this.shebeichakanShow=false
 
             }
         },
         components:{
-            jiludanhao
+            jiludanhao,shebeichakan
         }
     }
 </script>

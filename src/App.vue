@@ -71,6 +71,7 @@
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
     height: 100%;
+    min-width: 1100px;
     .el-header, .el-footer {
       background-color: #27435f;//7d757a
       color: #333;

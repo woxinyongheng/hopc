@@ -14,14 +14,15 @@
                 class="el-menu-vertical-demo"
                 @select="handleNodeClick"
                 background-color="#27435f"
+                unique-opened
                 text-color="#fff"
                 active-text-color="#66a3ff">
-            <el-submenu v-for="item in $store.state.itemList" :index="item.id+''">
+            <el-submenu v-for="(item,index) in $store.state.itemList" :index="item.id+''" :key="index">
                 <template slot="title">
                     <img class="leftlistimg" src="../../../static/images/list.png" alt="">
                     <span>{{item.menuName}}</span>
                 </template>
-                <el-menu-item-group v-for="it in item.list">
+                <el-menu-item-group v-for="(it,ii) in item.list" :key="ii">
                     <el-menu-item :index="it.path">{{it.menuName}}</el-menu-item>
                 </el-menu-item-group>
             </el-submenu>

@@ -1,19 +1,56 @@
 <template>
     <div class="usermanage">
-        <div class="banner">
+        <div class="righttitle">
+            <p>用户管理</p>
+        </div>
+        <div class="buttonbox">
+            <div class="pullleft">
+                <el-button type="primary" size="mini" @click="distributionUserClick">分配用户</el-button>
+                <el-button type="warning" size="mini">导出</el-button>
+            </div>
+            <div class="pullright">
+                <el-button @click="filterShow=!filterShow" type="success" size="mini" icon="el-icon-search">检索</el-button>
+            </div>
+        </div>
+        <div class="filterbox">
             <el-row>
-                <el-col :span="12"><div class="grid-content  bannerleft">
-                    <el-button type="primary" @click="distributionUserClick">分配用户</el-button>
-                    <el-button>导出</el-button>
+                <el-col :span="21"><div class="grid-content">
+                    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+                        <el-form-item label="登录名">
+                            <el-input v-model="formInline.user" placeholder="登录名"></el-input>
+                        </el-form-item>
+                        <el-form-item label="姓名">
+                            <el-input v-model="formInline.user" placeholder="姓名"></el-input>
+                        </el-form-item>
+                        <el-form-item label="所属部门">
+                            <el-select v-model="formInline.region" placeholder="所属部门">
+                                <el-option label="区域一" value="shanghai"></el-option>
+                                <el-option label="区域二" value="beijing"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="状态">
+                            <el-select v-model="formInline.region" placeholder="状态">
+                                <el-option label="启用" value="shanghai"></el-option>
+                                <el-option label="禁用" value="beijing"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-form>
                 </div></el-col>
-                <el-col :span="12" v-if="lookId"><div class="grid-content  bannerright">
-                    <el-button @click="filterShow=!filterShow">检索</el-button>
+                <el-col :span="3"><div class="grid-content searchbox">
+                    <el-button type="primary" size="mini" icon="el-icon-search">搜索</el-button>
+                    <el-button  size="mini" icon="el-icon-refresh">重置</el-button>
                 </div></el-col>
             </el-row>
+
         </div>
-        <div class="content">
+
+        <div class="contentbox">
             <el-row :gutter="40">
                 <el-col :span="gridspan"><div class="grid-content">
+                    <div class="batchSelectLabel">
+                        <i class="el-icon-warning"></i>
+                        已选择<span>0</span>项
+                    </div>
                     <div class="contentheader">
                         角色信息
                     </div>
@@ -49,36 +86,6 @@
                     </el-table>
                 </div></el-col>
                 <el-col :span="24-gridspan"><div class="grid-content">
-                    <div class="filter" v-if="filterShow">
-                        <el-row>
-                            <el-col :span="18"><div class="grid-content">
-                                <el-form :inline="true" :model="formInline" class="demo-form-inline">
-                                    <el-form-item label="登录名">
-                                        <el-input v-model="formInline.user" placeholder="登录名"></el-input>
-                                    </el-form-item>
-                                    <el-form-item label="姓名">
-                                        <el-input v-model="formInline.user" placeholder="姓名"></el-input>
-                                    </el-form-item>
-                                    <el-form-item label="所属部门">
-                                        <el-select v-model="formInline.region" placeholder="所属部门">
-                                            <el-option label="区域一" value="shanghai"></el-option>
-                                            <el-option label="区域二" value="beijing"></el-option>
-                                        </el-select>
-                                    </el-form-item>
-                                    <el-form-item label="状态">
-                                        <el-select v-model="formInline.region" placeholder="状态">
-                                            <el-option label="启用" value="shanghai"></el-option>
-                                            <el-option label="禁用" value="beijing"></el-option>
-                                        </el-select>
-                                    </el-form-item>
-                                </el-form>
-                            </div></el-col>
-                            <el-col :span="6"><div class="grid-content filterright">
-                                <el-button type="primary" @click="searchClick">查询</el-button>
-                                <el-button  @click="searchClick">重置</el-button>
-                            </div></el-col>
-                        </el-row>
-                    </div>
                     <div class="contentheader">
                         用户信息
                     </div>
@@ -132,10 +139,13 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="paginationbox">
+                    <div class="page">
                         <el-pagination
-                                layout="prev, pager, next"
-                                :total="50">
+                                :current-page="1"
+                                :page-sizes="[100, 200, 300, 400]"
+                                :page-size="100"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="400">
                         </el-pagination>
                     </div>
                 </div></el-col>
@@ -157,75 +167,19 @@
         <el-dialog
                 title="分配用户"
                 :visible.sync="distributionUser"
-                width="50%">
-            <div>
-                <el-row :gutter="40">
-                    <el-col :span="6"><div class="grid-content">
-                        <el-tree :data="distributionUserdata" :props="defaultProps"></el-tree>
-                    </div></el-col>
-                    <el-col :span="18"><div class="grid-content">
-                        <div class="filter">
-                            <el-row>
-                                <el-col :span="15"><div class="grid-content">
-                                    <el-form :inline="true" :model="formInline" class="demo-form-inline">
-                                        <el-form-item label="用户名">
-                                            <el-input v-model="formInline.user" placeholder="用户名"></el-input>
-                                        </el-form-item>
-                                    </el-form>
-                                </div></el-col>
-                                <el-col :span="9"><div class="grid-content filterright">
-                                    <el-button type="primary" @click="searchClick">查询</el-button>
-                                    <el-button  @click="searchClick">重置</el-button>
-                                </div></el-col>
-                            </el-row>
-                        </div>
-                        <el-table
-                                ref="multipleTable"
-                                align="center"
-                                :data="roleData"
-                                tooltip-effect="dark"
-                                style="width: 100%">
-                            <el-table-column
-                                    label="序号"
-                                    align="center"
-                                    type="index">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="name"
-                                    align="center"
-                                    label="登录名">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="name"
-                                    align="center"
-                                    label="用户名">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="name"
-                                    align="center"
-                                    label="性别">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="name"
-                                    align="center"
-                                    label="所属科室">
-                            </el-table-column>
-                        </el-table>
-                    </div></el-col>
-                </el-row>
+                @close="distributionUser=false"
+                width="1000px">
+            <span slot="title" class="dialogtitle">
+                分配用户
+              </span>
+            <fenpeiyonghu @closeHandle="distributionUser=false"></fenpeiyonghu>
 
-
-
-            </div>
-            <span slot="footer" class="dialog-footer">
-            <el-button @click="distributionUser = false">取 消</el-button>
-            <el-button type="primary" @click="distributionUserClickSure">确 定</el-button>
-          </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
+    import fenpeiyonghu from '@/components/globaltem/Fenpeiyonghu'
     export default {
         name: "UserManage",
         data:function(){
@@ -297,6 +251,9 @@
 
             }
 
+        },
+        components:{
+            fenpeiyonghu
         }
 
     }
