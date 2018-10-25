@@ -115,6 +115,16 @@ html,body{width: 100%;height: 100%;overflow: hidden;}
   color: #0c7ff2;
   cursor: pointer;
 }
+.tablebtn {
+  margin: 0 10px;
+  cursor: pointer;
+}
+.tablebtn-c1{
+  color: #0c7ff2;
+}
+.tablebtn-c2{
+  color: #e6a23c;
+}
 .tebleimg{
   width: 30px;
   height: 30px;
@@ -165,4 +175,10 @@ html,body{width: 100%;height: 100%;overflow: hidden;}
   box-sizing: border-box;
   padding-right: 10px;
   width: 120px;
+}
+.houzhui input{
+  width: 125px !important;
+}
+.left::-webkit-scrollbar{
+  display: none;
 }

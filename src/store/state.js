@@ -59,7 +59,7 @@ const state = {
                 menuName: '报废记录',
                 path: 'HSSpList',
             },{
-                menuName: '报废到期处理记录',
+                menuName: '质保到期处理记录',
                 path: 'HSDlList',
             },{
                 menuName: '管理任务分配',

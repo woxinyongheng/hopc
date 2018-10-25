@@ -1,6 +1,6 @@
 <template>
     <div class="gdmanage">
-        维保公司管理
+        医院设备管理员 - 维保公司管理 - 延期
     </div>
 </template>
 

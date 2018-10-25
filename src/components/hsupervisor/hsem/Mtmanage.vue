@@ -1,6 +1,6 @@
 <template>
     <div class="mtmanage">
-        设备管理元
+        医院运保主管---设备管理员----延期
     </div>
 </template>
 

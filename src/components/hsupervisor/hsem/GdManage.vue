@@ -1,6 +1,7 @@
 <template>
     <div class="gdmanage">
-        维保公司管理
+        医院运保主管---维保公司管理----延期
+
     </div>
 </template>
 

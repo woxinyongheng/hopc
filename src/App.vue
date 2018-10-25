@@ -120,6 +120,7 @@
       width: calc(100% - 198px);
       box-shadow: 0 -2px 5px #999;
       z-index: 9999;
+      text-align: center;
     }
     .powerl{
       height: 40px;
