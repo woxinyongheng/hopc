@@ -1,0 +1,123 @@
+
+
+<template>
+    <div class="scrap">
+        <div class="dialogcontent">
+            <div class="list">
+                <el-form :inline="true" :model="formInline" class="demo-form-inline" style="display: flex;justify-content: space-between;margin-left: 25px">
+                    <el-form-item label="记录号">
+                        <el-input v-model="formInline.user"></el-input>
+                    </el-form-item>
+                    <el-form-item label="处理人" >
+                        <el-input v-model="formInline.user"></el-input>
+                    </el-form-item>
+                    <el-form-item label="业务日期" required>
+                        <el-date-picker
+                                v-model="formInline.user"
+                                type="date"
+                                placeholder="选择日期">
+                        </el-date-picker>
+                    </el-form-item>
+                </el-form>
+                <el-form :inline="true" :model="formInline" class="demo-form-inline" style="display: flex;justify-content: space-between;margin-left: 25px">
+                    <el-form-item label="确认人">
+                        <el-select v-model="formInline.user" placeholder="确认人">
+                            <el-option label="区域一" value="shanghai"></el-option>
+                            <el-option label="区域二" value="beijing"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+                <el-form ref="form" :model="formInline" label-width="80px"  style="padding-right: 10px">
+                    <el-form-item label="处理说明">
+                        <el-input type="textarea" v-model="formInline.user"></el-input>
+                    </el-form-item>
+                </el-form>
+
+                <el-form :model="formInline" label-width="80px">
+                    <el-form-item label="相关附件">
+
+                    </el-form-item>
+                </el-form>
+            </div>
+            <div class="label" style="margin: 20px 0">报废详情</div>
+            <div class="list">
+                <el-form :inline="true" :model="formInline" class="demo-form-inline" style="display: flex;justify-content: left;margin-left: 10px">
+                    <el-form-item label="报废确认人" required>
+                        <el-select v-model="formInline.user" placeholder="报废确认人">
+                            <el-option label="区域一" value="shanghai"></el-option>
+                            <el-option label="区域二" value="beijing"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="报废原因" required>
+                        <el-select v-model="formInline.user" placeholder="报废原因">
+                            <el-option label="区域一" value="shanghai"></el-option>
+                            <el-option label="区域二" value="beijing"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+                <el-form :model="formInline" label-width="80px">
+                    <el-form-item label="监测报告">
+
+                    </el-form-item>
+                </el-form>
+            </div>
+            <div class="label" style="margin: 20px 0">报废详处理情</div>
+            <div class="list">
+                <el-form :inline="true" :model="formInline" class="demo-form-inline" style="display: flex;justify-content: left;margin-left: 10px">
+                    <el-form-item label="报废处理人" required>
+                        <el-select v-model="formInline.user" placeholder="报废确认人">
+                            <el-option label="区域一" value="shanghai"></el-option>
+                            <el-option label="区域二" value="beijing"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="处理方式" required>
+                        <el-select v-model="formInline.user" placeholder="报废原因">
+                            <el-option label="区域一" value="shanghai"></el-option>
+                            <el-option label="区域二" value="beijing"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+                <el-form :model="formInline" label-width="80px">
+                    <el-form-item label="处理文件">
+
+                    </el-form-item>
+                </el-form>
+            </div>
+        </div>
+        <div class="dialogfooter" style="text-align: right;margin-top: 20px">
+            <el-button  size="small" @click="cancleScrap">取消</el-button>
+            <el-button type="primary" size="small" @click="sureScrap">确认</el-button>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: "scrapTem",
+        data:function () {
+            return{
+                formInline: {
+                    user: '',
+                    region: ''
+                }
+            }
+        },
+        methods:{
+            //    报废
+            cancleScrap(){
+                this.$emit('closeHandle')
+
+            },
+            sureScrap(){
+                this.$emit('closeHandle')
+
+            },
+        }
+    }
+</script>
+
+<style scoped lang="scss">
+    .scrap{
+
+    }
+</style>

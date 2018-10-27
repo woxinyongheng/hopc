@@ -192,7 +192,7 @@
                 title="设备查看"
                 :visible.sync="shebeichakanShow"
                 @close="shebeichakanShow=false"
-                width="1000">
+                width="1000px">
             <span slot="title" class="dialogtitle">
                 设备查看
               </span>

@@ -15,7 +15,7 @@
         <div class="filterbox">
             <el-row>
                 <el-col :span="21"><div class="grid-content">
-                    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+                    <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
                         <el-form-item label="登录名">
                             <el-input v-model="formInline.user" placeholder="登录名"></el-input>
                         </el-form-item>
@@ -56,31 +56,36 @@
                     </div>
                     <el-table
                             ref="multipleTable"
-                            align="center"
+                            stripe
+                            border
                             :data="roleData"
-                            tooltip-effect="dark"
                             style="width: 100%">
                         <el-table-column
                                 type="selection"
-                                align="center"
+                                show-overflow-tooltip
+
                                 width="55">
                         </el-table-column>
                         <el-table-column
                                 label="序号"
-                                align="center"
+                                show-overflow-tooltip
+
                                 type="index">
                         </el-table-column>
                         <el-table-column
                                 prop="name"
-                                align="center"
+                                show-overflow-tooltip
+
                                 label="角色名称">
                         </el-table-column>
                         <el-table-column
                                 prop="name"
-                                align="center"
+                                show-overflow-tooltip
+
                                 label="操作">
                             <template slot-scope="scope">
-                                <el-button type="primary" @click="lookUser(scope.row.id)">查看用户</el-button>
+                                <span @click="lookUser(scope.row.id)" class="tablebtn tablebtn-c1">查看用户</span>
+
                             </template>
                         </el-table-column>
                     </el-table>
@@ -91,38 +96,44 @@
                     </div>
                     <el-table
                             ref="multipleTable"
-                            align="center"
                             :data="roleData"
-                            tooltip-effect="dark"
+                            stripe
+                            border
                             style="width: 100%">
                         <el-table-column
                                 label="序号"
-                                align="center"
+                                show-overflow-tooltip
+
                                 type="index">
                         </el-table-column>
                         <el-table-column
                                 prop="name"
-                                align="center"
+                                show-overflow-tooltip
+
                                 label="登录名">
                         </el-table-column>
                         <el-table-column
                                 prop="name"
-                                align="center"
+                                show-overflow-tooltip
+
                                 label="所属部门">
                         </el-table-column>
                         <el-table-column
                                 prop="name"
-                                align="center"
+                                show-overflow-tooltip
+
                                 label="上级机构">
                         </el-table-column>
                         <el-table-column
                                 prop="name"
-                                align="center"
+                                show-overflow-tooltip
+
                                 label="状态">
                         </el-table-column>
                         <el-table-column
                                 prop="name"
-                                align="center"
+                                show-overflow-tooltip
+
                                 label="启用/禁用">
                             <template slot-scope="scope">
                                 <el-switch
@@ -132,10 +143,11 @@
                         </el-table-column>
                         <el-table-column
                                 prop="name"
-                                align="center"
+                                show-overflow-tooltip
+
                                 label="操作">
                             <template slot-scope="scope">
-                                <el-button type="primary" @click="deleteUser(scope.row.id)">删除</el-button>
+                                <span @click="deleteUser(scope.row.id)" class="tablebtn tablebtn-c2">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -155,13 +167,11 @@
         <el-dialog
                 title="提示"
                 :visible.sync="deleteDialogVisible"
-                width="30%"
-                center>
-            <span>确认要删除该用户吗？</span>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="deleteDialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="sureDeleteClick">确 定</el-button>
-              </span>
+                width="1000px">
+                <span slot="title" class="dialogtitle">
+                    提示
+                  </span>
+            <deleteUser @closeHandle="deleteDialogVisible=false"></deleteUser>
         </el-dialog>
         <!--分配用户-->
         <el-dialog
@@ -180,6 +190,8 @@
 
 <script>
     import fenpeiyonghu from '@/components/globaltem/Fenpeiyonghu'
+    import deleteUser from './deleteUser'
+
     export default {
         name: "UserManage",
         data:function(){
@@ -253,7 +265,7 @@
 
         },
         components:{
-            fenpeiyonghu
+            fenpeiyonghu,deleteUser
         }
 
     }
