@@ -1,12 +1,237 @@
 <template>
     <div class="plantask">
-        计划任务
+        <div class="righttitle">
+            <p>计划任务</p>
+        </div>
+        <div class="buttonbox">
+            <div class="pullleft">
+                <el-tag>全部</el-tag>
+                <el-tag type="danger">进行中</el-tag>
+                <el-tag type="info">未完成</el-tag>
+                <el-tag type="success">已完成</el-tag>
+            </div>
+            <div class="pullright">
+                <el-button type="success" size="mini" icon="el-icon-search">检索</el-button>
+            </div>
+        </div>
+        <div class="filterbox">
+            <el-row>
+                <el-col :span="21"><div class="grid-content">
+                    <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
+                        <el-form-item label="计划编号">
+                            <el-input v-model="formInline.user" placeholder="计划编号"></el-input>
+                        </el-form-item>
+                        <el-form-item label="计划名称">
+                            <el-input v-model="formInline.user" placeholder="计划名称"></el-input>
+                        </el-form-item>
+                        <el-form-item label="保养类型">
+                            <el-select v-model="formInline.region" placeholder="保养类型">
+                                <el-option label="区域一" value="1"></el-option>
+                                <el-option label="区域二" value="2"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="周期类型">
+                            <el-select v-model="formInline.region" placeholder="周期类型">
+                                <el-option label="区域一" value="1"></el-option>
+                                <el-option label="区域二" value="2"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="设备类别">
+                            <el-cascader
+                                    :options="options"
+                                    v-model="formInline.tree"
+                                    :props="props">
+                            </el-cascader>
+                        </el-form-item>
+                        <el-form-item label="保养项目">
+                            <el-input v-model="formInline.user" placeholder="保养项目"></el-input>
+                        </el-form-item>
+                        <el-form-item label="开始日期">
+                            <el-date-picker
+                                    v-model="formInline.user"
+                                    type="date"
+                                    placeholder="开始日期">
+                            </el-date-picker>
+                        </el-form-item>
+                        <el-form-item label="至">
+                            <el-date-picker
+                                    v-model="formInline.user"
+                                    type="date"
+                                    placeholder="结束日期">
+                            </el-date-picker>
+                        </el-form-item>
+                        <el-form-item label="责任归属">
+                            <el-select v-model="formInline.region" placeholder="责任归属">
+                                <el-option label="区域一" value="1"></el-option>
+                                <el-option label="区域二" value="2"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-form>
+                </div></el-col>
+                <el-col :span="3"><div class="grid-content searchbox">
+                    <el-button type="primary" size="mini" icon="el-icon-search">搜索</el-button>
+                    <el-button  size="mini" icon="el-icon-refresh">重置</el-button>
+                </div></el-col>
+            </el-row>
+
+        </div>
+        <div class="contentbox">
+            <el-table
+                    :data="tableData"
+                    stripe
+                    border
+                    style="width: 100%">
+                <el-table-column
+                        type="index"
+                        label="序号"
+                        width="50">
+                </el-table-column>
+                <el-table-column
+                        prop="date"
+                        label="计划编号"
+                        show-overflow-tooltip
+                        width="180">
+                    <template slot-scope="scope">
+                        <span  @click="showPlanInfo(scope.row,scope.row.id)" class="tableactive">{{scope.row.name}}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column
+                        prop="name"
+                        label="计划名称"
+                        show-overflow-tooltip
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="address"
+                        show-overflow-tooltip
+
+                        label="保养类型">
+                </el-table-column>
+                <el-table-column
+                        prop="address"
+                        show-overflow-tooltip
+                        label="周期类型">
+                </el-table-column>
+                <el-table-column
+                        prop="address"
+                        show-overflow-tooltip
+
+                        label="保养项目">
+                </el-table-column>
+                <el-table-column
+                        prop="address"
+                        show-overflow-tooltip
+
+                        label="设备类型">
+                </el-table-column>
+                <el-table-column
+                        prop="address"
+                        show-overflow-tooltip
+
+                        label="设备数量">
+                </el-table-column>
+                <el-table-column
+                        prop="address"
+                        show-overflow-tooltip
+
+                        label="开始日期">
+                </el-table-column>
+                <el-table-column
+                        prop="address"
+                        show-overflow-tooltip
+                        label="结束日期">
+                </el-table-column>
+                <el-table-column
+                        prop="address"
+                        show-overflow-tooltip
+                        label="责任归属">
+                </el-table-column>
+                <el-table-column
+                        prop="address"
+                        show-overflow-tooltip
+                        label="状态">
+                    <template slot-scope="scope">
+                        <span class="tablebtn-c1">进行中</span>
+                        <span class="tablebtn-c2">未完成</span>
+
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="page">
+                <el-pagination
+                        :current-page="1"
+                        :page-sizes="[100, 200, 300, 400]"
+                        :page-size="100"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="400">
+                </el-pagination>
+            </div>
+        </div>
+        <el-dialog
+                title="计划任务"
+                :visible.sync="planInfoShow"
+                @close="closeHandle"
+                width="1000px">
+            <span slot="title" class="dialogtitle">
+                计划任务
+              </span>
+            <jihuarenwu @closeHandle="planInfoShow=false"></jihuarenwu>
+        </el-dialog>
     </div>
 </template>
 
 <script>
+    import jihuarenwu from '@/components/globaltem/Jihuarenwu'
     export default {
-        name: "PlanTask"
+        name: "PlanTask",
+        data:function () {
+            return{
+                formInline:{
+                    user:'',
+                    region:'1',
+                    tree:[]
+                },
+                options: [{
+                    label: '江苏',
+                    cities: []
+                }, {
+                    label: '浙江',
+                    cities: []
+                }],
+                props: {
+                    value: 'label',
+                    children: 'cities'
+                },
+                tableData: [{
+                    date: '2016-05-02',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1518 弄'
+                }, {
+                    date: '2016-05-04',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1517 弄'
+                }, {
+                    date: '2016-05-01',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1519 弄'
+                }, {
+                    date: '2016-05-03',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1516 弄'
+                }],
+                planInfoShow:false,
+
+            }
+        },
+        methods:{
+            showPlanInfo(){//记录单号
+                this.planInfoShow = true
+            },
+        },
+        components:{
+            jihuarenwu
+        }
     }
 </script>
 

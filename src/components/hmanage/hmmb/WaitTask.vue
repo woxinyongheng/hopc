@@ -1,17 +1,129 @@
 <template>
     <div class="waittask">
-        待办工作
+        <div class="righttitle" style="margin-bottom: 20px">
+            <p>待办工作</p>
+        </div>
+        <div class="contentbox">
+            <el-tabs v-model="activeName" @tab-click="handleClick">
+                <el-tab-pane label="全部" name="0">
+                    <el-row :gutter="20">
+                        <el-col :span="6" v-for="item in 4" ><div class="grid-content collist">
+                            <card @operateHandle="operateHandle" type="1"></card>
+                        </div></el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="6" v-for="item in 4" ><div class="grid-content collist">
+                            <card  @operateHandle="operateHandle" type="2"></card>
+                        </div></el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="6" v-for="item in 4" ><div class="grid-content collist">
+                            <card  @operateHandle="operateHandle" type="3"></card>
+                        </div></el-col>
+                    </el-row>
+                </el-tab-pane>
+                <el-tab-pane label="计划审核" name="1">
+                    <el-row :gutter="20">
+                        <el-col :span="6" v-for="item in 20" ><div class="grid-content collist">
+                            <card @operateHandle="operateHandle"  type="1"></card>
+                        </div></el-col>
+                    </el-row>
+                </el-tab-pane>
+                <el-tab-pane label="寿命到期" name="2">
+                    <el-row :gutter="20">
+                        <el-col :span="6" v-for="item in 20"><div class="grid-content collist">
+                            <card @operateHandle="operateHandle"  type="2"></card>
+                        </div></el-col>
+                    </el-row>
+                </el-tab-pane>
+                <el-tab-pane label="质保到期" name="3">
+                    <el-row :gutter="20">
+                        <el-col :span="6" v-for="item in 20" ><div class="grid-content collist">
+                            <card @operateHandle="operateHandle"  type="3"></card>
+                        </div></el-col>
+                    </el-row>
+                </el-tab-pane>
+            </el-tabs>
+        </div>
+        <el-dialog
+                title="计划审核"
+                :visible.sync="checkplanShow"
+                @close="checkplanShow=false"
+                width="1000px">
+            <span slot="title" class="dialogtitle">
+                计划审核
+              </span>
+            <checkPlan @closeHandle="checkplanShow=false"></checkPlan>
+        </el-dialog>
+        <el-dialog
+                title="设备查看"
+                :visible.sync="deviceInfoShow"
+                @close="deviceInfoShow=false"
+                width="1000px">
+            <span slot="title" class="dialogtitle">
+                设备查看
+              </span>
+            <DeviceInfo :type="typeNum" @closeHandle="deviceInfoShow=false"></DeviceInfo>
+        </el-dialog>
+
     </div>
 </template>
 
 <script>
+    import card from '@/components/globaltem/Card'
+    import checkPlan from './tem/checkPlan'
+    import DeviceInfo from './tem/DeviceInfo'
     export default {
-        name: "WaitTask"
+        name: "WaitTask",
+        data:function () {
+            return{
+                activeName:0,
+                checkplanShow:false,
+                typeNum:1,
+                deviceInfoShow:false
+            }
+        },
+        methods:{
+            //切换tab选项
+            handleClick(tab,event){
+
+            },
+            //点击操作选项
+            operateHandle(type){
+                this.typeNum = type
+                switch (type*1) {
+                    case 1:
+                        this.checkplanShow = true
+                        break;
+                    case 2:
+                        this.deviceInfoShow=true
+                        break;
+                    case 3:
+                        this.deviceInfoShow=true
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+        },
+        components:{
+            card,checkPlan,DeviceInfo
+        }
+
     }
 </script>
 
 <style scoped lang="scss">
 .waittask{
+    .contentbox{
+        background-color: #fff;
+        padding: 10px;
+        .collist{
+            margin: 30px 0;
+        }
+
+    }
     
 }
 </style>

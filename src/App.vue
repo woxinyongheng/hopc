@@ -2,22 +2,54 @@
   <div id="app"  v-loading="loading" element-loading-text="拼命加载中"
        element-loading-spinner="el-icon-loading"
        element-loading-background="rgba(0, 0, 0, 0.5)">
+    <!--<el-container v-if="isLogin">-->
+      <!--<el-aside v-if="showLeftValue" width="260px" class="left">-->
+        <!--<Left></Left>-->
+      <!--</el-aside>-->
+      <!--<el-container>-->
+        <!--<el-header>-->
+          <!--<Top></Top>-->
+        <!--</el-header>-->
+        <!--<el-main>-->
+          <!--<router-view v-if="isLoginjudge"/>-->
+        <!--</el-main>-->
+        <!--<el-footer  v-if="isLoginjudge" class="power"> Copyright @ 2018 SINOMIS. All Rights Reserved</el-footer>-->
+      <!--</el-container>-->
+    <!--</el-container>-->
     <el-container v-if="isLogin">
-      <el-header>
-        <Top></Top>
-      </el-header>
+      <el-header><Top></Top></el-header>
       <el-container>
-        <el-aside v-if="showLeftValue" width="200px" class="left" style="background: linear-gradient(top, #3b6179 0%,#6e808b 80% ,#7d757a 100%);">
+        <el-aside v-if="showLeftValue" width="260px" class="left">
           <Left></Left>
         </el-aside>
-        <el-main>
-          <router-view v-if="isLoginjudge"/>
-          <div :class="showLeftValue?'power':'powerl'">
+        <el-container>
+          <el-main>
+            <router-view v-if="isLoginjudge"/>
+
+          </el-main>
+          <el-footer v-if="isLoginjudge" class="power">
             Copyright @ 2018 SINOMIS. All Rights Reserved
-          </div>
-        </el-main>
+          </el-footer>
+        </el-container>
       </el-container>
     </el-container>
+    <!--<el-container v-if="isLogin">-->
+      <!--<el-header>-->
+        <!--<Top></Top>-->
+      <!--</el-header>-->
+      <!--<el-container>-->
+        <!--<el-aside v-if="showLeftValue" width="260px" class="left">-->
+          <!--<Left></Left>-->
+        <!--</el-aside>-->
+        <!--<el-main>-->
+          <!--<router-view v-if="isLoginjudge"/>-->
+          <!--&lt;!&ndash;<div :class="showLeftValue?'power':'powerl'">&ndash;&gt;-->
+            <!--&lt;!&ndash;Copyright @ 2018 SINOMIS. All Rights Reserved&ndash;&gt;-->
+          <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--</el-main>-->
+        <!--<el-footer v-if="isLoginjudge"> Copyright @ 2018 SINOMIS. All Rights Reserved</el-footer>-->
+      <!--</el-container>-->
+    <!--</el-container>-->
     <router-view v-if="!isLoginjudge"/>
   </div>
 </template>
@@ -110,29 +142,12 @@
       line-height: 320px;
     }
     .power{
-      height: 40px;
-      line-height: 40px;
       background-color: #fff;
-      font-size: 12px;
-      position: absolute;
-      bottom: 0;
-      left: 200px;
-      width: calc(100% - 198px);
-      box-shadow: 0 -2px 5px #999;
-      z-index: 9999;
       text-align: center;
-    }
-    .powerl{
-      height: 40px;
-      line-height: 40px;
-      background-color: #fff;
       font-size: 12px;
-      position: absolute;
-      bottom: 0;
-      left: 0px;
-      width: 100%;
-      box-shadow: 0 -2px 5px #999;
-      z-index: 9999;
+      color: #666;
+
     }
+
   }
 </style>

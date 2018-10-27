@@ -6,8 +6,8 @@
                 <el-steps :active="1" align-center>
                     <el-step title="报修时间" description="2018-08-29 0：30"></el-step>
                     <el-step title="派工时间" description="2018-08-29 0：30"></el-step>
-                    <el-step title="维修时间" description="2018-08-29 0：30"></el-step>
-                    <el-step title="结束时间" description="2018-08-29 0：30"></el-step>
+                    <el-step :title="type=='guadan'?'挂单时间':'维修时间'" description="2018-08-29 0：30"></el-step>
+                    <el-step :title="type=='guadan'?'维修时间':'结束时间'" description="2018-08-29 0：30"></el-step>
 
                 </el-steps>
             </div>
@@ -16,11 +16,11 @@
                     <table class="dialogtablebox">
                         <tbody>
                             <tr>
-                                <td class="table-title">资产编号</td>
+                                <td class="table-title">{{type=='guadan'?'报修时间':'资产编号'}}</td>
                                 <td class="table-content"></td>
-                                <td class="table-title">资产类别</td>
+                                <td class="table-title">{{type=='guadan'?'报修人':'资产类别'}}</td>
                                 <td class="table-content"></td>
-                                <td class="table-title">资产名称</td>
+                                <td class="table-title">{{type=='guadan'?'报修人电话':'资产名称'}}</td>
                                 <td class="table-content"></td>
                             </tr>
                             <tr>
@@ -127,7 +127,7 @@
             </div>
         </div>
         <div class="dialogfooter" style="text-align: right">
-            <el-button type="primary" size="small" @click="closeHandle">确定</el-button>
+            <el-button type="primary" size="small" @click="closeHandle">关闭</el-button>
         </div>
     </div>
 </template>
@@ -135,6 +135,7 @@
 <script>
     export default {
         name: "Jiludanhao",
+        props:['type'],
         data:function () {
             return{
             }

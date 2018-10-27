@@ -1,5 +1,8 @@
 <template>
     <div class="left">
+        <div class="logobox">
+
+        </div>
         <!--<el-collapse v-model="activeTitle"  class="itemsource"  @change="handleChange">-->
             <!--<el-collapse-item v-for="(item,index) in $store.state.itemList" :key="index" :name="item.id">-->
                 <!--<template slot="title">-->

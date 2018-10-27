@@ -89,7 +89,7 @@
       display: inline-block;
       vertical-align: middle;
       color: #fff;
-      margin-left: 50px;
+      margin-left: 110px;
     }
     img{
       height: 40px;
