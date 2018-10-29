@@ -97,8 +97,7 @@
                 <el-table-column
                         prop="date"
                         label="记录单号"
-                        show-overflow-tooltip
-                        width="180">
+                        show-overflow-tooltip>
                     <template slot-scope="scope">
                         <span  @click="showOrderInfo(scope.row,scope.row.id)" class="tableactive">{{scope.row.name}}</span>
                     </template>
@@ -106,9 +105,7 @@
                 <el-table-column
                         prop="name"
                         label="保修时间"
-                        show-overflow-tooltip
-
-                        width="180">
+                        show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column
                         prop="address"

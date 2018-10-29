@@ -3,30 +3,19 @@
     <el-row :gutter="20">
       <el-col :span="12"><div class="grid-content bg-purple">
         <img src="../../../static/images/logo.png" alt="">
-        <span class="welcom">欢迎使用医院设备管理云平台</span>
+        <span class="welcom" @click="changeLeft"><img src="../../../static/images/left.png" alt=""></span>
       </div></el-col>
       <el-col :span="12">
         <div class="grid-content topright">
           <div style="padding: 0 30px;display: inline-block;">
-            <el-switch
-                    @change="changeLeft"
-                    v-model="value3">
-            </el-switch>
+            <!--<el-switch-->
+                    <!--@change="changeLeft"-->
+                    <!--v-model="value3">-->
+            <!--</el-switch>-->
+            <span class="welcom">欢迎使用医院设备管理云平台</span>
           </div>
-
           <img src="../../../static/images/avatar.png" alt="">
           <span class="name">{{name}}</span>
-          <!--<el-dropdown trigger="click" @command="logoutClick">-->
-          <!--<span class="el-dropdown-link">-->
-          <!--{{name}}<i class="el-icon-caret-bottom el-icon&#45;&#45;right"></i>-->
-          <!--</span>-->
-          <!--<el-dropdown-menu slot="dropdown">-->
-          <!--<el-dropdown-item class="clearfix" command="a">-->
-          <!--退出-->
-          <!--</el-dropdown-item>-->
-
-          <!--</el-dropdown-menu>-->
-          <!--</el-dropdown>-->
           <span class="logout" @click="logoutClick('a')">退出</span>
         </div>
       </el-col>
@@ -55,8 +44,9 @@
                     this.$router.push('/login')
                 }
             },
-            changeLeft(bool){
-                this.$store.commit('leftShowHandle',bool)
+            changeLeft(){
+                this.value3 = !this.value3
+                this.$store.commit('leftShowHandle',this.value3)
             }
         }
     }
@@ -90,6 +80,11 @@
       vertical-align: middle;
       color: #fff;
       margin-left: 110px;
+      img{
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+      }
     }
     img{
       height: 40px;
