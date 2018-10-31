@@ -311,3 +311,246 @@ const state = {
 }
 
 export default state
+/*
+
+{
+    menuName: '首页',
+    path:'index',
+},
+{
+    menuName: '用户管理',
+    path: 'usermanage',
+}]
+},
+//    医院主管
+{
+    menuName: '医院主管-我的事项',
+    id:3,
+    list: [{
+        menuName: '我的报修',
+        path: 'HSMyWarranty',
+    }]
+},{
+    menuName: '医院主管-设备管理',
+        list: [{
+        menuName: '设备列表',
+        path: 'HSMtList',
+    },{
+        menuName: '设备管理员',
+        path: 'HSMtmanage',
+    },{
+        menuName: '维保公司管理',
+        path: 'HSGdManage',
+    },{
+        menuName: '延期记录',
+        path: 'HSEtList',
+    },{
+        menuName: '报废记录',
+        path: 'HSSpList',
+    },{
+        menuName: '质保到期处理记录',
+        path: 'HSDlList',
+    },{
+        menuName: '管理任务分配',
+        path: 'HSTaList',
+    },]
+},{
+    menuName: '医院主管-维保管理',
+        list: [{
+        menuName: '计划任务',
+        path: 'HSPlanTask',
+    },{
+        menuName: '维修工单',
+        path: 'HSWorkOrder',
+    },{
+        menuName: '保养任务',
+        path: 'HSMtTask',
+    }]
+},{
+    menuName: '医院主管-统计分析',
+        list: [{
+        menuName: '统计分析',
+        path: 'HSSaList',
+    }]
+},
+//    医院设备管理
+{
+    menuName: '医院设备-我的事项',
+    list: [
+    {
+        menuName: '待办工作',
+        path: 'HMWaitTask',
+    },
+    {
+        menuName: '计划审核',
+        path: 'HMPlanReview',
+    },
+    {
+        menuName: '寿命到期',
+        path: 'HMLifeEx',
+    },
+    {
+        menuName: '质保到期',
+        path: 'HMWarrEx',
+    },
+    {
+        menuName: '我的报修',
+        path: 'HMMyRepair',
+    },
+]
+},
+{
+    menuName: '医院设备-设备管理',
+    list: [
+    {
+        menuName: '设备列表',
+        path: 'HMMtList',
+    },
+    {
+        menuName: '维保公司管理',
+        path: 'HMGdManage',
+    },
+    {
+        menuName: '延期记录',
+        path: 'HMEtList',
+    },
+    {
+        menuName: '报废记录',
+        path: 'HMSpList',
+    },
+    {
+        menuName: '质保到期处理记录',
+        path: 'HMDlList',
+    },
+    {
+        menuName: '责任归属分配',
+        path: 'HMTaList',
+    },
+    {
+        menuName: '到期提醒设置',
+        path: 'HMExRemind',
+    },
+]
+},
+{
+    menuName: '医院设备-维保管理',
+    list: [
+    {
+        menuName: '计划任务',
+        path: 'HMPlanTask',
+    },
+    {
+        menuName: '维修工单',
+        path: 'HMWorkOrder',
+    },
+    {
+        menuName: '保养任务',
+        path: 'HMMtTask',
+    },
+]
+},
+{
+    menuName: '医院设备-统计分析',
+    list: [{
+    menuName: '统计分析',
+    path: 'HMSaList',
+}]
+},
+//    物业主管
+{
+    menuName: '物业主管-我的事项',
+    list: [
+    {
+        menuName: '我的报修',
+        path: 'PMMyRepair',
+    },
+]
+},
+{
+    menuName: '物业主管-设备管理',
+    list: [
+    {
+        menuName: '设备列表',
+        path: 'PMMtList',
+    },
+]
+},
+{
+    menuName: '物业主管-维保管理',
+    list: [
+    {
+        menuName: '计划任务',
+        path: 'PMPlanTask',
+    },
+    {
+        menuName: '维修工单',
+        path: 'PMWorkOrder',
+    },
+    {
+        menuName: '保养任务',
+        path: 'PMMtTask',
+    },
+]
+},
+{
+    menuName: '物业主管-统计分析',
+    list: [{
+    menuName: '统计分析',
+    path: 'PMSaList',
+}]
+},
+//    物业业务经理
+{
+    menuName: '物业经理-我的事项',
+    list: [
+    {
+        menuName: '保养计划',
+        path: 'PBMtPlan',
+    },
+    {
+        menuName: '保养项目',
+        path: 'PBMtItem',
+    },
+    {
+        menuName: '我的报修',
+        path: 'PBMyRepair',
+    },
+]
+},
+{
+    menuName: '物业经理-设备管理',
+    list: [
+    {
+        menuName: '设备列表',
+        path: 'PBMtList',
+    },
+    {
+        menuName: '班组管理',
+        path: 'PBTeamManage',
+    },
+]
+},
+{
+    menuName: '物业经理-维保管理',
+    list: [
+    {
+        menuName: '计划任务',
+        path: 'PBPlanTask',
+    },
+    {
+        menuName: '维修工单',
+        path: 'PBWorkOrder',
+    },
+    {
+        menuName: '保养任务',
+        path: 'PBMtTask',
+    },
+]
+},
+{
+    menuName: '物业经理-统计分析',
+    list: [{
+    menuName: '统计分析',
+    path: 'PBSaList',
+}]
+*/

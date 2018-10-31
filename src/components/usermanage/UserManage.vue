@@ -231,11 +231,14 @@
                 defaultProps: {
                     children: 'children',
                     label: 'label'
-                }
+                },
+                currentPage:1,
+                pageSize:10
+
             }
         },
         mounted(){
-
+            this.requestList()
         },
         methods:{
             //筛选
@@ -261,6 +264,16 @@
             },
             distributionUserClickSure(){
 
+            },
+        //    列表信息
+            requestList(){
+                let vm =this
+                vm.$http.post('/api/userControl/getRoleListAndStaffList',{
+                    currentPage:vm.currentPage,
+                    pageSize:vm.pageSize
+                }).then(res=>{
+                    debugger
+                })
             }
 
         },

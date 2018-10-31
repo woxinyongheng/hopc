@@ -110,70 +110,77 @@
                         label="状态"
                         prop="status"
                         width="80">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.equipmentState==0">正常</span>
+                        <span v-if="scope.row.equipmentState==1">延期</span>
+                        <span v-if="scope.row.equipmentState==2">报废</span>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         label="照片"
                         show-overflow-tooltip
                         width="80">
                     <template slot-scope="scope">
-                        <img class="tebleimg" src="../../../../static/images/avatar.png" alt="">
+                        <img class="tebleimg" :src="scope.row.picture" alt="">
                     </template>
                 </el-table-column>
                 <el-table-column
-                        prop="name"
+                        prop="assetsCode"
                         label="设备编号"
                         show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="assetsName"
                         show-overflow-tooltip
                         label="设备名称">
                     <template slot-scope="scope">
-                        <span  @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.name}}</span>
+                        <span  @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.assetsName}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="classifyName"
                         show-overflow-tooltip
                         label="设备类别">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="brandName"
                         show-overflow-tooltip
                         label="设备品牌">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="model"
                         show-overflow-tooltip
                         label="规格型号">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="repairNumber"
                         show-overflow-tooltip
+                        width="100px"
                         label="维修次数(次)">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="repairExpenditure"
                         show-overflow-tooltip
                         label="累计支出">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="maintainNumber"
                         show-overflow-tooltip
+                        width="100px"
                         label="保养次数(次)">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="equipmentAdminName"
                         show-overflow-tooltip
                         label="设备管理员">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="propertyCompanyName"
                         show-overflow-tooltip
                         label="责任归属">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="taskName"
                         show-overflow-tooltip
                         label="任务归属">
                 </el-table-column>
@@ -181,10 +188,12 @@
             <div class="page">
                 <el-pagination
                         :current-page="1"
-                        :page-sizes="[100, 200, 300, 400]"
+                        :page-sizes="[10, 20, 30, 50]"
                         :page-size="100"
+                        @size-change="pageSizeChange"
+                        @current-change="pageCurrentChange"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="400">
+                        :total="total">
                 </el-pagination>
             </div>
         </div>
@@ -218,6 +227,10 @@
         name: "MtList",
         data:function () {
             return{
+                //分页
+                total:0,
+                pageSize:10,
+                currentPage:1,
                 formInline:{
                     user:'',
                     region:'1',
@@ -257,9 +270,41 @@
                 shebeibaoxiuShow:false
             }
         },
+        mounted(){
+          this.requestList()
+        },
         methods:{
-            showshebeiInfo(){
+            showshebeiInfo(row){
+                let vm =this
+                vm.$http.post('/api/equipmentListController/GetEquipmentById',{
+                    Id:row.equipmentId
+                }).then(res=>{
+                    debugger
+                })
                 this.shebeichakanShow =true
+            },
+        //    获取列表
+            requestList(){
+                let vm =this
+                vm.$http.post('/api/equipmentListController/equipmentList',{
+                    InterfaceNum:'1',
+                    pageSize:vm.pageSize,
+                    currentPage:vm.currentPage
+                }).then(res=>{
+                    if(res.code=='200'){
+                        vm.total = res.data.count
+                        vm.tableData = res.data.list
+                    }
+                })
+            },
+        //    分页
+            pageSizeChange(val){
+                this.pageSize =val
+                this.requestList()
+            },
+            pageCurrentChange(val){
+                this.currentPage =val
+                this.requestList()
             }
         },
         components:{

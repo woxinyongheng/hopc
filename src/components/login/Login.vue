@@ -27,16 +27,17 @@
         },
         methods:{
           loginClick(){
-            // var vm =this
-            // if(!vm.userName || !vm.password){
-            //   return
-            // }
-            // vm.$http.post('/userLoginController/userLogin', {
+            var vm =this
+            if(!vm.userName || !vm.password){
+              return
+            }
+            // vm.$http.post('/api/userLoginController/userLogin', {
             //     userName: vm.userName,
             //     passWord: vm.password
             //   }
             // ).then(function (res) {
             //   if(res.code==200){
+            //
             //     var obj = {}
             //     obj.companyCode = res.data.companyCode
             //     obj.hospitalCode = res.data.hospitalCode
@@ -56,16 +57,16 @@
             //     vm.$store.commit('loginChangeTrue')
             //     vm.$router.push('/index')
             //   }
-            //
+
             // })
-            var obj = {
-              unitCode:'BJSCSYGJ',
-              hospitalCode:'ZXYSHJ',
-              userId:'4a00ebaa0219423daa55e07046f2edf9',
-              userName:'张鹏',
-              roleCode:'corpAdmin,default'
-            }
-            localStorage.setItem('LOGINDATA',JSON.stringify(obj))
+            // var obj = {
+            //   unitCode:'BJSCSYGJ',
+            //   hospitalCode:'ZXYSHJ',
+            //   userId:'4a00ebaa0219423daa55e07046f2edf9',
+            //   userName:'张鹏',
+            //   roleCode:'corpAdmin,default'
+            // }
+            // localStorage.setItem('LOGINDATA',JSON.stringify(obj))
             this.$store.commit('loginChangeTrue')
             this.$router.push('/index')
           }

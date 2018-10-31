@@ -14,6 +14,8 @@ routerConfig()
 
 //import jquery 和 element
 import $ from 'jquery'
+import { Message } from 'element-ui';
+
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI)
@@ -28,7 +30,7 @@ Vue.config.productionTip = false
 
 //axios 请求与响应配置
 
-axios.defaults.baseURL = 'http://124.207.234.79:8980/assetAccount/';
+// axios.defaults.baseURL = __PATH.FULLPATH;
 axios.defaults.withCredentials=false //不设置
 Vue.prototype.$http = {
     get: (url, param, flag) => {
@@ -46,8 +48,8 @@ Vue.prototype.$http = {
             param.unitCode = obj.unitCode
             param.hospitalCode = obj.hospitalCode
             param.userId = obj.id
-            param.userName = obj.name
             param.roleCode = obj.roleCode
+            param.userName = obj.name
         }
         let params = qs.stringify(param)
         return axios.post(url, params).then((res) => {
@@ -61,7 +63,7 @@ Vue.prototype.$http = {
 //全局请求响应配置
 axios.interceptors.request.use(config => { //spinShowSet
     store.commit('spinShowSet',true)
-    config.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8'
+    // config.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8'
 
     return config
 }, error =>{
