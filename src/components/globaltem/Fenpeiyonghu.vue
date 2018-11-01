@@ -119,9 +119,25 @@
 
             }
         },
+        mounted(){
+          let vm =this
+            vm.requestList()
+        },
         methods:{
             closeHandle(){
                 this.$emit('closeHandle')
+            },
+        //    树形图
+            requestList(){
+                let vm =this
+                vm.$http.post('userControl/getRoleListAndStaffList',{
+
+                }).then(res=>{
+                    debugger
+                    if(res.code=='200'){
+
+                    }
+                })
             }
         },
     }

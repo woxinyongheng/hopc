@@ -87,63 +87,74 @@
                         width="50">
                 </el-table-column>
                 <el-table-column
-                        prop="date"
+                        prop="planTaskCode"
                         label="计划编号"
                         show-overflow-tooltip
                         width="180">
                     <template slot-scope="scope">
-                        <span  @click="showPlanInfo(scope.row,scope.row.id)" class="tableactive">{{scope.row.name}}</span>
+                        <span  @click="showPlanInfo(scope.row)" class="tableactive">{{scope.row.planTaskCode}}</span>
                     </template>
                 </el-table-column>
 
                 <el-table-column
-                        prop="name"
+                        prop="planName"
                         label="计划名称"
                         show-overflow-tooltip
                         width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="maintainType"
                         show-overflow-tooltip
 
                         label="保养类型">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.maintainType==0?'质保':'维保'}}</span>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="address"
                         show-overflow-tooltip
                         label="周期类型">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.cycleType==0">周</span>
+                        <span v-if="scope.row.cycleType==1">半月</span>
+                        <span v-if="scope.row.cycleType==2">月</span>
+                        <span v-if="scope.row.cycleType==3">季度</span>
+                        <span v-if="scope.row.cycleType==4">半年</span>
+                        <span v-if="scope.row.cycleType==5">年</span>
+                    </template>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="maintainName"
                         show-overflow-tooltip
 
                         label="保养项目">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="facilityTypeName"
                         show-overflow-tooltip
 
                         label="设备类型">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="facilityNum"
                         show-overflow-tooltip
 
                         label="设备数量">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="startTime"
                         show-overflow-tooltip
 
                         label="开始日期">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="endTime"
                         show-overflow-tooltip
                         label="结束日期">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="company"
                         show-overflow-tooltip
                         label="责任归属">
                 </el-table-column>
@@ -152,8 +163,10 @@
                         show-overflow-tooltip
                         label="状态">
                     <template slot-scope="scope">
-                        <span class="tablebtn-c1">进行中</span>
-                        <span class="tablebtn-c2">未完成</span>
+                        <span v-if="scope.row.taskState==0" class="tablebtn-c1">进行中</span>
+                        <span v-if="scope.row.taskState==1"  class="tablebtn-c2">未完成</span>
+                        <span v-if="scope.row.taskState==2" class="tablebtn-c1">已完成</span>
+
 
                     </template>
                 </el-table-column>
@@ -161,17 +174,19 @@
             <div class="page">
                 <el-pagination
                         :current-page="1"
-                        :page-sizes="[100, 200, 300, 400]"
+                        :page-sizes="[10, 20, 30, 50]"
                         :page-size="100"
+                        @size-change="pageSizeChange"
+                        @current-change="pageCurrentChange"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="400">
+                        :total="total">
                 </el-pagination>
             </div>
         </div>
         <el-dialog
                 title="计划任务"
                 :visible.sync="planInfoShow"
-                @close="closeHandle"
+                @close="planInfoShow=false"
                 width="1000px">
             <span slot="title" class="dialogtitle">
                 计划任务
@@ -187,6 +202,10 @@
         name: "PlanTask",
         data:function () {
             return{
+                //分页
+                total:0,
+                pageSize:10,
+                currentPage:1,
                 formInline:{
                     user:'',
                     region:'1',
@@ -224,10 +243,34 @@
 
             }
         },
+        mounted(){
+          this.requestList()
+        },
         methods:{
             showPlanInfo(){//记录单号
                 this.planInfoShow = true
             },
+            requestList(){
+                let vm =this
+                vm.$http.post('planTask/getPlanTaskList',{
+                    pageSize:vm.pageSize,
+                    currentPage:vm.currentPage,
+                }).then(res=>{
+                    if(res.code=='200'){
+                        vm.tableData = res.data.list
+                        vm.total = res.data.count*1
+                    }
+                })
+            },
+            //    分页
+            pageSizeChange(val){
+                this.pageSize =val
+                this.requestList()
+            },
+            pageCurrentChange(val){
+                this.currentPage =val
+                this.requestList()
+            }
         },
         components:{
             jihuarenwu

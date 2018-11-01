@@ -6,11 +6,11 @@
         </div>
         <div class="buttonbox">
             <div class="pullleft">
-                <el-tag>全部</el-tag>
-                <el-tag type="success">正常</el-tag>
-                <el-tag type="danger">延期</el-tag>
-                <el-tag type="warning">待维修</el-tag>
-                <el-button type="danger" size="mini" @click="shebeibaoxiuShow=true">设备报修</el-button>
+                <el-button plain @click="normalStateClick" size="mini" >全部</el-button>
+                <el-button plain type="success" @click="commonStateClick" size="mini" >正常</el-button>
+                <el-button plain type="danger" @click="pullStateClick" size="mini" >延期</el-button>
+                <el-button plain type="warning" @click="repairStateClick" size="mini" >待维修</el-button>
+                <el-button  type="danger" size="mini" @click="deviceRepairClick">设备报修</el-button>
                 <el-button type="warning" size="mini">导出</el-button>
             </div>
             <div class="pullright">
@@ -101,6 +101,7 @@
                     :data="tableData"
                     stripe
                     border
+                    @selection-change="handleSelectionChange"
                     style="width: 100%">
                 <el-table-column
                         type="selection"
@@ -215,7 +216,7 @@
             <span slot="title" class="dialogtitle">
                 设备报修
               </span>
-            <shebeibaoxiu @closeShebeiHandle="shebeibaoxiuShow=false" ></shebeibaoxiu>
+            <shebeibaoxiu :selectData="selectData" @closeShebeiHandle="shebeibaoxiuShow=false" ></shebeibaoxiu>
         </el-dialog>
     </div>
 </template>
@@ -231,6 +232,9 @@
                 total:0,
                 pageSize:10,
                 currentPage:1,
+                //状态控制
+                equipmentState:'',
+                repirState:'',
                 formInline:{
                     user:'',
                     region:'1',
@@ -267,7 +271,8 @@
                     address: '上海市普陀区金沙江路 1516 弄'
                 }],
                 shebeichakanShow:false,
-                shebeibaoxiuShow:false
+                shebeibaoxiuShow:false,
+                selectData:'',
             }
         },
         mounted(){
@@ -276,7 +281,7 @@
         methods:{
             showshebeiInfo(row){
                 let vm =this
-                vm.$http.post('/api/equipmentListController/GetEquipmentById',{
+                vm.$http.post('equipmentListController/GetEquipmentById',{
                     Id:row.equipmentId
                 }).then(res=>{
                     debugger
@@ -286,16 +291,46 @@
         //    获取列表
             requestList(){
                 let vm =this
-                vm.$http.post('/api/equipmentListController/equipmentList',{
+                vm.$http.post('equipmentListController/equipmentList',{
                     InterfaceNum:'1',
                     pageSize:vm.pageSize,
-                    currentPage:vm.currentPage
+                    currentPage:vm.currentPage,
+                    equipmentState:vm.equipmentState,
+                    repirState:vm.repirState
                 }).then(res=>{
                     if(res.code=='200'){
                         vm.total = res.data.count
                         vm.tableData = res.data.list
                     }
                 })
+            },
+        //    列表选择
+            handleSelectionChange(val){
+                this.selectData=val
+            },
+        //    设备报修
+            deviceRepairClick(){
+                this.shebeibaoxiuShow=true
+            },
+        //    状态控制
+            normalStateClick(){
+                this.repirState = ''
+                this.equipmentState=''
+                this.requestList()
+            },
+            commonStateClick(){
+                this.repirState = '0'
+                this.equipmentState='0'
+                this.requestList()
+            },
+            pullStateClick(){
+                this.equipmentState='1'
+                this.requestList()
+            },
+            repairStateClick(){
+                this.repirState = '1'
+                this.requestList()
+
             },
         //    分页
             pageSizeChange(val){

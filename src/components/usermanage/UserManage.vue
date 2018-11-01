@@ -84,7 +84,7 @@
 
                                 label="操作">
                             <template slot-scope="scope">
-                                <span @click="lookUser(scope.row.id)" class="tablebtn tablebtn-c1">查看用户</span>
+                                <span @click="lookUser(scope.row.roleCode)" class="tablebtn tablebtn-c1">查看用户</span>
 
                             </template>
                         </el-table-column>
@@ -96,14 +96,13 @@
                     </div>
                     <el-table
                             ref="multipleTable"
-                            :data="roleData"
+                            :data="userData"
                             stripe
                             border
                             style="width: 100%">
                         <el-table-column
                                 label="序号"
                                 show-overflow-tooltip
-
                                 type="index">
                         </el-table-column>
                         <el-table-column
@@ -113,13 +112,13 @@
                                 label="登录名">
                         </el-table-column>
                         <el-table-column
-                                prop="name"
+                                prop="officeName"
                                 show-overflow-tooltip
 
                                 label="所属部门">
                         </el-table-column>
                         <el-table-column
-                                prop="name"
+                                prop="hospitalName"
                                 show-overflow-tooltip
 
                                 label="上级机构">
@@ -154,10 +153,12 @@
                     <div class="page">
                         <el-pagination
                                 :current-page="1"
-                                :page-sizes="[100, 200, 300, 400]"
+                                :page-sizes="[10, 20, 30, 50]"
                                 :page-size="100"
+                                @size-change="pageSizeChange"
+                                @current-change="pageCurrentChange"
                                 layout="total, sizes, prev, pager, next, jumper"
-                                :total="400">
+                                :total="total">
                         </el-pagination>
                     </div>
                 </div></el-col>
@@ -197,8 +198,9 @@
         data:function(){
             return{
                 gridspan:24,
-                lookId:'',
-                roleData:[{name:'运保主管',id:1,status:0},{name:'运保主管',id:2,status:1},{name:'运保主管',id:3,status:0}],
+                roleCode:'',
+                roleData:[],
+                userData:[],
                 formInline:{
                     user:'',
                     region:''
@@ -208,32 +210,9 @@
                 filterShow:false,
                 // 分配用户
                 distributionUser:false,
-                distributionUserdata: [{
-                    label: '一级 1',
-                    children: [{
-                        label: '二级 1-1',
-                    }]
-                }, {
-                    label: '一级 2',
-                    children: [{
-                        label: '二级 2-1',
-                    }, {
-                        label: '二级 2-2',
-                    }]
-                }, {
-                    label: '一级 3',
-                    children: [{
-                        label: '二级 3-1',
-                    }, {
-                        label: '二级 3-2',
-                    }]
-                }],
-                defaultProps: {
-                    children: 'children',
-                    label: 'label'
-                },
                 currentPage:1,
-                pageSize:10
+                pageSize:10,
+                total:0
 
             }
         },
@@ -245,10 +224,11 @@
             searchClick(){
 
             },
-            lookUser(id){
+            lookUser(code){
                 let vm =this
                 vm.gridspan = 8
-                vm.lookId = id
+                vm.roleCode = code
+                vm.requestList()
             },
 
             deleteUser(id){
@@ -268,12 +248,28 @@
         //    列表信息
             requestList(){
                 let vm =this
-                vm.$http.post('/api/userControl/getRoleListAndStaffList',{
+                vm.$http.post('userControl/getRoleListAndStaffList',{
                     currentPage:vm.currentPage,
-                    pageSize:vm.pageSize
+                    pageSize:vm.pageSize,
+                    staffRole:vm.roleCode
                 }).then(res=>{
-                    debugger
+                    if(res.code=='200'){
+                        if(!vm.roleData.length){
+                            vm.roleData =  res.data.roleList
+                        }
+                        vm.userData = res.data.userList
+                        vm.total = res.data.userListCount
+                    }
                 })
+            },
+            //    分页
+            pageSizeChange(val){
+                this.pageSize =val
+                this.requestList()
+            },
+            pageCurrentChange(val){
+                this.currentPage =val
+                this.requestList()
             }
 
         },

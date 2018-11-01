@@ -1,17 +1,5 @@
 <template>
     <div class="left">
-        <div class="logobox">
-
-        </div>
-        <!--<el-collapse v-model="activeTitle"  class="itemsource"  @change="handleChange">-->
-            <!--<el-collapse-item v-for="(item,index) in $store.state.itemList" :key="index" :name="item.id">-->
-                <!--<template slot="title">-->
-                    <!--<img class="leftlistimg" src="../../../static/images/list.png" alt="">-->
-                    <!--<span class="lefttitle">{{item.menuName}}</span>-->
-                <!--</template>-->
-                <!--<div v-for="(i,ii) in item.list" :key="ii" class="leftlist" :class="activePath==i.path?'active':''" @click="handleNodeClick(i.path,item.id)">{{i.menuName}}</div>-->
-            <!--</el-collapse-item>-->
-        <!--</el-collapse>-->
         <el-menu
                 :default-active="activePath"
                 class="el-menu-vertical-demo"
@@ -20,13 +8,13 @@
                 unique-opened
                 text-color="#fff"
                 active-text-color="#66a3ff">
-            <el-submenu v-for="(item,index) in $store.state.itemList" :index="item.id+''" :key="index">
+            <el-submenu v-for="(item,index) in $store.state.itemList" :index="item.menuId+''" :key="index">
                 <template slot="title">
                     <img class="leftlistimg" src="../../../static/images/list.png" alt="">
                     <span>{{item.menuName}}</span>
                 </template>
                 <el-menu-item-group v-for="(it,ii) in item.list" :key="ii">
-                    <el-menu-item :index="it.path">{{it.menuName}}</el-menu-item>
+                    <el-menu-item :index="it.menuHref">{{it.menuName}}</el-menu-item>
                 </el-menu-item-group>
             </el-submenu>
         </el-menu>
@@ -43,7 +31,7 @@
                   children: 'list',
                   label: 'menuName'
               },
-              activePath:sessionStorage.getItem('activePath') || 'index',
+              activePath:sessionStorage.getItem('activePath') || this.$store.state.itemList[0].list[0].menuHref,
 
           }
         },

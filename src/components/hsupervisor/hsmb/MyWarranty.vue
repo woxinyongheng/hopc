@@ -95,76 +95,84 @@
                         width="50">
                 </el-table-column>
                 <el-table-column
-                        prop="date"
+                        prop="repairCode"
                         label="记录单号"
                         show-overflow-tooltip>
                     <template slot-scope="scope">
-                        <span  @click="showOrderInfo(scope.row,scope.row.id)" class="tableactive">{{scope.row.name}}</span>
+                        <span  @click="showOrderInfo(scope.row)" class="tableactive">{{scope.row.repairCode}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
-                        prop="name"
-                        label="保修时间"
+                        prop="reportTime"
+                        label="报修时间"
                         show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="repairPersonName"
                         show-overflow-tooltip
 
                         label="报修人">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="assetsCode"
                         show-overflow-tooltip
                         label="设备编号">
                     <template slot-scope="scope">
-                        <span  @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.name}}</span>
+                        <span  @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.assetsCode}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="assetsName"
                         show-overflow-tooltip
 
                         label="设备名称">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="classifyName"
                         show-overflow-tooltip
 
                         label="设备类别">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="areaName"
                         show-overflow-tooltip
 
                         label="所在区域">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="storageLocation"
                         show-overflow-tooltip
 
                         label="存放地点">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="liabilityName"
                         show-overflow-tooltip
 
                         label="责任归属">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="state"
                         show-overflow-tooltip
-
                         label="状态">
+                    <template slot-scope="scope">
+                        <el-tag v-if="scope.row.status==3" type="success">已完成</el-tag>
+                        <el-tag v-if="scope.row.status==2"  type="info">已派工</el-tag>
+                        <el-tag v-if="scope.row.status==1"  type="warning">已挂单</el-tag>
+                        <el-tag v-if="scope.row.status==0"  type="danger">未处理</el-tag>
+                    </template>
+
                 </el-table-column>
             </el-table>
             <div class="page">
                 <el-pagination
                         :current-page="1"
-                        :page-sizes="[100, 200, 300, 400]"
+                        :page-sizes="[10, 20, 30, 50]"
                         :page-size="100"
+                        @size-change="pageSizeChange"
+                        @current-change="pageCurrentChange"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="400">
+                        :total="total">
                 </el-pagination>
             </div>
         </div>
@@ -176,7 +184,7 @@
             <span slot="title" class="dialogtitle">
                 查看页面
               </span>
-            <jiludanhao @closeOrderHandle="jiludanhaoShow=false"></jiludanhao>
+            <jiludanhao :orderData="orderData" @closeOrderHandle="jiludanhaoShow=false"></jiludanhao>
         </el-dialog>
         <el-dialog
                 title="设备查看"
@@ -198,6 +206,11 @@
         name: "MyWarranty",
         data:function () {
             return{
+                //分页
+                total:0,
+                pageSize:10,
+                currentPage:1,
+                orderData:'',
                 formInline:{
                     user:'',
                     region:'1',
@@ -214,30 +227,18 @@
                     value: 'label',
                     children: 'cities'
                 },
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }],
+                tableData: [],
                 jiludanhaoShow:false,
                 shebeichakanShow:false
 
             }
         },
+        mounted(){
+          this.requestList()
+        },
         methods:{
-            showOrderInfo(){//记录单号
+            showOrderInfo(row){//记录单号
+                this.orderData=row
                 this.jiludanhaoShow = true
             },
             closeHandle(){
@@ -250,6 +251,27 @@
             closeShebeiHandle(){
                 this.shebeichakanShow=false
 
+            },
+            requestList(){
+                let vm =this
+                vm.$http.post('equipmentListController/getMyRepairs',{
+                    pageSize:vm.pageSize,
+                    currentPage:vm.currentPage,
+                }).then(res=>{
+                    if(res.code=='200'){
+                        vm.tableData = res.data.list
+                        vm.total = res.data.count
+                    }
+                })
+            },
+            //    分页
+            pageSizeChange(val){
+                this.pageSize =val
+                this.requestList()
+            },
+            pageCurrentChange(val){
+                this.currentPage =val
+                this.requestList()
             }
         },
         components:{

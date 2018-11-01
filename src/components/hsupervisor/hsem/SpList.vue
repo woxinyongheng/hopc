@@ -88,27 +88,27 @@
                         width="50">
                 </el-table-column>
                 <el-table-column
-                        prop="date"
+                        prop="recordCode"
                         label="记录单号"
                         show-overflow-tooltip
                         width="180">
                     <template slot-scope="scope">
-                        <span  @click="showOrderInfo(scope.row,scope.row.id)" class="tableactive">{{scope.row.name}}</span>
+                        <span  @click="showOrderInfo(scope.row)" class="tableactive">{{scope.row.recordCode}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
-                        prop="name"
+                        prop="createTime"
                         label="处理时间"
                         show-overflow-tooltip
                         width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="createPersonName"
                         show-overflow-tooltip
                         label="处理人">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="confirmPersonName"
                         show-overflow-tooltip
                         label="确认人">
                 </el-table-column>
@@ -117,36 +117,36 @@
                         show-overflow-tooltip
                         width="80">
                     <template slot-scope="scope">
-                        <img class="tebleimg" src="../../../../static/images/avatar.png" alt="">
+                        <img class="tebleimg" :src="scope.row.picture" alt="">
                     </template>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="equipmentNumber"
                         show-overflow-tooltip
                         label="设备编号">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="assetsName"
                         show-overflow-tooltip
                         label="设备名称">
                     <template slot-scope="scope">
-                        <span  @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.name}}</span>
+                        <span  @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.assetsName}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="classifyName"
                         show-overflow-tooltip
 
                         label="设备类别">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="brandName"
                         show-overflow-tooltip
 
                         label="设备品牌">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="model"
                         show-overflow-tooltip
                         label="规格型号">
                 </el-table-column>
@@ -154,10 +154,12 @@
             <div class="page">
                 <el-pagination
                         :current-page="1"
-                        :page-sizes="[100, 200, 300, 400]"
+                        :page-sizes="[10, 20, 30, 50]"
                         :page-size="100"
+                        @size-change="pageSizeChange"
+                        @current-change="pageCurrentChange"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="400">
+                        :total="total">
                 </el-pagination>
             </div>
         </div>
@@ -169,7 +171,7 @@
             <span slot="title" class="dialogtitle">
                 查看页面
               </span>
-            <baofeidanhao @closeShebeiHandle="baofeidanhao=false"></baofeidanhao>
+            <baofeidanhao :orderData="orderData" @closeShebeiHandle="baofeidanhao=false"></baofeidanhao>
         </el-dialog>
         <el-dialog
                 title="设备查看"
@@ -192,6 +194,11 @@
         name: "SpList",
         data:function () {
             return{
+                //分页
+                total:0,
+                pageSize:10,
+                currentPage:1,
+                orderData:'',
                 formInline:{
                     user:'',
                     region:'1',
@@ -208,30 +215,18 @@
                     value: 'label',
                     children: 'cities'
                 },
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }],
+                tableData: [],
                 baofeidanhao:false,
                 shebeichakanShow:false
 
             }
         },
+        mounted(){
+            this.requestList()
+        },
         methods:{
-            showOrderInfo(){//记录单号
+            showOrderInfo(row){//记录单号
+                this.orderData =row
                 this.baofeidanhao = true
             },
             closeHandle(){
@@ -244,6 +239,29 @@
             closeShebeiHandle(){
                 this.shebeichakanShow=false
 
+            },
+
+            requestList(){
+                let vm =this
+                vm.$http.post('equipmentRecordController/findList',{
+                    pageSize:vm.pageSize,
+                    currentPage:vm.currentPage,
+                    category:'1'
+                }).then(res=>{
+                    if(res.code=='200'){
+                        vm.tableData = res.data.list
+                        vm.total = res.data.count
+                    }
+                })
+            },
+            //    分页
+            pageSizeChange(val){
+                this.pageSize =val
+                this.requestList()
+            },
+            pageCurrentChange(val){
+                this.currentPage =val
+                this.requestList()
             }
         },
         components:{

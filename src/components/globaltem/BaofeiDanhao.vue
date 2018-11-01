@@ -6,15 +6,15 @@
                     <tbody>
                     <tr>
                         <td class="table-title">记录单号</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{data.recordCode}}</td>
                         <td class="table-title">处理时间</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{data.processTime}}</td>
                         <td class="table-title">处理人</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{data.processPersonName}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">确认人</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{data.confirmPersonName}}</td>
                         <td class="table-title"></td>
                         <td class="table-content"></td>
                         <td class="table-title"></td>
@@ -22,11 +22,11 @@
                     </tr>
                     <tr>
                         <td class="table-title">处理说明</td>
-                        <td class="table-content" colspan="5"></td>
+                        <td class="table-content" colspan="5">{{data.remarks}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">相关附件</td>
-                        <td class="table-content" colspan="5"></td>
+                        <td class="table-content" colspan="5">{{data.contentAttachmentUrl}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -37,13 +37,13 @@
                     <tbody>
                     <tr>
                         <td class="table-title">报废确定人</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{data.scrapConfirmPersonName}}</td>
                         <td class="table-title">报废原因</td>
-                        <td class="table-content" colspan="3"></td>
+                        <td class="table-content" colspan="3">{{data.scrapReason}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">相关附件</td>
-                        <td class="table-content" colspan="5"></td>
+                        <td class="table-content" colspan="5">{{data.monitoringContentAttachmentUrl}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -54,13 +54,13 @@
                     <tbody>
                     <tr>
                         <td class="table-title">报废处理人</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{data.scrapHandlePersonName}}</td>
                         <td class="table-title">处理方式</td>
-                        <td class="table-content" colspan="3"></td>
+                        <td class="table-content" colspan="3">{{data.processModeName}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">相关附件</td>
-                        <td class="table-content" colspan="5"></td>
+                        <td class="table-content" colspan="5">{{data.handleContentAttachmentUrl}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -75,13 +75,30 @@
 <script>
     export default {
         name: "BaofeiDanhao",
+        props:['orderData'],
         data:function () {
             return{
+                data:''
             }
+        },
+        mounted(){
+            this.requesInfo()
         },
         methods:{
             closeHandle(){
                 this.$emit('closeShebeiHandle')
+            },
+            requesInfo(){
+                let vm =this
+                vm.$http.post('equipmentRecordController/findRecord',{
+                    id:vm.orderData.id,
+                    category:'1'
+                }).then(res=>{
+                    vm.data=res.data[0]
+                    if(res.code=='200'){
+                        vm.data=res.data[0]
+                    }
+                })
             }
         },
 

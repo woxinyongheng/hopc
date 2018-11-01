@@ -31,34 +31,21 @@
             if(!vm.userName || !vm.password){
               return
             }
-            // vm.$http.post('/api/userLoginController/userLogin', {
-            //     userName: vm.userName,
-            //     passWord: vm.password
-            //   }
-            // ).then(function (res) {
-            //   if(res.code==200){
-            //
-            //     var obj = {}
-            //     obj.companyCode = res.data.companyCode
-            //     obj.hospitalCode = res.data.hospitalCode
-            //     obj.hospitalName = res.data.hospitalName
-            //     obj.id = res.data.id
-            //     obj.name = res.data.name
-            //     obj.officeCode = res.data.officeCode
-            //     obj.roleCode = res.data.roleCode
-            //     obj.roleName = res.data.roleName
-            //     obj.unitCode = res.data.unitCode
-            //     obj.unitName = res.data.unitName
-            //     obj.unitCode = res.data.unitCode
-            //     obj.type = res.data.type
-            //     vm.$store.commit('listChange')
-            //     localStorage.setItem('LIST',JSON.stringify(res.data.menuList))
-            //     localStorage.setItem('LOGINDATA',JSON.stringify(obj))
-            //     vm.$store.commit('loginChangeTrue')
-            //     vm.$router.push('/index')
-            //   }
+            vm.$http.post('userLoginController/userLogin', {
+                userNames: vm.userName,
+                password: vm.password
+              }
+            ).then(function (res) {
+              if(res.code==200){
+                  localStorage.setItem('LOGINDATA',JSON.stringify(res.data))
+                  localStorage.setItem('LIST',JSON.stringify(res.data.menuList))
+                  vm.$store.commit('listChange')
 
-            // })
+                  vm.$store.commit('loginChangeTrue')
+                  vm.$router.push('/index')
+              }
+
+            })
             // var obj = {
             //   unitCode:'BJSCSYGJ',
             //   hospitalCode:'ZXYSHJ',
@@ -67,8 +54,8 @@
             //   roleCode:'corpAdmin,default'
             // }
             // localStorage.setItem('LOGINDATA',JSON.stringify(obj))
-            this.$store.commit('loginChangeTrue')
-            this.$router.push('/index')
+            // this.$store.commit('loginChangeTrue')
+            // this.$router.push('/index')
           }
         }
     }

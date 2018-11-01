@@ -30,7 +30,7 @@ Vue.config.productionTip = false
 
 //axios 请求与响应配置
 
-// axios.defaults.baseURL = __PATH.FULLPATH;
+axios.defaults.baseURL = __PATH.FULLPATH;
 axios.defaults.withCredentials=false //不设置
 Vue.prototype.$http = {
     get: (url, param, flag) => {
@@ -63,7 +63,7 @@ Vue.prototype.$http = {
 //全局请求响应配置
 axios.interceptors.request.use(config => { //spinShowSet
     store.commit('spinShowSet',true)
-    // config.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8'
+    config.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8'
 
     return config
 }, error =>{

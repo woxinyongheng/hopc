@@ -5,30 +5,30 @@
                 <el-form :inline="true" :model="formInline" class="demo-form-inline" style="display: flex;justify-content: space-between;margin-left: 10px">
                     <el-form-item label="报修日期" required>
                         <el-date-picker
-                                v-model="formInline.user"
+                                v-model="formInline.reportTime"
                                 type="date"
                                 placeholder="选择日期">
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="报修人" required>
-                        <el-select v-model="formInline.region" placeholder="报修人">
+                        <el-select v-model="formInline.reportPersonCode" placeholder="报修人">
                             <el-option label="区域一" value="shanghai"></el-option>
                             <el-option label="区域二" value="beijing"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="报修人电话" >
-                        <el-input v-model="formInline.user"></el-input>
+                        <el-input v-model="formInline.reportPersonPhone"></el-input>
                     </el-form-item>
                 </el-form>
                 <el-form ref="form" :model="formInline" label-width="80px"  style="padding-right: 10px">
 
                     <el-form-item label="报修说明">
-                        <el-input type="textarea" v-model="formInline.user"></el-input>
+                        <el-input type="textarea" v-model="formInline.repairExplain"></el-input>
                     </el-form-item>
                 </el-form>
                 <el-form :model="formInline" label-width="80px">
                     <el-form-item label="相关附件">
-
+                        <upload></upload>
                     </el-form-item>
                 </el-form>
 
@@ -37,44 +37,48 @@
             </div>
         </div>
         <div class="dialogfooter" style="text-align: right">
-            <el-button type="primary" size="small" @click="closeHandle">确认</el-button>
+            <el-button type="primary" size="small" @click="sureRepair">确认</el-button>
             <el-button  size="small" @click="closeHandle">取消</el-button>
         </div>
     </div>
 </template>
 
 <script>
+    import upload from '@/components/globaltem/UpLoad'
     export default {
         name: "Shebeibaoxiu",
+        props:['selectData'],
         data:function () {
             return{
                 activeName:'first',
-                tableData:[
-                    {
-                        date: '2016-05-04',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1517 弄'
-                    },{
-                        date: '2016-05-04',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1517 弄'
-                    },{
-                        date: '2016-05-04',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1517 弄'
-                    },
-                ],
                 formInline: {
-                    user: '',
-                    region: ''
+                    reportTime:'',
+                    reportPersonCode:'',
+                    reportPersonName:'',
+                    reportPersonPhone:'',
+                    repairExplain:'',
+                    repairContentAttachmentUrl:'',
+                    repairAttachmentUrl:'',
                 }
             }
         },
         methods:{
             closeHandle(){
                 this.$emit('closeShebeiHandle')
+            },
+            sureRepair(){
+                let vm =this
+                vm.$http.post('equipmentListController/equipmentRepair',{
+                    createPersonCode:'',
+                    createPersonName:'',
+                    createPersonPhone:'13267898877',
+                    reportTime:'',
+                })
             }
         },
+        components:{
+            upload
+        }
     }
 </script>
 
