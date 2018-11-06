@@ -6,15 +6,15 @@
                     <tbody>
                     <tr>
                         <td class="table-title">设备编码</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{deviceData.typeCode}}</td>
                         <td class="table-title">设备管理员</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{deviceData.eqAdminName}}</td>
                         <td class="table-title"></td>
                         <td class="table-content"></td>
                     </tr>
                     <tr>
                         <td class="table-title">备注</td>
-                        <td class="table-content" colspan="5"></td>
+                        <td class="table-content" colspan="5">{{deviceData.eqAdminRemarks}}</td>
                     </tr>
 
                     </tbody>
@@ -31,6 +31,7 @@
 <script>
     export default {
         name: "Shebeileibie",
+        props:['deviceData'],
         data:function () {
             return{
             }

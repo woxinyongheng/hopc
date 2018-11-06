@@ -6,14 +6,14 @@
         </div>
         <div class="buttonbox">
             <div class="pullleft">
-                <el-tag type="success">同步</el-tag>
+                <el-button type="success" plain size="mini" @click="syncDevice">同步</el-button>
                 <el-button type="warning" size="mini">导出</el-button>
             </div>
             <div class="pullright">
-                <el-button type="success" size="mini" icon="el-icon-search">检索</el-button>
+                <el-button type="success" size="mini" icon="el-icon-search" @click="filterShow=!filterShow">检索</el-button>
             </div>
         </div>
-        <div class="filterbox">
+        <div class="filterbox" v-if="filterShow">
             <el-row>
                 <el-col :span="21">
                     <div class="grid-content">
@@ -74,24 +74,24 @@
                 </el-table-column>
                 <el-table-column
                         label="设备编号"
-                        prop="status"
-                        width="80">
+                        prop="typeCode"
+                        show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="typeName"
                         show-overflow-tooltip
                         label="设备类别">
                     <template slot-scope="scope">
-                        <span  @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.name}}</span>
+                        <span  @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.typeName}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="eqAdminName"
                         show-overflow-tooltip
                         label="设备管理员">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="eqAdminRemarks"
                         show-overflow-tooltip
                         label="备注">
                 </el-table-column>
@@ -100,8 +100,8 @@
                         show-overflow-tooltip
                         label="操作">
                     <template slot-scope="scope">
-                        <span  class="tablebtn tablebtn-c1" @click="feipeiguanliyuanshowClick(scope.row)">管理任务分配</span>
-                        <span  @click="editClick(scope.row)" class="tablebtn tablebtn-c2">编辑</span>
+                        <span  v-if="!scope.row.eqAdminName" class="tablebtn tablebtn-c1" @click="feipeiguanliyuanshowClick(scope.row)">管理任务分配</span>
+                        <span v-if="scope.row.eqAdminName" @click="editClick(scope.row)" class="tablebtn tablebtn-c2">编辑</span>
 
                     </template>
                 </el-table-column>
@@ -109,10 +109,12 @@
             <div class="page">
                 <el-pagination
                         :current-page="1"
-                        :page-sizes="[100, 200, 300, 400]"
+                        :page-sizes="[10, 20, 30, 50]"
                         :page-size="100"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="400">
+                        @size-change="pageSizeChange"
+                        @current-change="pageCurrentChange"
+                        :total="total">
                 </el-pagination>
             </div>
         </div>
@@ -124,7 +126,7 @@
             <span slot="title" class="dialogtitle">
                 设备查看
               </span>
-            <shebeichakan @editHandle="editHandle"  @closeShebeiHandle="shebeichakanShow=false" ></shebeichakan>
+            <shebeichakan :deviceData="deviceData" @editHandle="editHandle"  @closeShebeiHandle="shebeichakanShow=false" ></shebeichakan>
         </el-dialog>
         <el-dialog
                 title="分配任务管理员"
@@ -134,7 +136,7 @@
             <span slot="title" class="dialogtitle">
                 分配任务管理员
               </span>
-            <feipeiguanliyuan  @closeShebeiHandle="feipeiguanliyuanshow=false" ></feipeiguanliyuan>
+            <feipeiguanliyuan :deviceData="deviceData" :adminList="adminList" @closeShebeiHandle="feipeiguanliyuanshow=false" ></feipeiguanliyuan>
         </el-dialog>
         <el-dialog
                 title="编辑页面"
@@ -144,7 +146,7 @@
             <span slot="title" class="dialogtitle">
                 编辑页面
               </span>
-            <feipeiguanliyuan @closeShebeiHandle="editShow=false" ></feipeiguanliyuan>
+            <feipeiguanliyuan :deviceData="deviceData" :adminList="adminList" @closeShebeiHandle="editShow=false" ></feipeiguanliyuan>
         </el-dialog>
     </div>
 </template>
@@ -158,6 +160,11 @@
         name: "TaList",
         data:function () {
             return{
+                //分页
+                total:0,
+                pageSize:10,
+                currentPage:1,
+                filterShow:false,
                 formInline:{
                     user:'',
                     region:'',
@@ -175,43 +182,79 @@
                     children: 'cities'
                 },
                 frequencyData:[{label:'='},{label:'!='},{label:'>='},{label:'=<'},{label:'>'},{label:'<'}],
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    status:'延期使用',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }],
+                tableData: [],
                 shebeichakanShow:false,
                 feipeiguanliyuanshow:false,
-                editShow:false
+                editShow:false,
+                deviceData:{},
+                adminList:[]
             }
         },
+        mounted(){
+          this.requestList()
+            this.requestAdmin()
+        },
         methods:{
-            showshebeiInfo(){
+            requestList(){
+                let vm =this
+                vm.$http.post('/equipmentConfigController/getEquipmentOfCompanyList',{
+                    pageSize:vm.pageSize,
+                    currentPage:vm.currentPage,
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.tableData = res.data.deviceConfigList
+                        vm.total = res.data.sum
+                    }
+                })
+            },
+            //获取设备管理员
+            requestAdmin(){
+              let vm =this
+              vm.$http.post('/userControl/getDeviceManagerList',{}).then(res=>{
+                  if(res.code==200){
+                      vm.adminList = res.data.userList
+                  }
+              })
+            },
+            //同步
+            syncDevice(){
+                debugger
+                let vm =this
+                vm.$http.post('/equipmentConfigController/synchronousDeviceType',{}).then(res=>{
+                    if(res.code==200){
+                        vm.$message({
+                            message: res.message,
+                            type: 'success'
+                        });
+                    }
+                })
+            },
+            showshebeiInfo(row){
+                this.deviceData = row
                 this.shebeichakanShow =true
             },
-            feipeiguanliyuanshowClick(){
+            feipeiguanliyuanshowClick(row){
+                this.deviceData = row
                 this.feipeiguanliyuanshow =true
             },
-            editClick(){
+            editClick(row){
+                debugger
+                this.deviceData = row
               this.editShow = true
             },
             editHandle(){
                 this.shebeichakanShow = false
                 this.editShow = true
 
+            },
+            //    分页
+            pageSizeChange(val){
+                this.pageSize =val
+                this.requestList()
+            },
+            pageCurrentChange(val){
+                this.currentPage =val
+                this.requestList()
             }
         },
         components:{

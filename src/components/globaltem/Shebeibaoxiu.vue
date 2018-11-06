@@ -12,8 +12,7 @@
                     </el-form-item>
                     <el-form-item label="报修人" required>
                         <el-select v-model="formInline.reportPersonCode" placeholder="报修人">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
+                            <el-option v-for="item in customList" :label="item.name" :value="item.staffId"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="报修人电话" >
@@ -59,8 +58,19 @@
                     repairExplain:'',
                     repairContentAttachmentUrl:'',
                     repairAttachmentUrl:'',
-                }
+                },
+                customList:[]
             }
+        },
+        mounted(){
+            let vm =this
+            debugger
+            vm.$http.post('http://218.247.12.42:8196/staffController/getHospitalStaffList',{}).then(res=>{
+                if(res.code==200){
+                    vm.customList = res.data
+                }
+            })
+
         },
         methods:{
             closeHandle(){
@@ -68,11 +78,30 @@
             },
             sureRepair(){
                 let vm =this
+                let _index = vm.customList.findIndex(function (item) {
+                    return item.staffId == vm.formInline.reportPersonCode
+                })
+                vm.formInline.reportPersonName = vm.customList[_index].name
                 vm.$http.post('equipmentListController/equipmentRepair',{
-                    createPersonCode:'',
-                    createPersonName:'',
+                    createPersonCode:JSON.parse(localStorage.getItem('LOGINDATA')).id,
+                    createPersonName:JSON.parse(localStorage.getItem('LOGINDATA')).name,
                     createPersonPhone:'13267898877',
-                    reportTime:'',
+                    reportTime:vm.formInline.reportTime,
+                    reportPersonCode:vm.formInline.reportPersonCode,
+                    reportPersonName:vm.formInline.reportPersonName,
+                    reportPersonPhone:vm.formInline.reportPersonPhone,
+                    repairExplain:vm.formInline.repairExplain,
+                    repairContentAttachmentUrl:vm.formInline.repairContentAttachmentUrl,
+                    repairAttachmentUrl:vm.formInline.repairAttachmentUrl,
+                    equipmentId:vm.selectData[0].equipmentId
+                }).then(res=>{
+                    if(res.status==200){
+                        vm.$message({
+                            message: res.message,
+                            type: 'success'
+                        });
+                        vm.$emit('closeShebeiHandle')
+                    }
                 })
             }
         },
