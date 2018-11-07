@@ -9,61 +9,59 @@
                 <el-button type="warning" size="mini">导出</el-button>
             </div>
             <div class="pullright">
-                <el-button type="success" size="mini" icon="el-icon-search">检索</el-button>
+                <el-button type="success" size="mini" icon="el-icon-search" @click="filterShow=!filterShow">检索</el-button>
             </div>
         </div>
-        <div class="filterbox">
+        <div class="filterbox" v-if="filterShow">
             <el-row>
                 <el-col :span="21"><div class="grid-content">
                     <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
                         <el-form-item label="记录单号">
-                            <el-input v-model="formInline.user" placeholder="记录单号"></el-input>
+                            <el-input v-model="formInline.recordCode" placeholder="记录单号"></el-input>
                         </el-form-item>
                         <el-form-item label="处理时间">
                             <el-date-picker
-                                    v-model="formInline.user"
+                                    v-model="formInline.starTime"
                                     type="date"
                                     placeholder="开始日期">
                             </el-date-picker>
                         </el-form-item>
                         <el-form-item label="至">
                             <el-date-picker
-                                    v-model="formInline.user"
+                                    v-model="formInline.endTime"
                                     type="date"
                                     placeholder="结束日期">
                             </el-date-picker>
                         </el-form-item>
                         <el-form-item label="处理人">
-                            <el-input v-model="formInline.user" placeholder="处理人"></el-input>
+                            <el-input v-model="formInline.createPersonName" placeholder="处理人"></el-input>
                         </el-form-item>
-                        <el-form-item label="处理说明">
-                            <el-input v-model="formInline.user" placeholder="确认人"></el-input>
+                        <el-form-item label="确认人">
+                            <el-input v-model="formInline.confirmPersonName" placeholder="确认人"></el-input>
                         </el-form-item>
                         <el-form-item label="设备编号">
-                            <el-input v-model="formInline.user" placeholder="设备编号"></el-input>
+                            <el-input v-model="formInline.equipmentNumber" placeholder="设备编号"></el-input>
                         </el-form-item>
                         <el-form-item label="设备名称">
-                            <el-input v-model="formInline.user" placeholder="设备名称"></el-input>
+                            <el-input v-model="formInline.equipmentName" placeholder="设备名称"></el-input>
                         </el-form-item>
                         <el-form-item label="设备类别">
-                            <el-cascader
-                                    :options="options"
-                                    v-model="formInline.tree"
-                                    :props="props">
-                            </el-cascader>
+                            <el-select v-model="formInline.equipmentTypeId" placeholder="设备类别">
+                                <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeCode"></el-option>
+                            </el-select>
                         </el-form-item>
                         <el-form-item label="设备品牌">
-                            <el-input v-model="formInline.user" placeholder="设备品牌"></el-input>
+                            <el-input v-model="formInline.brandName" placeholder="设备品牌"></el-input>
                         </el-form-item>
                         <el-form-item label="规格型号">
-                            <el-input v-model="formInline.user" placeholder="规格型号"></el-input>
+                            <el-input v-model="formInline.model" placeholder="规格型号"></el-input>
                         </el-form-item>
 
                     </el-form>
                 </div></el-col>
                 <el-col :span="3"><div class="grid-content searchbox">
-                    <el-button type="primary" size="mini" icon="el-icon-search">搜索</el-button>
-                    <el-button  size="mini" icon="el-icon-refresh">重置</el-button>
+                    <el-button type="primary" size="mini" icon="el-icon-search" @click="searchClick">搜索</el-button>
+                    <el-button  size="mini" icon="el-icon-refresh" @click="resetSearch">重置</el-button>
                 </div></el-col>
             </el-row>
 
@@ -71,10 +69,12 @@
         <div class="contentbox">
             <div class="batchSelectLabel">
                 <i class="el-icon-warning"></i>
-                已选择<span>0</span>项
+                已选择<span>{{selectData.length}}</span>项
             </div>
             <el-table
                     :data="tableData"
+                    @selection-change="handleSelectionChange"
+
                     stripe
                     border
                     style="width: 100%">
@@ -130,7 +130,7 @@
                         show-overflow-tooltip
                         label="设备名称">
                     <template slot-scope="scope">
-                        <span  @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.name}}</span>
+                        <span  @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.assetsName}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -181,7 +181,7 @@
             <span slot="title" class="dialogtitle">
                 设备查看
               </span>
-            <shebeichuli @closeShebeiHandle="shebeichakanShow=false" ></shebeichuli>
+            <shebeichuli  :deviceData="deviceData" @closeShebeiHandle="shebeichakanShow=false" ></shebeichuli>
         </el-dialog>
     </div>
 </template>
@@ -198,33 +198,57 @@
                 total:0,
                 pageSize:10,
                 currentPage:1,
+                filterShow:false,
+                selectData:[],
+                typeList:[],
                 orderData:'',
                 formInline:{
-                    user:'',
-                    region:'1',
-                    tree:[]
-                },
-                options: [{
-                    label: '江苏',
-                    cities: []
-                }, {
-                    label: '浙江',
-                    cities: []
-                }],
-                props: {
-                    value: 'label',
-                    children: 'cities'
+                    recordCode:'',
+                    starTime:'',
+                    endTime:'',
+                    createPersonName:'',
+                    confirmPersonName:'',
+                    equipmentNumber:'',
+                    equipmentName:'',
+                    equipmentTypeId:'',
+                    brandName:'',
+                    model:''
                 },
                 tableData: [],
                 zhibaochulishow:false,
-                shebeichakanShow:false
+                shebeichakanShow:false,
+                deviceData:{list:[]}
 
             }
         },
         mounted(){
             this.requestList()
+            this.requestType()
         },
         methods:{
+            //列表筛选
+            searchClick(){
+                this.requestList()
+            },
+            resetSearch(){
+                this.formInline = {
+                    recordCode:'',
+                    starTime:'',
+                    endTime:'',
+                    createPersonName:'',
+                    confirmPersonName:'',
+                    equipmentNumber:'',
+                    equipmentName:'',
+                    equipmentTypeId:'',
+                    brandName:'',
+                    model:''
+                }
+                this.requestList()
+            },
+            //    列表选择
+            handleSelectionChange(val){
+                this.selectData=val
+            },
             showOrderInfo(row){//记录单号
                 this.orderData = row
                 this.zhibaochulishow = true
@@ -233,8 +257,16 @@
                 this.zhibaochulishow = false
 
             },
-            showshebeiInfo(){//设备编号
-                this.shebeichakanShow=true
+            showshebeiInfo(row){//设备编号
+                let vm =this
+                vm.$http.post('equipmentListController/GetEquipmentById',{
+                    id:row.equipmentId
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.deviceData = res.data
+                        vm.shebeichakanShow =true
+                    }
+                })
             },
             closeShebeiHandle(){
                 this.shebeichakanShow=false
@@ -245,11 +277,30 @@
                 vm.$http.post('equipmentRecordController/findList',{
                     pageSize:vm.pageSize,
                     currentPage:vm.currentPage,
-                    category:'2'
+                    category:'2',
+                    recordCode:vm.formInline.recordCode,
+                    starTime:vm.formInline.starTime,
+                    endTime:vm.formInline.endTime,
+                    createPersonName:vm.formInline.createPersonName,
+                    confirmPersonName:vm.formInline.confirmPersonName,
+                    equipmentNumber:vm.formInline.equipmentNumber,
+                    equipmentName:vm.formInline.equipmentName,
+                    equipmentTypeId:vm.formInline.equipmentTypeId,
+                    brandName:vm.formInline.brandName,
+                    model:vm.formInline.model,
                 }).then(res=>{
                     if(res.code=='200'){
                         vm.tableData = res.data.list
                         vm.total = res.data.count
+                    }
+                })
+            },
+            //    获取设备分类列表
+            requestType(){
+                let vm =this
+                vm.$http.post('equipmentConfigController/getDeviceTypeList',{}).then(res=>{
+                    if(res.code=='200'){
+                        vm.typeList = res.data
                     }
                 })
             },

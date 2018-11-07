@@ -73,11 +73,12 @@
         <div class="contentbox">
             <div class="batchSelectLabel">
                 <i class="el-icon-warning"></i>
-                已选择<span>0</span>项
+                已选择<span>{{selectData.length}}</span>项
             </div>
             <el-table
                     :data="tableData"
                     stripe
+                    @selection-change="handleSelectionChange"
                     border
                     style="width: 100%">
                 <el-table-column
@@ -228,7 +229,8 @@
                 jiludanhaoShow:false,
                 shebeichakanShow:false,
                 orderData:'',
-                deviceData:{list:[]}
+                deviceData:{list:[]},
+                selectData:[]
 
             }
         },
@@ -237,6 +239,10 @@
             this.requestType()
         },
         methods:{
+            //    列表选择
+            handleSelectionChange(val){
+                this.selectData=val
+            },
             searchClick(){
                 this.requestList()
             },

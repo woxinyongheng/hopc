@@ -101,41 +101,51 @@
                         width="50">
                 </el-table-column>
                 <el-table-column
-                        prop="date"
+                        prop="maintainCode"
                         label="记录单号"
                         show-overflow-tooltip
                         width="180">
                     <template slot-scope="scope">
-                        <span  @click="showOrderInfo(scope.row,scope.row.id)" class="tableactive">{{scope.row.name}}</span>
+                        <span  @click="showOrderInfo(scope.row,scope.row.id)" class="tableactive">{{scope.row.maintainCode}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
-                        prop="name"
+                        prop="classifyName"
                         label="设备类别"
                         show-overflow-tooltip
 
                         width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="maintainType"
                         show-overflow-tooltip
-
                         label="保养类型">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.maintainType==0?'质保':'维保'}}</span>
+                    </template>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="cycleType"
                         show-overflow-tooltip
-
                         label="周期类型">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.cycleType==0">周</span>
+                        <span v-if="scope.row.cycleType==1">半月</span>
+                        <span v-if="scope.row.cycleType==2">月</span>
+                        <span v-if="scope.row.cycleType==3">季度</span>
+                        <span v-if="scope.row.cycleType==4">半年</span>
+                        <span v-if="scope.row.cycleType==5">年</span>
+
+                    </template>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="maintainItem"
                         show-overflow-tooltip
 
                         label="保养项目">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="requirementPlanTime"
                         show-overflow-tooltip
 
                         label="要求完成时间">
@@ -147,15 +157,15 @@
                         label="责任归属">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="assetsCode"
                         show-overflow-tooltip
                         label="设备编号">
                     <template slot-scope="scope">
-                        <span  @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.name}}</span>
+                        <span  @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.assetsCode}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="assetsName"
                         show-overflow-tooltip
 
                         label="设备名称">
@@ -167,7 +177,7 @@
                         label="责任归属">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="state"
                         show-overflow-tooltip
                         label="状态">
                 </el-table-column>
@@ -212,6 +222,11 @@
         name: "MtTask",
         data:function () {
             return{
+                //分页
+                total:0,
+                pageSize:10,
+                currentPage:1,
+                filterShow:false,
                 formInline:{
                     user:'',
                     region:'1',
@@ -228,29 +243,30 @@
                     value: 'label',
                     children: 'cities'
                 },
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }],
+                tableData: [],
                 jiludanhaoShow:false,
                 shebeichakanShow:false
 
             }
         },
+        mounted(){
+            this.requestList()
+        },
         methods:{
+            //获取列表
+            requestList(){
+              let vm =this
+              vm.$http.post('/maintainController/findMaintainList',{
+                  pageSize:vm.pageSize,
+                  currentPage:vm.currentPage
+              }).then(res=>{
+                  if(res.code==200){
+                      vm.total = res.data.count
+                      vm.tableData = res.data.data
+
+                  }
+              })
+            },
             showOrderInfo(){//记录单号
                 this.jiludanhaoShow = true
             },

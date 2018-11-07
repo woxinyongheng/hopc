@@ -85,8 +85,7 @@
                             </el-form-item>
                             <el-form-item label="责任归属">
                                 <el-select v-model="formInline.propertyCompanyCode" placeholder="责任归属">
-                                    <el-option label="区域一" value="1"></el-option>
-                                    <el-option label="区域二" value="2"></el-option>
+                                    <el-option v-for="item in componyList" :label="item.companyName" :value="item.companyCode"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-form>
@@ -103,7 +102,7 @@
         <div class="contentbox">
             <div class="batchSelectLabel">
                 <i class="el-icon-warning"></i>
-                已选择<span>0</span>项
+                已选择<span>{{selectData.length}}</span>项
             </div>
             <el-table
                     :data="tableData"
@@ -214,7 +213,7 @@
             <span slot="title" class="dialogtitle">
                 设备查看
               </span>
-            <shebeichuli @closeShebeiHandle="shebeichakanShow=false" ></shebeichuli>
+            <shebeichuli :deviceData="deviceData" @closeShebeiHandle="shebeichakanShow=false" ></shebeichuli>
         </el-dialog>
         <el-dialog
                 title="设备报修"
@@ -244,6 +243,7 @@
                 //filter
                 typeList:[],
                 adminList:[],
+                componyList:[],
                 //状态控制
                 equipmentState:'',
                 repirState:'',
@@ -278,12 +278,15 @@
                 shebeichakanShow:false,
                 shebeibaoxiuShow:false,
                 selectData:'',
+                deviceData:{}
+
             }
         },
         mounted(){
           this.requestList()
           this.requestType()
             this.requestAdmin()
+            this.requestComponeny()
         },
         methods:{
             searchClick(){
@@ -312,9 +315,12 @@
                 vm.$http.post('equipmentListController/GetEquipmentById',{
                     id:row.equipmentId
                 }).then(res=>{
-                    debugger
+                    if(res.code==200){
+                        vm.deviceData = res.data
+                        vm.shebeichakanShow =true
+                    }
                 })
-                this.shebeichakanShow =true
+
             },
         //    获取列表
             requestList(){
@@ -360,6 +366,15 @@
               vm.$http.post('userControl/getDeviceManagerList',{}).then(res=>{
                   if(res.code==200){
                       vm.adminList = res.data.userList
+                  }
+              })
+            },
+        //    wuye
+            requestComponeny(){
+              let vm = this
+              vm.$http.post(__PATH.BASEPATH+'outsourcedController/getOutsourcedCompanyList',{}).then(res=>{
+                  if(res.code==200){
+                      vm.componyList = res.data
                   }
               })
             },

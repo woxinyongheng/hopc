@@ -19,14 +19,12 @@
                     <div class="grid-content">
                         <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
                             <el-form-item label="类别编号">
-                                <el-input v-model="formInline.user" placeholder="设备编号"></el-input>
+                                <el-input v-model="formInline.typeCode" placeholder="设备编号"></el-input>
                             </el-form-item>
                             <el-form-item label="设备类别">
-                                <el-cascader
-                                        :options="options"
-                                        v-model="formInline.tree"
-                                        :props="props">
-                                </el-cascader>
+                                <el-select v-model="formInline.typeCode" placeholder="设备类别">
+                                    <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeCode"></el-option>
+                                </el-select>
                             </el-form-item>
                             <!--<el-form-item label="设备管理员">-->
                                 <!--<el-cascader-->
@@ -37,9 +35,8 @@
                             <!--</el-form-item>-->
 
                             <el-form-item label="设备管理员">
-                                <el-select v-model="formInline.region" placeholder="设备管理员">
-                                    <el-option label="区域一" value="1"></el-option>
-                                    <el-option label="区域二" value="2"></el-option>
+                                <el-select v-model="formInline.eqAdminCode" placeholder="设备管理员">
+                                    <el-option v-for="(item,index) in adminList" :label="item.name" :value="item.id"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-form>
@@ -47,8 +44,8 @@
                 </el-col>
                 <el-col :span="3">
                     <div class="grid-content searchbox">
-                        <el-button type="primary" size="mini" icon="el-icon-search">搜索</el-button>
-                        <el-button size="mini" icon="el-icon-refresh">重置</el-button>
+                        <el-button type="primary" size="mini" icon="el-icon-search"  @click="searchClick">搜索</el-button>
+                        <el-button size="mini" icon="el-icon-refresh" @click="resetSearch">重置</el-button>
                     </div>
                 </el-col>
             </el-row>
@@ -56,10 +53,12 @@
         <div class="contentbox">
             <div class="batchSelectLabel">
                 <i class="el-icon-warning"></i>
-                已选择<span>0</span>项
+                已选择<span>{{selectData.length}}</span>项
             </div>
             <el-table
                     :data="tableData"
+                    @selection-change="handleSelectionChange"
+
                     stripe
                     border
                     style="width: 100%">
@@ -166,28 +165,17 @@
                 currentPage:1,
                 filterShow:false,
                 formInline:{
-                    user:'',
-                    region:'',
-                    tree:[]
+                    eqAdminCode:'',
+                    typeCode:'',
                 },
-                options: [{
-                    label: '江苏',
-                    cities: []
-                }, {
-                    label: '浙江',
-                    cities: []
-                }],
-                props: {
-                    value: 'label',
-                    children: 'cities'
-                },
-                frequencyData:[{label:'='},{label:'!='},{label:'>='},{label:'=<'},{label:'>'},{label:'<'}],
                 tableData: [],
                 shebeichakanShow:false,
                 feipeiguanliyuanshow:false,
                 editShow:false,
                 deviceData:{},
-                adminList:[]
+                adminList:[],
+                typeList:[],
+                selectData:[]
             }
         },
         mounted(){
@@ -195,11 +183,27 @@
             this.requestAdmin()
         },
         methods:{
+            searchClick(){
+                this.requestList()
+            },
+            resetSearch(){
+                this.formInline = {
+                    eqAdminCode:'',
+                    typeCode:'',
+                }
+                this.requestList()
+            },
+            //    列表选择
+            handleSelectionChange(val){
+                this.selectData=val
+            },
             requestList(){
                 let vm =this
                 vm.$http.post('/equipmentConfigController/getEquipmentOfCompanyList',{
                     pageSize:vm.pageSize,
                     currentPage:vm.currentPage,
+                    eqAdminCode:vm.formInline.eqAdminCode,
+                    typeCode:vm.formInline.typeCode,
                 }).then(res=>{
                     if(res.code==200){
                         vm.tableData = res.data.deviceConfigList
@@ -207,14 +211,23 @@
                     }
                 })
             },
-            //获取设备管理员
+            //    获取设备分类列表
+            requestType(){
+                let vm =this
+                vm.$http.post('equipmentConfigController/getDeviceTypeList',{}).then(res=>{
+                    if(res.code=='200'){
+                        vm.typeList = res.data
+                    }
+                })
+            },
+            //    获取设备管理员
             requestAdmin(){
-              let vm =this
-              vm.$http.post('/userControl/getDeviceManagerList',{}).then(res=>{
-                  if(res.code==200){
-                      vm.adminList = res.data.userList
-                  }
-              })
+                let vm =this
+                vm.$http.post('userControl/getDeviceManagerList',{}).then(res=>{
+                    if(res.code==200){
+                        vm.adminList = res.data.userList
+                    }
+                })
             },
             //同步
             syncDevice(){

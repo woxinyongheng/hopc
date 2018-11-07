@@ -32,7 +32,7 @@
               return
             }
             vm.$http.post('userLoginController/userLogin', {
-                userNames: vm.userName,
+                userName: vm.userName,
                 password: vm.password
               }
             ).then(function (res) {
