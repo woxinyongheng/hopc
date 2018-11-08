@@ -9,16 +9,20 @@
                                 class="el-menu-vertical-demo"
                                 background-color="#545c64"
                                 text-color="#fff"
-                                active-text-color="#ffd04b">
-                            <el-submenu index="1" v-for="(item,index) in distributionUserdata">
+                                active-text-color="#409EFF">
+                            <el-submenu :index="index+''" v-for="(item,index) in roleTree" v-if="item.children">
                                 <template slot="title">
-                                    <i class="el-icon-location"></i>
-                                    <span>{{item.label}}</span>
+                                    <span>{{item.name}}</span>
                                 </template>
-                                <el-menu-item-group>
-                                    <el-menu-item index="1-1" v-for="(it,ii) in item.children">{{it.label}}</el-menu-item>
+                                <el-menu-item-group >
+                                    <el-menu-item v-if="item.children" :index="index+'-'+ii" v-for="(it,ii) in item.children">{{it.name}}</el-menu-item>
                                 </el-menu-item-group>
                             </el-submenu>
+                            <el-menu-item :index="index+''" v-for="(item,index) in roleTree" v-if="!item.children">
+                                <i class="el-icon-menu"></i>
+                                <span slot="title">{{item.name}}</span>
+                            </el-menu-item>
+
                         </el-menu>
                         <!--<el-tree :data="distributionUserdata" :props="defaultProps"></el-tree>-->
                     </div></el-col>
@@ -85,6 +89,7 @@
 <script>
     export default {
         name: "Renwufenpei",
+        props:['roleTree'],
         data:function () {
             return{
                 roleData:[{name:'运保主管',id:1,status:0},{name:'运保主管',id:2,status:1},{name:'运保主管',id:3,status:0}],
@@ -92,53 +97,23 @@
                     user:'',
                     region:''
                 },
-                distributionUserdata: [{
-                    label: '一级 1',
-                    children: [{
-                        label: '二级 1-1',
-                    }]
-                }, {
-                    label: '一级 2',
-                    children: [{
-                        label: '二级 2-1',
-                    }, {
-                        label: '二级 2-2',
-                    }]
-                }, {
-                    label: '一级 3',
-                    children: [{
-                        label: '二级 3-1',
-                    }, {
-                        label: '二级 3-2',
-                    }]
-                }],
                 defaultProps: {
                     children: 'children',
-                    label: 'label'
+                    label: 'name'
                 }
 
             }
         },
         mounted(){
           let vm =this
-            vm.requestList()
         },
         methods:{
+            searchClick(){
+
+            },
             closeHandle(){
                 this.$emit('closeHandle')
             },
-        //    树形图
-            requestList(){
-                let vm =this
-                vm.$http.post('userControl/getRoleListAndStaffList',{
-
-                }).then(res=>{
-                    debugger
-                    if(res.code=='200'){
-
-                    }
-                })
-            }
         },
     }
 </script>

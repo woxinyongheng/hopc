@@ -12,7 +12,7 @@
                 <el-button @click="filterShow=!filterShow" type="success" size="mini" icon="el-icon-search">检索</el-button>
             </div>
         </div>
-        <div class="filterbox">
+        <div class="filterbox" v-if="filterShow">
             <el-row>
                 <el-col :span="21"><div class="grid-content">
                     <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
@@ -49,13 +49,15 @@
                 <el-col :span="gridspan"><div class="grid-content">
                     <div class="batchSelectLabel">
                         <i class="el-icon-warning"></i>
-                        已选择<span>0</span>项
+                        已选择<span>{{selectData.length}}</span>项
                     </div>
                     <div class="contentheader">
                         角色信息
                     </div>
                     <el-table
                             ref="multipleTable"
+                            @selection-change="handleSelectionChange"
+
                             stripe
                             border
                             :data="roleData"
@@ -128,6 +130,11 @@
                                 show-overflow-tooltip
 
                                 label="状态">
+                            <template slot-scope="scope">
+                                <span class="tablebtn-c1" v-if="scope.row.status==0">正常</span>
+
+                                <span class=" tablebtn-c2"  v-if="scope.row.status==1">禁用</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
                                 prop="name"
@@ -136,7 +143,8 @@
                                 label="启用/禁用">
                             <template slot-scope="scope">
                                 <el-switch
-                                        v-model="scope.row.status==1">
+                                        @change="switchHandle(scope.row)"
+                                        v-model="scope.row.status==0">
                                 </el-switch>
                             </template>
                         </el-table-column>
@@ -146,7 +154,8 @@
 
                                 label="操作">
                             <template slot-scope="scope">
-                                <span @click="deleteUser(scope.row.id)" class="tablebtn tablebtn-c2">删除</span>
+
+                                <span @click="deleteUser(scope.row.id)" class="tablebtn-c2">删除</span>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -172,7 +181,7 @@
                 <span slot="title" class="dialogtitle">
                     提示
                   </span>
-            <deleteUser @closeHandle="deleteDialogVisible=false"></deleteUser>
+            <deleteUser :roleCode="roleCode" :deleteId="deleteId" @closeHandle="deleteCLOSE"></deleteUser>
         </el-dialog>
         <!--分配用户-->
         <el-dialog
@@ -183,7 +192,7 @@
             <span slot="title" class="dialogtitle">
                 分配用户
               </span>
-            <fenpeiyonghu @closeHandle="distributionUser=false"></fenpeiyonghu>
+            <fenpeiyonghu :roleTree="roleTree" @closeHandle="distributionUser=false"></fenpeiyonghu>
 
         </el-dialog>
     </div>
@@ -212,7 +221,10 @@
                 distributionUser:false,
                 currentPage:1,
                 pageSize:10,
-                total:0
+                total:0,
+                selectData:[],
+                filterShow:false,
+                roleTree:[]
 
             }
         },
@@ -223,6 +235,12 @@
             //筛选
             searchClick(){
 
+            },
+            deleteCLOSE(str){
+                this.deleteDialogVisible = false
+                if(str){
+                    this.requestList()
+                }
             },
             lookUser(code){
                 let vm =this
@@ -240,7 +258,28 @@
             },
             //分配用户
             distributionUserClick(){
-                this.distributionUser =true
+                let vm =this
+                vm.$http.post('/userControl/getOfficeByTree',{
+
+                }).then(res=>{
+                    if(res.code==200){
+                        var arrData = res.data.officeInfoLists
+                        var arr=[]
+                        var arrChild =[]
+                        arrData.forEach(function (item) {
+                            if(item.pid=='#'){
+                                arr.push(item)
+                            }else{
+                                arrChild.push(item)
+                            }
+                        })
+                        var _arr = vm.recursiveFun(arr,arrChild)
+                        vm.roleTree = _arr
+                        debugger
+                        vm.distributionUser=true
+
+                    }
+                })
             },
             distributionUserClickSure(){
 
@@ -262,6 +301,26 @@
                     }
                 })
             },
+            switchHandle(val){
+                let vm =this
+                vm.$http.post('/userControl/openAndForbiddenOrRole',{
+                    staffRole:vm.roleCode,
+                    staffId:val.id,
+                    status:val.status==1?'0':'1'
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.$message({
+                            message: val.status==1?'用户启用成功':'用户禁用成功',
+                            type: 'success'
+                        });
+                        vm.requestList()
+                    }
+                })
+            },
+            //    列表选择
+            handleSelectionChange(val){
+                this.selectData=val
+            },
             //    分页
             pageSizeChange(val){
                 this.pageSize =val
@@ -270,7 +329,26 @@
             pageCurrentChange(val){
                 this.currentPage =val
                 this.requestList()
-            }
+            },
+            //递归工具函数
+            recursiveFun(arr,arrData){
+                var vm =this
+                arr.forEach(function (item) {
+
+                    arrData.forEach(function (arritem) {
+                        if(arritem.pid==item.id){
+                            if(!item.children){
+                                item.children=[]
+                            }
+                            item.children.push(arritem)
+                        }
+                    })
+                    if(item.children && item.children.length){
+                        vm.recursiveFun(item.children,arrData)
+                    }
+                })
+                return arr
+            },
 
         },
         components:{

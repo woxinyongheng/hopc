@@ -17,6 +17,7 @@
 <script>
     export default {
         name: "deleteUser",
+        props:['roleCode','deleteId'],
         data:function () {
             return{
             }
@@ -26,7 +27,19 @@
                 this.$emit('closeHandle')
             },
             sureDeleteClick(){
-
+                let vm =this
+                vm.$http.post('/userControl/removeRoleBystaffId',{
+                    staffRole:vm.roleCode,
+                    staffId:vm.deleteId
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.$message({
+                            message: res.message,
+                            type: 'success'
+                        });
+                        this.$emit('closeHandle',true)
+                    }
+                })
             }
         },
 
