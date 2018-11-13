@@ -9,59 +9,65 @@
             <el-button type="warning" size="mini" @click="copyPlan">复制</el-button>
         </div>
             <div class="pullright">
-                <el-button type="primary" size="mini">检索</el-button>
+                <el-button type="primary" size="mini" @click="filterShow=!filterShow">检索</el-button>
             </div>
         </div>
-        <div class="filterbox">
+        <div class="filterbox" v-if="filterShow">
             <el-row>
                 <el-col :span="21"><div class="grid-content">
                     <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
                         <el-form-item label="计划编号">
-                            <el-input v-model="formInline.user" placeholder="计划编号"></el-input>
+                            <el-input v-model="formInline.planCode" placeholder="计划编号"></el-input>
                         </el-form-item>
                         <el-form-item label="计划名称">
-                            <el-input v-model="formInline.user" placeholder="姓名"></el-input>
+                            <el-input v-model="formInline.planName" placeholder="姓名"></el-input>
                         </el-form-item>
                         <el-form-item label="保养类型">
-                            <el-select v-model="formInline.region" placeholder="保养类型">
-                                <el-option label="区域一" value="shanghai"></el-option>
-                                <el-option label="区域二" value="beijing"></el-option>
+                            <el-select v-model="formInline.maintainType" placeholder="保养类型">
+                                <el-option label="质保" value="0"></el-option>
+                                <el-option label="维保" value="1"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="周期类型">
-                            <el-select v-model="formInline.region" placeholder="周期类型">
-                                <el-option label="区域一" value="shanghai"></el-option>
-                                <el-option label="区域二" value="beijing"></el-option>
+                            <el-select v-model="formInline.cycleType" placeholder="周期类型">
+                                <el-option label="周" value="0"></el-option>
+                                <el-option label="半月" value="1"></el-option>
+                                <el-option label="月" value="2"></el-option>
+                                <el-option label="季度" value="3"></el-option>
+                                <el-option label="年" value="4"></el-option>
+                                <el-option label="半年" value="5"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="状态">
-                            <el-select v-model="formInline.region" placeholder="状态">
-                                <el-option label="启用" value="shanghai"></el-option>
-                                <el-option label="禁用" value="beijing"></el-option>
+                            <el-select v-model="formInline.planAuditState" placeholder="状态">
+                                <el-option label="未提交" value="0"></el-option>
+                                <el-option label="已提交" value="1"></el-option>
+                                <el-option label="通过" value="2"></el-option>
+                                <el-option label="未通过" value="3"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="开始日期">
                             <el-date-picker
-                                    v-model="formInline.user"
+                                    v-model="formInline.startTime"
                                     type="date"
                                     placeholder="">
                             </el-date-picker>
                         </el-form-item>
                         <el-form-item label="至">
                             <el-date-picker
-                                    v-model="formInline.user"
+                                    v-model="formInline.endTime"
                                     type="date"
                                     placeholder="">
                             </el-date-picker>
                         </el-form-item>
                         <el-form-item label="维保单位">
-                            <el-input v-model="formInline.user" placeholder="维保单位"></el-input>
+                            <el-input v-model="formInline.company" placeholder="维保单位"></el-input>
                         </el-form-item>
                     </el-form>
                 </div></el-col>
                 <el-col :span="3"><div class="grid-content searchbox">
-                    <el-button type="primary" size="mini" icon="el-icon-search">搜索</el-button>
-                    <el-button  size="mini" icon="el-icon-refresh">重置</el-button>
+                    <el-button type="primary" size="mini" icon="el-icon-search" @click="requestList">搜索</el-button>
+                    <el-button  size="mini" icon="el-icon-refresh" @click="resetSearch">重置</el-button>
                 </div></el-col>
             </el-row>
 
@@ -76,19 +82,21 @@
                     </div>
                     <el-table
                             ref="multipleTable"
-                            :data="roleData"
+                            :data="typeList"
                             stripe
                             border
                             style="width: 100%">
                         <el-table-column
-                                prop="name"
+                                prop="typeCode"
+                                show-overflow-tooltip
                                 label="编号">
                         </el-table-column>
                         <el-table-column
-                                prop="name"
+                                prop="typeName"
+                                show-overflow-tooltip
                                 label="设备类型">
                             <template slot-scope="scope">
-                                <span @click="lookUser(scope.row.id)" class="tablebtn tablebtn-c1">制冷设备</span>
+                                <span @click="lookUser(scope.row.id)" class="tablebtn tablebtn-c1">{{scope.row.typeName}}</span>
 
                             </template>
                         </el-table-column>
@@ -97,7 +105,7 @@
                 <el-col :span="24-gridspan"><div class="grid-content">
                     <div class="batchSelectLabel">
                         <i class="el-icon-warning"></i>
-                        已选择<span>0</span>项
+                        已选择<span>{{selectData.length}}</span>项
                     </div>
                     <div class="contentheader">
                         保养计划
@@ -105,62 +113,82 @@
                     <el-table
                             ref="multipleTable"
                             :data="roleData"
+                            @selection-change="handleSelectionChange"
                             stripe
                             border
                             style="width: 100%">
                         <el-table-column
-                                label="序号"
                                 show-overflow-tooltip
                                 width="55"
                                 type="selection">
                         </el-table-column>
                         <el-table-column
-                                prop="name"
+                                prop="planCode"
                                 show-overflow-tooltip
 
                                 label="计划编号">
                         </el-table-column>
                         <el-table-column
-                                prop="name"
+                                prop="planAuditState"
                                 show-overflow-tooltip
 
                                 label="状态">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.planAuditState==0">未提交</span>
+                                <span v-if="scope.row.planAuditState==1">已提交</span>
+                                <span v-if="scope.row.planAuditState==2">通过</span>
+                                <span v-if="scope.row.planAuditState==3">未通过</span>
+
+                            </template>
                         </el-table-column>
                         <el-table-column
-                                prop="name"
+                                prop="planName"
                                 show-overflow-tooltip
                                 label="计划名称">
                             <template slot-scope="scope">
-                                <span class="tableactive" @click="planLookHandle(scope.row)">{{scope.row.name}}</span>
+                                <span class="tableactive" @click="planLookHandle(scope.row)">{{scope.row.planName}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column
                                 prop="name"
                                 show-overflow-tooltip
                                 label="保养类型">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.maintainType==0?'质保':'维保'}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column
-                                prop="name"
+                                prop="maintainType"
                                 show-overflow-tooltip
                                 label="周期类型">
+                            <!--cycleType-->
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.cycleType==0">周</span>
+                                <span v-if="scope.row.cycleType==1">半月</span>
+                                <span v-if="scope.row.cycleType==2">月</span>
+                                <span v-if="scope.row.cycleType==3">季度</span>
+                                <span v-if="scope.row.cycleType==4">半年</span>
+                                <span v-if="scope.row.cycleType==5">年</span>
+
+                            </template>
                         </el-table-column>
                         <el-table-column
-                                prop="name"
+                                prop="facilityNum"
                                 show-overflow-tooltip
                                 label="设备数量">
                         </el-table-column>
                         <el-table-column
-                                prop="name"
+                                prop="company"
                                 show-overflow-tooltip
                                 label="维保单位">
                         </el-table-column>
                         <el-table-column
-                                prop="name"
+                                prop="startTime"
                                 show-overflow-tooltip
                                 label="开始日期">
                         </el-table-column>
                         <el-table-column
-                                prop="name"
+                                prop="endTime"
                                 show-overflow-tooltip
                                 label="结束日期">
                         </el-table-column>
@@ -170,9 +198,9 @@
                                 width="180px"
                                 label="操作">
                             <template slot-scope="scope">
-                                <span @click="editPlan(scope.row.id)" class="tablebtn tablebtn-c1">编辑</span>
-                                <span @click="deletePlan(scope.row.id)" class="tablebtn tablebtn-c2">删除</span>
-                                <span @click="submitPlan(scope.row.id)" class="tablebtn tablebtn-c1">提交</span>
+                                <span v-if="scope.row.planAuditState!=1 && scope.row.planAuditState!=2" @click="editPlan(scope.row)" class="tablebtn tablebtn-c1">编辑</span>
+                                <span v-if="scope.row.planAuditState!=1 && scope.row.planAuditState!=2" @click="deletePlan(scope.row)" class="tablebtn tablebtn-c2">删除</span>
+                                <span v-if="scope.row.planAuditState==0" @click="submitPlan(scope.row)" class="tablebtn tablebtn-c1">提交</span>
 
                             </template>
                         </el-table-column>
@@ -180,10 +208,12 @@
                     <div class="page">
                         <el-pagination
                                 :current-page="1"
-                                :page-sizes="[100, 200, 300, 400]"
+                                :page-sizes="[10, 20, 30, 50]"
                                 :page-size="100"
+                                @size-change="pageSizeChange"
+                                @current-change="pageCurrentChange"
                                 layout="total, sizes, prev, pager, next, jumper"
-                                :total="400">
+                                :total="total">
                         </el-pagination>
                     </div>
                 </div></el-col>
@@ -199,7 +229,7 @@
             <span slot="title" class="dialogtitle">
                 {{addOrEdit=='edit'?'编辑':'新增'}}页面
               </span>
-            <addPlan @closeHandle="addplanShow=false"></addPlan>
+            <addPlan :areaList="areaList" :typeList="typeList" @closeHandle="addplanShow=false"></addPlan>
         </el-dialog>
         <!--查看-->
         <el-dialog
@@ -210,7 +240,7 @@
             <span slot="title" class="dialogtitle">
                 查看页面
               </span>
-            <PlanLook @closeHandle="planlookShowHandle"></PlanLook>
+            <PlanLook :planData="planData" @closeHandle="planlookShowHandle"></PlanLook>
         </el-dialog>
     </div>
 </template>
@@ -223,30 +253,117 @@
         name: "MtPlan",
         data:function(){
             return{
-                gridspan:24,
+                //分页
+                total:0,
+                pageSize:10,
+                currentPage:1,
+                filterShow:false,
+                //filter
+                typeList:[],
+                selectData:[],
+                gridspan:8,
                 lookId:'',
-                roleData:[{name:'运保主管',id:1,status:0},{name:'运保主管',id:2,status:1},{name:'运保主管',id:3,status:0}],
+                roleData:[],
                 formInline:{
-                    user:'',
-                    region:''
+                    planCode:'',
+                    planName:'',
+                    maintainType:'',
+                    cycleType:'',
+                    planAuditState:'',
+                    startTime:'',
+                    endTime:'',
+                    company:''
                 },
                 addplanShow:false,
                 planlookShow:false,
-                addOrEdit:''
+                addOrEdit:'',
+                areaList:[],
+                planData:[]
             }
         },
         mounted(){
-
+            this.requestList()
+            this.requestType()
+            this.requestArea()
         },
         methods:{
             //筛选
-            searchClick(){
+            resetSearch(){
+                this.formInline={
+                    planCode:'',
+                        planName:'',
+                        maintainType:'',
+                        cycleType:'',
+                        planAuditState:'',
+                        startTime:'',
+                        endTime:'',
+                        company:''
+                }
+                this.requestList()
+            },
+            handleSelectionChange(val){
+                this.selectData=val
 
             },
-            lookUser(id){
+            //    获取设备分类列表
+            requestType(){
                 let vm =this
-                vm.gridspan = 8
-                vm.lookId = id
+                vm.$http.post('equipmentConfigController/getDeviceTypeList',{}).then(res=>{
+                    if(res.code=='200'){
+                        vm.typeList = res.data
+                    }
+                })
+            },
+
+            //列表
+            requestList(){
+              let vm =this
+              vm.$http.post('maintainPlan/getMaintainPlanList',{
+                  pageSize:vm.pageSize,
+                  currentPage:vm.currentPage,
+                  planCode:vm.formInline.planCode,
+                  planName:vm.formInline.planName,
+                  maintainType:vm.formInline.maintainType,
+                  cycleType:vm.formInline.cycleType,
+                  planAuditState:vm.formInline.planAuditState,
+                  startTime:vm.formInline.startTime,
+                  endTime:vm.formInline.endTime,
+                  company:vm.formInline.company,
+              }).then(res=>{
+                  if(res.code==200){
+                      vm.total = res.data.count*1
+                      vm.roleData = res.data.list
+                  }
+              })
+            },
+            //区域
+            requestArea(){
+                var vm = this
+                vm.$http.post(__PATH.BASEPATH+'hospitalController/getHospitalGridInfo',{
+                    unitCode:'ZXYSZGDW',
+                    hospitalCode:'zkzxysyy',
+                }).then(res=>{
+                    if(res.code=='200'){
+                        var arrData = res.data
+                        vm.areaListCommon = res.data
+                        var arr=[]
+                        var arrChild =[]
+                        arrData.forEach(function (item) {
+                            if(item.parentId=='#'){
+                                arr.push(item)
+                            }else{
+                                arrChild.push(item)
+                            }
+                        })
+                        var _arr = vm.recursiveFun(arr,arrChild)
+                        vm.areaList = _arr
+                    }
+                })
+            },
+            lookUser(id){
+                // let vm =this
+                // vm.gridspan = 8
+                // vm.lookId = id
             },
             addplanClick(){
                 this.addOrEdit = 'add'
@@ -256,68 +373,131 @@
                 this.addOrEdit = 'edit'
                 this.addplanShow = true
             },
-            deletePlan(){
+            deletePlan(row){
+                let vm =this
                 this.$confirm('确定要删除这个保养计划吗?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '复制成功!'
-                    });
+                    vm.$http.post('maintainPlan/deleteMaintainPlan',{
+                        id:row.id
+                    }).then(res=>{
+                        if(res.code==200){
+                            vm.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            vm.requestList()
+                    }
+                    })
+
                 }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消复制'
-                    });
+
                 });
             },
-            submitPlan(){
+            submitPlan(row){
+                let vm=this
                 this.$confirm('确定要提交这个保养计划吗，提交后无法编辑和删除', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '复制成功!'
-                    });
+                    vm.$http.post('maintainPlan/submitMaintainPlan',{
+                        id:row.id,
+                        planAuditState:1
+                    }).then(res=>{
+                        if(res.code==200){
+                            vm.$message({
+                                type: 'success',
+                                message: '提交成功!'
+                            });
+                            vm.requestList()
+                        }
+                    })
                 }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消复制'
-                    });
+
                 });
             },
             //复制
             copyPlan(){
+                let vm =this
+                if(vm.selectData.length !=1){
+                    vm.$message({
+                        type: 'warning',
+                        message: '请选择一条计划复制!'
+                    });
+                    return
+                }
                 this.$confirm('确定要复制此保养计划吗?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '复制成功!'
-                    });
+                    vm.$http.post('maintainPlan/copyMaintainPlanData',{
+                        id:vm.selectData[0].id
+                    }).then(res=>{
+                        if(res.code==200){
+                            vm.$message({
+                                type: 'success',
+                                message: '复制成功!'
+                            });
+                            vm.requestList()
+                        }
+                    })
                 }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消复制'
-                    });
+
                 });
             },
             //查看
-            planLookHandle(){
-                this.planlookShow =true
+            planLookHandle(row){
+                let vm =this
+                vm.$http.post('maintainPlan/maintainPlanDetailOrUpdate',{
+                    id:row.id,
+                    pageSize:'10',
+                    currentPage:'1'
+                }).then(res=>{
+                   if(res.code==200){
+                       vm.planlookShow =true
+                       vm.planData=res.data
+
+                   }
+                })
             },
             //查看内部编辑
             planlookShowHandle(){
                 this.planlookShow =false
                 this.addOrEdit = 'edit'
                 this.addplanShow = true
-            }
+            },
+            //    分页
+            pageSizeChange(val){
+                this.pageSize =val
+                this.requestList()
+            },
+            pageCurrentChange(val){
+                this.currentPage =val
+                this.requestList()
+            },
+            //递归处理函数，联级使用
+            recursiveFun(arr,arrData){
+                var vm =this
+                arr.forEach(function (item) {
+
+                    arrData.forEach(function (arritem) {
+                        if(arritem.parentId==item.id){
+                            if(!item.children){
+                                item.children=[]
+                            }
+                            item.children.push(arritem)
+                        }
+                    })
+                    if(item.children && item.children.length){
+                        vm.recursiveFun(item.children,arrData)
+                    }
+                })
+                return arr
+            },
 
         },
         components:{

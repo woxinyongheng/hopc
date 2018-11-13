@@ -262,8 +262,17 @@
                 this.requestList()
             },
             showOrderInfo(row){//记录单号
-                this.orderData=row
-                this.jiludanhaoShow = true
+                let vm =this
+                    vm.$http.post('equipmentRecordController/findRecord',{
+                        id:row.id,
+                        category:'0'
+                    }).then(res=>{
+                        if(res.code=='200'){
+                            vm.orderData=res.data[0]
+                            vm.jiludanhaoShow = true
+                        }
+                    })
+
             },
             closeHandle(){
                 this.jiludanhaoShow = false

@@ -5,72 +5,74 @@
         </div>
         <div class="buttonbox">
             <div class="pullleft">
-                <el-tag>全部</el-tag>
-                <el-tag type="danger">进行中</el-tag>
-                <el-tag type="info">未完成</el-tag>
-                <el-tag type="success">已完成</el-tag>
+                <el-button plain size="mini" @click="statusHandle('')">全部</el-button>
+                <el-button plain size="mini" type="danger" @click="statusHandle('0')">进行中</el-button>
+                <el-button plain size="mini" type="info" @click="statusHandle('1')">未完成</el-button>
+                <el-button plain size="mini" type="success" @click="statusHandle('2')">已完成</el-button>
             </div>
             <div class="pullright">
-                <el-button type="success" size="mini" icon="el-icon-search">检索</el-button>
+                <el-button type="success" size="mini" icon="el-icon-search" @click="fliterShow=!fliterShow">检索</el-button>
             </div>
         </div>
-        <div class="filterbox">
+        <div class="filterbox" v-if="fliterShow">
             <el-row>
                 <el-col :span="21"><div class="grid-content">
                     <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
                         <el-form-item label="计划编号">
-                            <el-input v-model="formInline.user" placeholder="计划编号"></el-input>
+                            <el-input v-model="formInline.planCode" placeholder="计划编号"></el-input>
                         </el-form-item>
                         <el-form-item label="计划名称">
-                            <el-input v-model="formInline.user" placeholder="计划名称"></el-input>
+                            <el-input v-model="formInline.planName" placeholder="计划名称"></el-input>
                         </el-form-item>
                         <el-form-item label="保养类型">
-                            <el-select v-model="formInline.region" placeholder="保养类型">
-                                <el-option label="区域一" value="1"></el-option>
-                                <el-option label="区域二" value="2"></el-option>
+                            <el-select v-model="formInline.maintainType" placeholder="保养类型">
+                                <el-option label="质保" value="0"></el-option>
+                                <el-option label="维保" value="1"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="周期类型">
-                            <el-select v-model="formInline.region" placeholder="周期类型">
-                                <el-option label="区域一" value="1"></el-option>
-                                <el-option label="区域二" value="2"></el-option>
+                            <el-select v-model="formInline.cycleType" placeholder="周期类型">
+                                <el-option label="周" value="0"></el-option>
+                                <el-option label="半月" value="1"></el-option>
+                                <el-option label="月" value="2"></el-option>
+                                <el-option label="季度" value="3"></el-option>
+                                <el-option label="半年" value="4"></el-option>
+                                <el-option label="年" value="5"></el-option>
+
                             </el-select>
                         </el-form-item>
                         <el-form-item label="设备类别">
-                            <el-cascader
-                                    :options="options"
-                                    v-model="formInline.tree"
-                                    :props="props">
-                            </el-cascader>
+                            <el-select v-model="formInline.facilityTypeCode" placeholder="设备类别">
+                                <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeCode"></el-option>
+                            </el-select>
                         </el-form-item>
                         <el-form-item label="保养项目">
-                            <el-input v-model="formInline.user" placeholder="保养项目"></el-input>
+                            <el-input v-model="formInline.maintainName" placeholder="保养项目"></el-input>
                         </el-form-item>
                         <el-form-item label="开始日期">
                             <el-date-picker
-                                    v-model="formInline.user"
+                                    v-model="formInline.startDateTime"
                                     type="date"
                                     placeholder="开始日期">
                             </el-date-picker>
                         </el-form-item>
                         <el-form-item label="至">
                             <el-date-picker
-                                    v-model="formInline.user"
+                                    v-model="formInline.endDateTime"
                                     type="date"
                                     placeholder="结束日期">
                             </el-date-picker>
                         </el-form-item>
                         <el-form-item label="责任归属">
-                            <el-select v-model="formInline.region" placeholder="责任归属">
-                                <el-option label="区域一" value="1"></el-option>
-                                <el-option label="区域二" value="2"></el-option>
+                            <el-select v-model="formInline.company" placeholder="责任归属">
+                                <el-option v-for="item in componyList" :label="item.companyName" :value="item.companyCode"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-form>
                 </div></el-col>
                 <el-col :span="3"><div class="grid-content searchbox">
-                    <el-button type="primary" size="mini" icon="el-icon-search">搜索</el-button>
-                    <el-button  size="mini" icon="el-icon-refresh">重置</el-button>
+                    <el-button type="primary" size="mini" icon="el-icon-search" @click="searchClick">搜索</el-button>
+                    <el-button  size="mini" icon="el-icon-refresh"  @click="resetSearch">重置</el-button>
                 </div></el-col>
             </el-row>
 
@@ -191,7 +193,7 @@
             <span slot="title" class="dialogtitle">
                 计划任务
               </span>
-            <jihuarenwu @closeHandle="planInfoShow=false"></jihuarenwu>
+            <jihuarenwu :planData="planData" @closeHandle="planInfoShow=false"></jihuarenwu>
         </el-dialog>
     </div>
 </template>
@@ -206,59 +208,112 @@
                 total:0,
                 pageSize:10,
                 currentPage:1,
+                fliterShow:false,
+                typeList:[],
+                componyList:[],
                 formInline:{
-                    user:'',
-                    region:'1',
-                    tree:[]
+                    planCode:'',
+                    planName:'',
+                    maintainType:'',
+                    cycleType:'',
+                    facilityTypeCode:'',
+                    maintainName:'',
+                    startDateTime:'',
+                    endDateTime:'',
+                    company:'',
+                    columnName:'',
+                    sort:'',
+                    taskState:''
                 },
-                options: [{
-                    label: '江苏',
-                    cities: []
-                }, {
-                    label: '浙江',
-                    cities: []
-                }],
-                props: {
-                    value: 'label',
-                    children: 'cities'
-                },
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }],
+                tableData: [],
                 planInfoShow:false,
+                planData:[]
 
             }
         },
         mounted(){
           this.requestList()
+            this.requestType()
+            this.requestComponeny()
         },
         methods:{
-            showPlanInfo(){//记录单号
-                this.planInfoShow = true
+            //筛选
+            searchClick(){
+                this.requestList()
+            },
+            resetSearch(){
+                this.formInline = {
+                    planCode:'',
+                    planName:'',
+                    maintainType:'',
+                    cycleType:'',
+                    facilityTypeCode:'',
+                    maintainName:'',
+                    startDateTime:'',
+                    endDateTime:'',
+                    company:'',
+                    columnName:'',
+                    sort:'',
+                    taskState:''
+                }
+                this.requestList()
+            },
+            //状态切换
+            statusHandle(str){
+                this.formInline.taskState = str
+                this.requestList()
+            },
+            showPlanInfo(row){//记录单号
+                let vm =this
+                vm.$http.post('/planTask/getPlanTaskDetail',{
+                    id:row.id
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.planData=res.data
+                        vm.planInfoShow = true
+                    }
+                })
+
             },
             requestList(){
                 let vm =this
                 vm.$http.post('planTask/getPlanTaskList',{
                     pageSize:vm.pageSize,
                     currentPage:vm.currentPage,
+                    planCode:vm.formInline.planCode,
+                    planName:vm.formInline.planName,
+                    maintainType:vm.formInline.maintainType,
+                    cycleType:vm.formInline.cycleType,
+                    facilityTypeCode:vm.formInline.facilityTypeCode,
+                    maintainName:vm.formInline.maintainName,
+                    startDateTime:vm.formInline.startDateTime,
+                    endDateTime:vm.formInline.endDateTime,
+                    company:vm.formInline.company,
+                    columnName:vm.formInline.columnName,
+                    sort:vm.formInline.sort,
+                    taskState:vm.formInline.taskState
                 }).then(res=>{
                     if(res.code=='200'){
                         vm.tableData = res.data.list
                         vm.total = res.data.count*1
+                    }
+                })
+            },
+            //    获取设备分类列表
+            requestType(){
+                let vm =this
+                vm.$http.post('equipmentConfigController/getDeviceTypeList',{}).then(res=>{
+                    if(res.code=='200'){
+                        vm.typeList = res.data
+                    }
+                })
+            },
+            //    wuye
+            requestComponeny(){
+                let vm = this
+                vm.$http.post(__PATH.BASEPATH+'outsourcedController/getOutsourcedCompanyList',{}).then(res=>{
+                    if(res.code==200){
+                        vm.componyList = res.data
                     }
                 })
             },

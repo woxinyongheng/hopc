@@ -2,7 +2,7 @@
     <div class="shebei">
         <div class="dialogcontent">
             <div class="list">
-                <el-tabs v-model="activeName">
+                <el-tabs v-model="activeName" @tab-click="tabCliclk">
                     <el-tab-pane label="基本信息" name="first">
                         <table class="dialogtablebox">
                             <tbody>
@@ -111,7 +111,7 @@
                     </el-tab-pane>
                     <el-tab-pane label="处理记录" name="second">
                         <el-table
-                                :data="deviceData.record "
+                                :data="tableData"
                                 stripe
                                 align="center"
                                 style="width: 100%">
@@ -123,7 +123,12 @@
                                     prop="category"
                                     label="处理方式">
                                 <template slot-scope="scope">
-                                    <span>{{scope.row.category==0?'延期':(scope.row.category==1?'报废':'质保到期')}}</span>
+                                    <span v-if="scope.row.category==0">延期</span>
+                                    <span v-if="scope.row.category==1">报废</span>
+                                    <span v-if="scope.row.category==2">质保到期</span>
+                                    <span v-if="scope.row.category==3">还原</span>
+                                    <span v-if="scope.row.category==4">保养</span>
+                                    <span v-if="scope.row.category==5">维修</span>
                                 </template>
                             </el-table-column>
                             <el-table-column
@@ -131,15 +136,17 @@
                                     label="处理人">
                             </el-table-column>
                         </el-table>
-                        <!--<div class="page">-->
-                            <!--<el-pagination-->
-                                    <!--:current-page="1"-->
-                                    <!--:page-sizes="[100, 200, 300, 400]"-->
-                                    <!--:page-size="100"-->
-                                    <!--layout="total, sizes, prev, pager, next, jumper"-->
-                                    <!--:total="400">-->
-                            <!--</el-pagination>-->
-                        <!--</div>-->
+                        <div class="page">
+                            <el-pagination
+                                    :current-page="1"
+                                    :page-sizes="[10, 20, 30, 50]"
+                                    :page-size="100"
+                                    @size-change="pageSizeChange"
+                                    @current-change="pageCurrentChange"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="total">
+                            </el-pagination>
+                        </div>
                     </el-tab-pane>
                 </el-tabs>
             </div>
@@ -157,26 +164,44 @@
         data:function () {
             return{
                 activeName:'first',
-                tableData:[
-                    {
-                        date: '2016-05-04',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1517 弄'
-                    },{
-                        date: '2016-05-04',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1517 弄'
-                    },{
-                        date: '2016-05-04',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1517 弄'
-                    },
-                ]
+                tableData:[],
+                //分页
+                total:0,
+                pageSize:10,
+                currentPage:1,
             }
         },
         methods:{
             closeHandle(){
                 this.$emit('closeShebeiHandle')
+            },
+            tabCliclk(val){
+                let vm =this
+                if(val.name=='second' && !vm.tableData.length){
+                    vm.requestList()
+                }
+            },
+            requestList(){
+                let vm =this
+                vm.$http.post('equipmentListController/getEquipmentRecord',{
+                    id:vm.deviceData.list.id,
+                    pageSize:vm.pageSize,
+                    currentPage:vm.currentPage
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.total = res.data.count
+                        vm.tableData = res.data.record
+                    }
+                })
+            },
+            //    分页
+            pageSizeChange(val){
+                this.pageSize =val
+                this.requestList()
+            },
+            pageCurrentChange(val){
+                this.currentPage =val
+                this.requestList()
             }
         },
     }

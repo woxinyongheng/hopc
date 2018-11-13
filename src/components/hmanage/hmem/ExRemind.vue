@@ -16,45 +16,54 @@
                 </el-table-column>
                 <el-table-column
                         label="编号"
-                        prop="name"
+                        prop="typeCode"
                         show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="typeName"
                         show-overflow-tooltip
                         label="设备类别">
                     <template slot-scope="scope">
-                        <span  @click="showtixingInfo(scope.row)" class="tableactive">{{scope.row.name}}</span>
+                        <span  @click="showtixingInfo(scope.row)" class="tableactive">{{scope.row.typeName}}</span>
                     </template>
                 </el-table-column>
 
                 <el-table-column
-                        prop="name"
+                        prop="qualityExpiration"
                         label="质保到期提醒"
                         show-overflow-tooltip>
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.qualityExpiration.indexOf('0')>-1">系统</span>
+                        <span v-if="scope.row.qualityExpiration.indexOf('1')>-1">短信</span>
+
+                    </template>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="lifetimeExpiration"
                         show-overflow-tooltip
                         label="寿命到期提醒">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="remindWay"
                         show-overflow-tooltip
                         label="提醒方式">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.remindWay.indexOf('0')>-1">系统</span>
+                        <span v-if="scope.row.remindWay.indexOf('1')>-1">短信</span>
+
+                    </template>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="remindRemarks"
                         show-overflow-tooltip
                         label="备注">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="remindStatus"
                         show-overflow-tooltip
                         label="状态">
                     <template slot-scope="scope">
-                        <span>启用</span>
-                        <span>禁用</span>
+                        <span>{{scope.row.remindStatus==0?'禁用':'启用'}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -64,7 +73,8 @@
                         label="启用/禁用">
                     <template slot-scope="scope">
                         <el-switch
-                                v-model="scope.row.status==1">
+                                @change="switchHandle(scope.row)"
+                                v-model="scope.row.remindStatus==1">
                         </el-switch>
                     </template>
                 </el-table-column>
@@ -73,18 +83,20 @@
                         show-overflow-tooltip
                         label="操作">
                     <template slot-scope="scope">
-                        <span  class="tablebtn tablebtn-c1" @click="setClick(scope.row)">设置</span>
-                        <span  @click="editClick(scope.row)" class="tablebtn tablebtn-c2">编辑</span>
+                        <span  v-if="!scope.row.qualityExpiration" class="tablebtn tablebtn-c1" @click="setClick(scope.row)">设置</span>
+                        <span v-if="scope.row.qualityExpiration"  @click="editClick(scope.row)" class="tablebtn tablebtn-c2">编辑</span>
                     </template>
                 </el-table-column>
             </el-table>
             <div class="page">
                 <el-pagination
                         :current-page="1"
-                        :page-sizes="[100, 200, 300, 400]"
+                        :page-sizes="[10, 20, 30, 50]"
                         :page-size="100"
+                        @size-change="pageSizeChange"
+                        @current-change="pageCurrentChange"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="400">
+                        :total="total">
                 </el-pagination>
             </div>
         </div>
@@ -96,7 +108,7 @@
             <span slot="title" class="dialogtitle">
                 提醒查看
               </span>
-            <tixingchakan @editHandle="editHandle" @closeHandle="tixingchakanShow=false" ></tixingchakan>
+            <tixingchakan :selectData="selectData" @editHandle="editHandle" @closeHandle="tixingchakanShow=false" ></tixingchakan>
         </el-dialog>
         <el-dialog
                 title="到期提醒设置"
@@ -106,7 +118,7 @@
             <span slot="title" class="dialogtitle">
                 到期提醒设置
               </span>
-            <tixingshezhi @closeHandle="tixingshezhiShow=false" ></tixingshezhi>
+            <tixingshezhi :selectData="selectData" @closeHandle="closeHandleSet" ></tixingshezhi>
         </el-dialog>
         <el-dialog
                 title="编辑页面"
@@ -116,7 +128,7 @@
             <span slot="title" class="dialogtitle">
                 编辑页面
               </span>
-            <tixingbianji @closeHandle="tixingbianjiShow=false" ></tixingbianji>
+            <tixingbianji :selectData="selectData" :id="selectData.id" @closeHandle="closeHandleEdit" ></tixingbianji>
         </el-dialog>
     </div>
 </template>
@@ -129,59 +141,88 @@
         name: "ExRemind",
         data:function () {
             return{
-                formInline:{
-                    user:'',
-                    region:'1',
-                    tree:[]
-                },
-                options: [{
-                    label: '江苏',
-                    cities: []
-                }, {
-                    label: '浙江',
-                    cities: []
-                }],
-                props: {
-                    value: 'label',
-                    children: 'cities'
-                },
-                frequencyData:[{label:'='},{label:'!='},{label:'>='},{label:'=<'},{label:'>'},{label:'<'}],
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    status:'延期使用',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }],
+                //分页
+                total:0,
+                pageSize:10,
+                currentPage:1,
+                filterShow:false,
+                tableData: [],
+                selectData:[],
                 tixingchakanShow:false,
                 tixingshezhiShow:false,
                 tixingbianjiShow:false
             }
         },
+        mounted(){
+          this.requestList()
+        },
         methods:{
-            showtixingInfo(){
+            requestList(){
+              let vm =this
+              vm.$http.post('equipmentConfigController/getEquipmentOfCompanyList',{
+                  pageSize:vm.pageSize,
+                  currentPage:vm.currentPage
+              }).then(res=>{
+                  if(res.code==200){
+                      vm.total = res.data.sum
+                      vm.tableData = res.data.deviceConfigList
+                  }
+              })
+
+            },
+            showtixingInfo(row){
+                this.selectData = row
                 this.tixingchakanShow =true
             },
-            setClick(){
+            setClick(row){
+                this.selectData = row
                 this.tixingshezhiShow =true
             },
-            editClick(){
+            closeHandleSet(str){
+                this.tixingshezhiShow =false
+                if(str){
+                    this.requestList()
+                }
+            },
+            editClick(row){
+                this.selectData = row
                 this.tixingbianjiShow = true
             },
-            editHandle(){
+            closeHandleEdit(str){
+                this.tixingbianjiShow = false
+                if(str){
+                    this.requestList()
+                }
+            },
+            editHandle(row){
                 this.tixingchakanShow = false
                 this.tixingbianjiShow = true
+            },
+            //启用禁用
+            switchHandle(row){
+                let vm =this
+                vm.$http.post('equipmentConfigController/updateEquipmentOfRemindStates',{
+                    id:row.id,
+                    remindStates:row.remindStatus==0?'1':'0'
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.$message({
+                            message:res.message,
+                            type:'success'
+                        })
+                        vm.requestList()
+
+                    }
+                })
+            },
+            //    分页
+            pageSizeChange(val){
+                this.pageSize =val
+                this.requestList()
+            },
+            pageCurrentChange(val){
+                this.currentPage =val
+                this.requestList()
             }
         },
         components:{

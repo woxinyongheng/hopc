@@ -264,8 +264,17 @@
                 this.selectData=val
             },
             showOrderInfo(row){//记录单号
-                this.orderData =row
-                this.baofeidanhao = true
+                let vm =this
+                vm.$http.post('equipmentRecordController/findRecord',{
+                    id:row.id,
+                    category:'1'
+                }).then(res=>{
+                    vm.data=res.data[0]
+                    if(res.code=='200'){
+                        vm.orderData=res.data[0]
+                        vm.baofeidanhao = true
+                    }
+                })
             },
             closeHandle(){
                 this.baofeidanhao = false

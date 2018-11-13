@@ -19,19 +19,21 @@
                     </div>
                     <el-table
                             ref="multipleTable"
-                            :data="roleData"
+                            :data="typeList"
                             stripe
                             border
                             style="width: 100%">
                         <el-table-column
-                                prop="name"
+                                prop="typeCode"
+                                show-overflow-tooltip
                                 label="编号">
                         </el-table-column>
                         <el-table-column
-                                prop="name"
+                                prop="typeName"
+                                show-overflow-tooltip
                                 label="设备类型">
                             <template slot-scope="scope">
-                                <span @click="lookUser(scope.row.id)" class="tablebtn tablebtn-c1">制冷设备</span>
+                                <span @click="lookUser(scope.row)" class="tablebtn tablebtn-c1">{{scope.row.typeName}}</span>
 
                             </template>
                         </el-table-column>
@@ -57,21 +59,21 @@
                                 type="selection">
                         </el-table-column>
                         <el-table-column
-                                prop="name"
+                                prop="number"
                                 show-overflow-tooltip
 
                                 label="编号">
                         </el-table-column>
                         <el-table-column
-                                prop="name"
+                                prop="projectName"
                                 show-overflow-tooltip
                                 label="项目名称">
                             <template slot-scope="scope">
-                                <span class="tableactive" @click="planLookHandle(scope.row)">{{scope.row.name}}</span>
+                                <span class="tableactive" @click="planLookHandle(scope.row)">{{scope.row.projectName}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column
-                                prop="name"
+                                prop="projectExplain"
                                 show-overflow-tooltip
                                 label="项目说明">
                         </el-table-column>
@@ -81,12 +83,23 @@
                                 width="180px"
                                 label="操作">
                             <template slot-scope="scope">
-                                <span @click="editPro(scope.row.id)" class="tablebtn tablebtn-c1">编辑</span>
-                                <span @click="deletePro(scope.row.id)" class="tablebtn tablebtn-c2">删除</span>
+                                <span @click="editPro(scope.row)" class="tablebtn tablebtn-c1">编辑</span>
+                                <span @click="deletePro(scope.row)" class="tablebtn tablebtn-c2">删除</span>
 
                             </template>
                         </el-table-column>
                     </el-table>
+                    <div class="page">
+                        <el-pagination
+                                :current-page="1"
+                                :page-sizes="[10, 20, 30, 50]"
+                                :page-size="100"
+                                @size-change="pageSizeChange"
+                                @current-change="pageCurrentChange"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="total">
+                        </el-pagination>
+                    </div>
                 </div></el-col>
             </el-row>
         </div>
@@ -100,7 +113,7 @@
             <span slot="title" class="dialogtitle">
                 {{addOrEdit=='edit'?'编辑':'新增'}}页面
               </span>
-            <addPro @closeHandle="addproShow=false"></addPro>
+            <addPro :typeList="typeList" @closeHandle="addproShow=false"></addPro>
         </el-dialog>
         <!--查看-->
         <el-dialog
@@ -124,9 +137,17 @@
         name: "MtItem",
         data:function(){
             return{
+                //分页
+                total:0,
+                pageSize:10,
+                currentPage:1,
+                filterShow:false,
+                //filter
+                typeList:[],
+                selectData:[],
                 gridspan:24,
                 lookId:'',
-                roleData:[{name:'运保主管',id:1,status:0},{name:'运保主管',id:2,status:1},{name:'运保主管',id:3,status:0}],
+                roleData:[],
                 formInline:{
                     user:'',
                     region:''
@@ -137,17 +158,40 @@
             }
         },
         mounted(){
-
+            this.requestType()
         },
         methods:{
-            //筛选
-            searchClick(){
-
+            //    获取设备分类列表
+            requestType(){
+                let vm =this
+                vm.$http.post('equipmentConfigController/getDeviceTypeList',{}).then(res=>{
+                    if(res.code=='200'){
+                        vm.typeList = res.data
+                    }
+                })
             },
-            lookUser(id){
+
+            //列表
+            requestList(){
+                let vm =this
+                vm.$http.post('maintainProjectController/findMaintainProjectList',{
+                    pageSize:vm.pageSize,
+                    currentPage:vm.currentPage,
+                    equipmentTypeId:vm.lookId
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.total = res.data.count*1
+                        vm.roleData = res.data.list
+                    }
+                })
+            },
+            lookUser(row){
                 let vm =this
                 vm.gridspan = 8
-                vm.lookId = id
+                this.pageSize=10
+                this.currentPage=1
+                vm.lookId = row.typeId
+                this.requestList()
             },
             addplanClick(){
                 this.addOrEdit = 'add'
@@ -203,7 +247,16 @@
                 this.prolookShow =false
                 this.addOrEdit = 'edit'
                 this.addproShow = true
-            }
+            },
+            //    分页
+            pageSizeChange(val){
+                this.pageSize =val
+                this.requestList()
+            },
+            pageCurrentChange(val){
+                this.currentPage =val
+                this.requestList()
+            },
 
         },
         components:{

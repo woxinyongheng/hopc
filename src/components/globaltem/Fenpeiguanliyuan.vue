@@ -6,9 +6,15 @@
                     <el-form-item label="设备类别">
                         <el-input disabled v-model="formInline.typeName"></el-input>
                     </el-form-item>
-                    <el-form-item :label="judgeUser?'责任归属':'设备管理员'" required>
+                    <el-form-item :label="judgeUser?'责任归属':'设备管理员'" required v-if="!judgeUser">
                         <el-select v-model="formInline.eqAdminCode" :placeholder="judgeUser?'责任归属':'设备管理员'">
                             <el-option v-for="item in adminList" :label="item.name" :value="item.id">{{item.name}}</el-option>
+
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item :label="judgeUser?'责任归属':'设备管理员'" required v-if="judgeUser">
+                        <el-select v-model="formInline.companyCode" :placeholder="judgeUser?'责任归属':'设备管理员'">
+                            <el-option v-for="item in componyList" :label="item.companyName" :value="item.companyCode">{{item.companyName}}</el-option>
 
                         </el-select>
                     </el-form-item>
@@ -28,14 +34,16 @@
 <script>
     export default {
         name: "Fenpeiguanliyuan",
-        props:['judgeUser','deviceData','adminList'],
+        props:['judgeUser','deviceData','adminList','componyList'],
         data:function () {
             return{
                 formInline: {
                     eqAdminCode:'',
                     eqAdminName:'',
                     remarks: '',
-                    typeName:''
+                    typeName:'',
+                    companyCode:'',
+                    companyName:''
                 }
             }
         },
@@ -49,6 +57,31 @@
             },
             submit(){
                 let vm = this
+                if(vm.judgeUser){
+                    let _index = vm.componyList.findIndex(function (item) {
+                        return item.companyCode == vm.formInline.companyCode
+                    })
+                    vm.formInline.companyName = vm.componyList[_index].companyName
+                    vm.$http.post('/equipmentConfigController/updateEequipmentOfCompany',{
+                        companyName:vm.formInline.companyName,
+                        companyCode:vm.formInline.companyCode,
+                        remarks: vm.formInline.remarks,
+                        id:vm.deviceData.id
+                    }).then(res=>{
+                        if(res.code==200){
+                            vm.$message({
+                                message: res.message,
+                                type: 'success'
+                            });
+                            this.$emit('closeShebeiHandle',true)
+                        }
+                    })
+
+
+
+
+                    return
+                }
                 let _index = vm.adminList.findIndex(function (item) {
                     return item.id == vm.formInline.eqAdminCode
                 })

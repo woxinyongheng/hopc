@@ -17,28 +17,27 @@
                 <el-col :span="21"><div class="grid-content">
                     <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
                         <el-form-item label="登录名">
-                            <el-input v-model="formInline.user" placeholder="登录名"></el-input>
+                            <el-input v-model="formInline.userName" placeholder="登录名"></el-input>
                         </el-form-item>
                         <el-form-item label="姓名">
-                            <el-input v-model="formInline.user" placeholder="姓名"></el-input>
+                            <el-input v-model="formInline.staffName" placeholder="姓名"></el-input>
                         </el-form-item>
                         <el-form-item label="所属部门">
-                            <el-select v-model="formInline.region" placeholder="所属部门">
-                                <el-option label="区域一" value="shanghai"></el-option>
-                                <el-option label="区域二" value="beijing"></el-option>
+                            <el-select v-model="formInline.officeId" placeholder="所属部门">
+                                <el-option v-for="item in officeList" :label="item.name" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="状态">
-                            <el-select v-model="formInline.region" placeholder="状态">
-                                <el-option label="启用" value="shanghai"></el-option>
-                                <el-option label="禁用" value="beijing"></el-option>
+                            <el-select v-model="formInline.status" placeholder="状态">
+                                <el-option label="正常" value="0"></el-option>
+                                <el-option label="禁用" value="1"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-form>
                 </div></el-col>
                 <el-col :span="3"><div class="grid-content searchbox">
-                    <el-button type="primary" size="mini" icon="el-icon-search">搜索</el-button>
-                    <el-button  size="mini" icon="el-icon-refresh">重置</el-button>
+                    <el-button type="primary" size="mini" icon="el-icon-search" @click="searchClick">搜索</el-button>
+                    <el-button  size="mini" icon="el-icon-refresh" @click="resetSearchClick">重置</el-button>
                 </div></el-col>
             </el-row>
 
@@ -192,7 +191,7 @@
             <span slot="title" class="dialogtitle">
                 分配用户
               </span>
-            <fenpeiyonghu :roleTree="roleTree" @closeHandle="distributionUser=false"></fenpeiyonghu>
+            <fenpeiyonghu :selectData="selectData" :roleTree="roleTree" @closeHandle="closeHnadle"></fenpeiyonghu>
 
         </el-dialog>
     </div>
@@ -211,8 +210,10 @@
                 roleData:[],
                 userData:[],
                 formInline:{
-                    user:'',
-                    region:''
+                    userName:'',
+                    staffName:'',
+                    officeId:'',
+                    status:''
                 },
                 deleteDialogVisible:false,
                 deleteId:'',
@@ -224,17 +225,28 @@
                 total:0,
                 selectData:[],
                 filterShow:false,
-                roleTree:[]
+                roleTree:[],
+                officeList:[]
 
             }
         },
         mounted(){
             this.requestList()
+            this.requestOffice()
         },
         methods:{
             //筛选
             searchClick(){
-
+                this.requestList()
+            },
+            resetSearchClick(){
+                this.formInline={
+                    userName:'',
+                    staffName:'',
+                    officeId:'',
+                    status:''
+                }
+                this.requestList()
             },
             deleteCLOSE(str){
                 this.deleteDialogVisible = false
@@ -259,6 +271,20 @@
             //分配用户
             distributionUserClick(){
                 let vm =this
+                if(!vm.selectData.length){
+                    vm.$message({
+                        message: '请选择角色',
+                        type: 'warning'
+                    });
+                    return
+                }
+                if(vm.selectData.length>1){
+                    vm.$message({
+                        message: '请选择一个角色',
+                        type: 'warning'
+                    });
+                    return
+                }
                 vm.$http.post('/userControl/getOfficeByTree',{
 
                 }).then(res=>{
@@ -275,14 +301,16 @@
                         })
                         var _arr = vm.recursiveFun(arr,arrChild)
                         vm.roleTree = _arr
-                        debugger
                         vm.distributionUser=true
 
                     }
                 })
             },
-            distributionUserClickSure(){
-
+            closeHnadle(str){
+                this.distributionUser=false
+                if(str){
+                    this.requestList()
+                }
             },
         //    列表信息
             requestList(){
@@ -290,14 +318,30 @@
                 vm.$http.post('userControl/getRoleListAndStaffList',{
                     currentPage:vm.currentPage,
                     pageSize:vm.pageSize,
-                    staffRole:vm.roleCode
+                    staffRole:vm.roleCode,
+                    userName:vm.formInline.userName,
+                    staffName:vm.formInline.staffName,
+                    officeId:vm.formInline.officeId,
+                    status:vm.formInline.status,
+                    officeType:vm.formInline.officeId?'1':''
                 }).then(res=>{
                     if(res.code=='200'){
                         if(!vm.roleData.length){
                             vm.roleData =  res.data.roleList
                         }
                         vm.userData = res.data.userList
-                        vm.total = res.data.userListCount
+                        vm.total = res.data.userListCount || 0
+                    }
+                })
+            },
+            //获取部门
+            requestOffice(){
+                let vm =this
+                vm.$http.post(__PATH.BASEPATH+'outsourcedController/getOfficeAndTeamList',{
+                    type:'1',
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.officeList = res.data.officeList
                     }
                 })
             },

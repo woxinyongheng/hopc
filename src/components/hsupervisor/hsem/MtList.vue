@@ -262,17 +262,6 @@
                     equipmentAdminCode:'',
                     propertyCompanyCode:''
                 },
-                options: [{
-                    label: '江苏',
-                    cities: []
-                }, {
-                    label: '浙江',
-                    cities: []
-                }],
-                props: {
-                    value: 'label',
-                    children: 'cities'
-                },
                 frequencyData:[{label:'='},{label:'!='},{label:'>='},{label:'=<'},{label:'>'},{label:'<'}],
                 tableData: [],
                 shebeichakanShow:false,

@@ -18,7 +18,7 @@
                 <el-col :span="21">
                     <div class="grid-content">
                         <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
-                            <el-form-item label="类别编号">
+                            <el-form-item label="编号">
                                 <el-input v-model="formInline.typeCode" placeholder="设备编号"></el-input>
                             </el-form-item>
                             <el-form-item label="设备类别">
@@ -243,6 +243,7 @@
                 })
             },
             showshebeiInfo(row){
+                debugger
                 this.deviceData = row
                 this.shebeichakanShow =true
             },

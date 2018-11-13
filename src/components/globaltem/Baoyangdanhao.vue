@@ -140,6 +140,7 @@
 <script>
     export default {
         name: "Baoyangdanhao",
+        props:['orderData'],
         data:function () {
             return{
             }

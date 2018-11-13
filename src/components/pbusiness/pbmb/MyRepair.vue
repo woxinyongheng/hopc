@@ -1,87 +1,72 @@
 <template>
-    <div class="myrepail">
+    <div class="myrepair">
         <div class="righttitle">
             <p>我的报修</p>
         </div>
         <div class="buttonbox">
             <div class="pullleft">
-                <el-tag>全部</el-tag>
-                <el-tag type="danger">未派工</el-tag>
-                <el-tag type="success">已派工</el-tag>
-                <el-tag type="info">已挂单</el-tag>
-                <el-tag type="warning">已完成</el-tag>
-                <el-button type="warning" size="mini">导出</el-button>
+                <el-button size="mini" plain>全部</el-button>
+                <el-button type="danger" plain size="mini">未派工</el-button>
+                <el-button type="success" plain size="mini">已派工</el-button>
+                <el-button type="info" plain size="mini">已挂单</el-button>
+                <el-button type="warning" plain size="mini">已完成</el-button>
+                <el-button type="warning" plain size="mini">导出</el-button>
             </div>
             <div class="pullright">
-                <el-button type="success" size="mini" icon="el-icon-search">检索</el-button>
+                <el-button type="success" size="mini" icon="el-icon-search" @click="filterShow=!filterShow">检索</el-button>
             </div>
         </div>
-        <div class="filterbox">
+        <div class="filterbox" v-if="filterShow">
             <el-row>
-                <el-col :span="21">
-                    <div class="grid-content">
-                        <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
-                            <el-form-item label="记录单号">
-                                <el-input v-model="formInline.user" placeholder="记录单号"></el-input>
-                            </el-form-item>
-                            <el-form-item label="保修时间">
-                                <el-date-picker
-                                        v-model="formInline.user"
-                                        type="date"
-                                        placeholder="开始日期">
-                                </el-date-picker>
-                            </el-form-item>
-                            <el-form-item label="至">
-                                <el-date-picker
-                                        v-model="formInline.user"
-                                        type="date"
-                                        placeholder="结束日期">
-                                </el-date-picker>
-                            </el-form-item>
-                            <el-form-item label="报修人">
-                                <el-input v-model="formInline.user" placeholder="报修人"></el-input>
-                            </el-form-item>
-                            <el-form-item label="设备编号">
-                                <el-input v-model="formInline.user" placeholder="记录单号"></el-input>
-                            </el-form-item>
-                            <el-form-item label="设备名称">
-                                <el-input v-model="formInline.user" placeholder="记录单号"></el-input>
-                            </el-form-item>
-                            <el-form-item label="设备类别">
-                                <el-cascader
-                                        :options="options"
-                                        v-model="formInline.tree"
-                                        :props="props">
-                                </el-cascader>
-                            </el-form-item>
-                            <el-form-item label="所在区域">
-                                <el-cascader
-                                        :options="options"
-                                        v-model="formInline.tree"
-                                        :props="props">
-                                </el-cascader>
-                            </el-form-item>
-                            <el-form-item label="责任归属">
-                                <el-select v-model="formInline.region" placeholder="责任归属">
-                                    <el-option label="区域一" value="1"></el-option>
-                                    <el-option label="区域二" value="2"></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="状态">
-                                <el-select v-model="formInline.region" placeholder="状态">
-                                    <el-option label="区域一" value="1"></el-option>
-                                    <el-option label="区域二" value="2"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-form>
-                    </div>
-                </el-col>
-                <el-col :span="3">
-                    <div class="grid-content searchbox">
-                        <el-button type="primary" size="mini" icon="el-icon-search">搜索</el-button>
-                        <el-button size="mini" icon="el-icon-refresh">重置</el-button>
-                    </div>
-                </el-col>
+                <el-col :span="21"><div class="grid-content">
+                    <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
+                        <el-form-item label="记录单号">
+                            <el-input v-model="formInline.repairCode" placeholder="记录单号"></el-input>
+                        </el-form-item>
+                        <el-form-item label="报修时间">
+                            <el-date-picker
+                                    v-model="formInline.reportStartTime"
+                                    type="date"
+                                    placeholder="开始日期">
+                            </el-date-picker>
+                        </el-form-item>
+                        <el-form-item label="至">
+                            <el-date-picker
+                                    v-model="formInline.reportEndTime"
+                                    type="date"
+                                    placeholder="结束日期">
+                            </el-date-picker>
+                        </el-form-item>
+                        <el-form-item label="设备编号">
+                            <el-input v-model="formInline.assetsCode" placeholder="设备编号"></el-input>
+                        </el-form-item>
+                        <el-form-item label="设备名称">
+                            <el-input v-model="formInline.assetsName" placeholder="设备名称"></el-input>
+                        </el-form-item>
+                        <el-form-item label="设备类别">
+                            <el-select v-model="formInline.assetsTypeId" placeholder="设备类别">
+                                <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeCode"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="所在区域">
+                            <el-cascader
+                                    v-model="areaSelect"
+                                    change-on-select
+                                    :options="areaList"
+                                    :props="props"
+                            ></el-cascader>
+                        </el-form-item>
+                        <el-form-item label="任务归属">
+                            <el-select v-model="formInline.liabilityName" placeholder="任务归属">
+                                <el-option v-for="item in componyList" :label="item.name" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-form>
+                </div></el-col>
+                <el-col :span="3"><div class="grid-content searchbox">
+                    <el-button type="primary" size="mini" icon="el-icon-search" @click="searchClick">搜索</el-button>
+                    <el-button  size="mini" icon="el-icon-refresh"  @click="resetSearch">重置</el-button>
+                </div></el-col>
             </el-row>
 
         </div>
@@ -105,80 +90,84 @@
                         width="50">
                 </el-table-column>
                 <el-table-column
-                        prop="date"
+                        prop="repairCode"
                         label="记录单号"
-                        show-overflow-tooltip
-                        width="180">
+                        show-overflow-tooltip>
                     <template slot-scope="scope">
-                        <span @click="showOrderInfo(scope.row,scope.row.id)"
-                              class="tableactive">{{scope.row.name}}</span>
+                        <span  @click="showOrderInfo(scope.row)" class="tableactive">{{scope.row.repairCode}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
-                        prop="name"
-                        label="保修时间"
-                        show-overflow-tooltip
-
-                        width="180">
+                        prop="reportTime"
+                        label="报修时间"
+                        show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="repairPersonName"
                         show-overflow-tooltip
 
                         label="报修人">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="assetsCode"
                         show-overflow-tooltip
                         label="设备编号">
                     <template slot-scope="scope">
-                        <span @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.name}}</span>
+                        <span  @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.assetsCode}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="assetsName"
                         show-overflow-tooltip
 
                         label="设备名称">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="classifyName"
                         show-overflow-tooltip
 
                         label="设备类别">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="areaName"
                         show-overflow-tooltip
 
                         label="所在区域">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="storageLocation"
                         show-overflow-tooltip
 
                         label="存放地点">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="liabilityName"
                         show-overflow-tooltip
 
-                        label="责任归属">
+                        label="任务归属">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="state"
                         show-overflow-tooltip
-
                         label="状态">
+                    <template slot-scope="scope">
+                        <el-tag v-if="scope.row.status==3" type="success">已完成</el-tag>
+                        <el-tag v-if="scope.row.status==2"  type="info">已派工</el-tag>
+                        <el-tag v-if="scope.row.status==1"  type="warning">已挂单</el-tag>
+                        <el-tag v-if="scope.row.status==0"  type="danger">未处理</el-tag>
+                    </template>
+
                 </el-table-column>
             </el-table>
             <div class="page">
                 <el-pagination
                         :current-page="1"
-                        :page-sizes="[100, 200, 300, 400]"
+                        :page-sizes="[10, 20, 30, 50]"
                         :page-size="100"
+                        @size-change="pageSizeChange"
+                        @current-change="pageCurrentChange"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="400">
+                        :total="total">
                 </el-pagination>
             </div>
         </div>
@@ -190,7 +179,7 @@
             <span slot="title" class="dialogtitle">
                 查看页面
               </span>
-            <jiludanhao @closeOrderHandle="jiludanhaoShow=false"></jiludanhao>
+            <jiludanhao :orderData="orderData" @closeOrderHandle="jiludanhaoShow=false"></jiludanhao>
         </el-dialog>
         <el-dialog
                 title="设备查看"
@@ -200,10 +189,11 @@
             <span slot="title" class="dialogtitle">
                 查看页面
               </span>
-            <shebeichakan @closeShebeiHandle="shebeichakanShow=false"></shebeichakan>
+            <shebeichakan :deviceData="deviceData" @closeShebeiHandle="shebeichakanShow=false" ></shebeichakan>
         </el-dialog>
     </div>
 </template>
+
 <script>
     import jiludanhao from '@/components/globaltem/Jiludanhao'
     import shebeichakan from '@/components/globaltem/Shebeichakan'
@@ -211,58 +201,190 @@
         name: "MyRepair",
         data:function () {
             return{
+                workOrderState:'',
+                //分页
+                total:0,
+                pageSize:10,
+                currentPage:1,
+                typeList:[],
+                componyList:[],
+                areaList:[],
+                filterShow:false,
+                deviceData:[],
+                orderData:'',
                 formInline:{
-                    user:'',
-                    region:'1',
-                    tree:[]
+                    repairCode:'',
+                    reportStartTime:'',
+                    reportEndTime:'',
+                    assetsCode:'',
+                    assetsName:'',
+                    assetsTypeId:'',
+                    areaName:'',
+                    liabilityName:''
                 },
-                options: [{
-                    label: '江苏',
-                    cities: []
-                }, {
-                    label: '浙江',
-                    cities: []
-                }],
                 props: {
-                    value: 'label',
-                    children: 'cities'
+                    label:'gridName',
+                    value:'gridName',
+                    children:'children'
                 },
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }],
+                areaSelect:[],
+                tableData: [],
                 jiludanhaoShow:false,
                 shebeichakanShow:false
 
             }
         },
+        mounted(){
+            this.requestList()
+            this.requestType()
+            this.requestComponeny()
+            this.requestArea()
+
+        },
         methods:{
-            showOrderInfo(){//记录单号
-                this.jiludanhaoShow = true
+            //筛选
+            searchClick(){
+                this.requestList()
+            },
+            resetSearch(){
+                this.formInline={
+                    repairCode:'',
+                    reportStartTime:'',
+                    reportEndTime:'',
+                    assetsCode:'',
+                    assetsName:'',
+                    assetsTypeId:'',
+                    areaName:'',
+                    liabilityName:''
+                }
+                this.areaSelect =[]
+                this.requestList()
+            },
+            showOrderInfo(row){//记录单号
+                let vm =this
+                vm.$http.post('equipmentListController/getRepairDetailById',{
+                    id:row.id,
+                }).then(res=>{
+                    debugger
+                    if(res.code=='200'){
+                        vm.orderData=res.data.repair
+                        vm.jiludanhaoShow = true
+                    }
+                })
+
+
+
             },
             closeHandle(){
                 this.jiludanhaoShow = false
 
             },
-            showshebeiInfo(){//设备编号
-                this.shebeichakanShow=true
+            showshebeiInfo(row){//设备编号
+                let vm =this
+                vm.$http.post('equipmentListController/GetEquipmentById',{
+                    id:row.id
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.deviceData = res.data
+                        vm.shebeichakanShow =true
+                    }
+                })
             },
             closeShebeiHandle(){
                 this.shebeichakanShow=false
 
+            },
+            requestList(){
+                let vm =this
+                vm.$http.post('equipmentListController/getMyRepairs',{
+                    pageSize:vm.pageSize,
+                    currentPage:vm.currentPage,
+                    reportStartTime:vm.formInline.reportStartTime,
+                    reportEndTime:vm.formInline.reportEndTime,
+                    assetsCode:vm.formInline.assetsCode,
+                    assetsName:vm.formInline.assetsName,
+                    assetsTypeId:vm.formInline.assetsTypeId,
+                    areaName:vm.areaSelect.length?vm.areaSelect[vm.areaSelect.length-1]:'',
+                    liabilityName:vm.formInline.liabilityName,
+                    workOrderState:vm.workOrderState
+                }).then(res=>{
+                    if(res.code=='200'){
+                        vm.tableData = res.data.list
+                        vm.total = res.data.count
+                    }
+                })
+            },
+            //    获取设备分类列表
+            requestType(){
+                let vm =this
+                vm.$http.post('equipmentConfigController/getDeviceTypeList',{}).then(res=>{
+                    if(res.code=='200'){
+                        vm.typeList = res.data
+                    }
+                })
+            },
+            //    wuye
+            requestComponeny(){
+                let vm = this
+                vm.$http.post(__PATH.BASEPATH+'outsourcedController/getOfficeAndTeamList',{
+                    type:'2'
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.componyList = res.data.officeList
+                    }
+                })
+            },
+            //区域
+            requestArea(){
+                var vm = this
+                vm.$http.post(__PATH.BASEPATH+'hospitalController/getHospitalGridInfo',{
+                    unitCode:'ZXYSZGDW',
+                    hospitalCode:'zkzxysyy',
+                }).then(res=>{
+                    if(res.code=='200'){
+                        var arrData = res.data
+                        vm.areaListCommon = res.data
+                        var arr=[]
+                        var arrChild =[]
+                        arrData.forEach(function (item) {
+                            if(item.parentId=='#'){
+                                arr.push(item)
+                            }else{
+                                arrChild.push(item)
+                            }
+                        })
+                        var _arr = vm.recursiveFun(arr,arrChild)
+                        vm.areaList = _arr
+                    }
+                })
+            },
+            //递归处理函数，联级使用
+            recursiveFun(arr,arrData){
+                var vm =this
+                arr.forEach(function (item) {
+
+                    arrData.forEach(function (arritem) {
+                        if(arritem.parentId==item.id){
+                            if(!item.children){
+                                item.children=[]
+                            }
+                            item.children.push(arritem)
+                        }
+                    })
+                    if(item.children && item.children.length){
+                        vm.recursiveFun(item.children,arrData)
+                    }
+                })
+                return arr
+            },
+            //    分页
+            pageSizeChange(val){
+                this.pageSize =val
+                this.requestList()
+            },
+            pageCurrentChange(val){
+                this.currentPage =val
+                this.requestList()
             }
         },
         components:{
@@ -272,7 +394,7 @@
 </script>
 
 <style scoped lang="scss">
-    .myrepail {
+    .myrepair{
 
     }
 </style>

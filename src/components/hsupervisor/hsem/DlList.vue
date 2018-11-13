@@ -250,8 +250,17 @@
                 this.selectData=val
             },
             showOrderInfo(row){//记录单号
-                this.orderData = row
-                this.zhibaochulishow = true
+                let vm =this
+                vm.$http.post('equipmentRecordController/findRecord',{
+                    id:row.id,
+                    category:'2'
+                }).then(res=>{
+                    if(res.code=='200'){
+                        vm.orderData=res.data[0]
+                        vm.zhibaochulishow = true
+                    }
+                })
+
             },
             closeHandle(){
                 this.zhibaochulishow = false

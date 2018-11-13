@@ -5,50 +5,52 @@
         </div>
         <div class="buttonbox">
             <div class="pullleft">
-                <el-tag>全部</el-tag>
-                <el-tag type="warning">已超时</el-tag>
-                <el-tag type="danger">未派工</el-tag>
-                <el-tag type="success">已派工</el-tag>
-                <el-tag type="info">已挂单</el-tag>
-                <el-tag type="warning">已完成</el-tag>
+                <el-button plain size="mini" @click="stateClick('all')">全部</el-button>
+                <el-button plain size="mini" type="warning" @click="stateOverClick('1')">已超时</el-button>
+                <el-button plain size="mini" type="danger" @click="stateClick('0')">未派工</el-button>
+                <el-button plain size="mini" type="success" @click="stateClick('2')">已派工</el-button>
+                <el-button plain size="mini" type="info" @click="stateClick('1')">已挂单</el-button>
+                <el-button plain size="mini" type="warning" @click="stateClick('3')">已完成</el-button>
                 <el-button type="warning" size="mini">导出</el-button>
             </div>
             <div class="pullright">
-                <el-button type="success" size="mini" icon="el-icon-search">检索</el-button>
+                <el-button type="success" size="mini" icon="el-icon-search" @click="filterShow=!filterShow">检索</el-button>
             </div>
         </div>
-        <div class="filterbox">
+        <div class="filterbox" v-if="filterShow">
             <el-row>
                 <el-col :span="21"><div class="grid-content">
                     <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
                         <el-form-item label="任务编号">
-                            <el-input v-model="formInline.user" placeholder="记录单号"></el-input>
+                            <el-input v-model="formInline.maintainCode" placeholder="任务编号"></el-input>
                         </el-form-item>
                         <el-form-item label="设备类别">
-                            <el-cascader
-                                    :options="options"
-                                    v-model="formInline.tree"
-                                    :props="props">
-                            </el-cascader>
+                            <el-select v-model="formInline.assetsTypeId" placeholder="设备类别">
+                                <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeCode"></el-option>
+                            </el-select>
                         </el-form-item>
-                        <el-form-item label="设备类型">
-                            <el-select v-model="formInline.region" placeholder="设备类型">
-                                <el-option label="区域一" value="1"></el-option>
-                                <el-option label="区域二" value="2"></el-option>
+                        <el-form-item label="保养类型">
+                            <el-select v-model="formInline.maintainType" placeholder="保养类型">
+                                <el-option label="质保" value="0"></el-option>
+                                <el-option label="维保" value="1"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="周期类型">
-                            <el-select v-model="formInline.region" placeholder="周期类型">
-                                <el-option label="区域一" value="1"></el-option>
-                                <el-option label="区域二" value="2"></el-option>
+                            <el-select v-model="formInline.cycleType" placeholder="周期类型">
+                                <el-option label="周" value="0"></el-option>
+                                <el-option label="半月" value="1"></el-option>
+                                <el-option label="月" value="2"></el-option>
+                                <el-option label="季度" value="3"></el-option>
+                                <el-option label="半年" value="4"></el-option>
+                                <el-option label="年" value="5"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="保养项目">
-                            <el-input v-model="formInline.user" placeholder="保养项目"></el-input>
+                            <el-input v-model="formInline.maintainItem" placeholder="保养项目"></el-input>
                         </el-form-item>
                         <el-form-item label="要求完成时间">
                             <el-date-picker
-                                    v-model="formInline.user"
+                                    v-model="formInline.requirementPlanTime"
                                     type="date"
                                     placeholder="开始日期">
                             </el-date-picker>
@@ -61,22 +63,21 @@
                             </el-date-picker>
                         </el-form-item>
                         <el-form-item label="责任归属">
-                            <el-select v-model="formInline.region" placeholder="责任归属">
-                                <el-option label="区域一" value="1"></el-option>
-                                <el-option label="区域二" value="2"></el-option>
+                            <el-select v-model="formInline.propertyCompanyCode" placeholder="责任归属">
+                                <el-option v-for="item in componyList" :label="item.companyName" :value="item.companyCode"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="设备编号">
-                            <el-input v-model="formInline.user" placeholder="设备编号"></el-input>
+                            <el-input v-model="formInline.assetsCode" placeholder="设备编号"></el-input>
                         </el-form-item>
                         <el-form-item label="设备名称">
-                            <el-input v-model="formInline.user" placeholder="设备名称"></el-input>
+                            <el-input v-model="formInline.assetsName" placeholder="设备名称"></el-input>
                         </el-form-item>
                     </el-form>
                 </div></el-col>
                 <el-col :span="3"><div class="grid-content searchbox">
-                    <el-button type="primary" size="mini" icon="el-icon-search">搜索</el-button>
-                    <el-button  size="mini" icon="el-icon-refresh">重置</el-button>
+                    <el-button type="primary" size="mini" icon="el-icon-search" @click="requestList">搜索</el-button>
+                    <el-button  size="mini" icon="el-icon-refresh" @click="resetSearch">重置</el-button>
                 </div></el-col>
             </el-row>
 
@@ -84,10 +85,12 @@
         <div class="contentbox">
             <div class="batchSelectLabel">
                 <i class="el-icon-warning"></i>
-                已选择<span>0</span>项
+                已选择<span>{{selectData.length}}</span>项
             </div>
             <el-table
                     :data="tableData"
+                    @selection-change="handleSelectionChange"
+
                     stripe
                     border
                     style="width: 100%">
@@ -101,73 +104,77 @@
                         width="50">
                 </el-table-column>
                 <el-table-column
-                        prop="date"
+                        prop="maintainCode"
                         label="记录单号"
                         show-overflow-tooltip
                         width="180">
                     <template slot-scope="scope">
-                        <span  @click="showOrderInfo(scope.row,scope.row.id)" class="tableactive">{{scope.row.name}}</span>
+                        <span  @click="showOrderInfo(scope.row,scope.row.id)" class="tableactive">{{scope.row.maintainCode}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
-                        prop="name"
+                        prop="classifyName"
                         label="设备类别"
                         show-overflow-tooltip
 
                         width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="maintainType"
                         show-overflow-tooltip
-
                         label="保养类型">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.maintainType==0?'质保':'维保'}}</span>
+                    </template>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="cycleType"
                         show-overflow-tooltip
-
                         label="周期类型">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.cycleType==0">周</span>
+                        <span v-if="scope.row.cycleType==1">半月</span>
+                        <span v-if="scope.row.cycleType==2">月</span>
+                        <span v-if="scope.row.cycleType==3">季度</span>
+                        <span v-if="scope.row.cycleType==4">半年</span>
+                        <span v-if="scope.row.cycleType==5">年</span>
+
+                    </template>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="maintainItem"
                         show-overflow-tooltip
 
                         label="保养项目">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="requirementPlanTime"
                         show-overflow-tooltip
 
                         label="要求完成时间">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="propertyCompanyName"
                         show-overflow-tooltip
 
                         label="责任归属">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="assetsCode"
                         show-overflow-tooltip
                         label="设备编号">
                     <template slot-scope="scope">
-                        <span  @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.name}}</span>
+                        <span  @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.assetsCode}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="assetsName"
                         show-overflow-tooltip
 
-                        label="设备名称">
+                        label="propertyCompanyName">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
-                        show-overflow-tooltip
-
-                        label="责任归属">
-                </el-table-column>
-                <el-table-column
-                        prop="address"
+                        prop="state"
                         show-overflow-tooltip
                         label="状态">
                 </el-table-column>
@@ -175,10 +182,10 @@
             <div class="page">
                 <el-pagination
                         :current-page="1"
-                        :page-sizes="[100, 200, 300, 400]"
+                        :page-sizes="[10, 20, 30, 40]"
                         :page-size="100"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="400">
+                        :total="total">
                 </el-pagination>
             </div>
         </div>
@@ -190,7 +197,7 @@
             <span slot="title" class="dialogtitle">
                 查看页面
               </span>
-            <baoyangdanhao :type="'guadan'" @closeOrderHandle="jiludanhaoShow=false"></baoyangdanhao>
+            <baoyangdanhao :type="'guadan'" :orderData="orderData" @closeOrderHandle="jiludanhaoShow=false"></baoyangdanhao>
         </el-dialog>
         <el-dialog
                 title="设备查看"
@@ -200,7 +207,7 @@
             <span slot="title" class="dialogtitle">
                 查看页面
               </span>
-            <shebeichakan @closeShebeiHandle="shebeichakanShow=false" ></shebeichakan>
+            <shebeichakan :deviceData="deviceData" @closeShebeiHandle="shebeichakanShow=false" ></shebeichakan>
         </el-dialog>
     </div>
 </template>
@@ -212,58 +219,156 @@
         name: "MtTask",
         data:function () {
             return{
+                //分页
+                total:0,
+                pageSize:10,
+                currentPage:1,
+                typeList:[],
+                componyList:[],
+                state:'',
+                overTime:'',
+                filterShow:false,
                 formInline:{
-                    user:'',
-                    region:'1',
-                    tree:[]
+                    maintainCode:'',
+                    assetsTypeId:'',
+                    maintainType:'',
+                    cycleType:'',
+                    maintainItem:'',
+                    propertyCompanyCode:'',
+                    assetsCode:'',
+                    assetsName:''
                 },
-                options: [{
-                    label: '江苏',
-                    cities: []
-                }, {
-                    label: '浙江',
-                    cities: []
-                }],
-                props: {
-                    value: 'label',
-                    children: 'cities'
-                },
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }],
+                tableData: [],
                 jiludanhaoShow:false,
-                shebeichakanShow:false
+                shebeichakanShow:false,
+                selectData:[],
+                deviceData:[],
+                orderData:[]
+
 
             }
         },
+        mounted(){
+            this.requestList()
+            this.requestType()
+            this.requestComponeny()
+        },
         methods:{
-            showOrderInfo(){//记录单号
-                this.jiludanhaoShow = true
+            //重置筛选
+            resetSearch(){
+                this.formInline={
+                    maintainCode:'',
+                    assetsTypeId:'',
+                    maintainType:'',
+                    cycleType:'',
+                    maintainItem:'',
+                    propertyCompanyCode:'',
+                    assetsCode:'',
+                    assetsName:''
+                }
+                this.requestList()
+            },
+            //状态
+            stateClick(num){
+                if(num=='all'){
+                    this.state=''
+                    this.overTime = ''
+                }else{
+                    this.state=num
+
+                }
+                this.requestList()
+            },
+            stateOverClick(num){
+                this.overTime = num
+                this.requestList()
+            },
+            //获取列表
+            requestList(){
+                let vm =this
+                vm.$http.post('/maintainController/findMaintainList',{
+                    pageSize:vm.pageSize,
+                    currentPage:vm.currentPage,
+                    maintainCode:vm.formInline.maintainCode,
+                    assetsTypeId:vm.formInline.assetsTypeId,
+                    maintainType:vm.formInline.maintainType,
+                    cycleType:vm.formInline.cycleType,
+                    maintainItem:vm.formInline.maintainItem,
+                    propertyCompanyCode:vm.formInline.propertyCompanyCode,
+                    assetsCode:vm.formInline.assetsCode,
+                    assetsName:vm.formInline.assetsName,
+                    overTime:vm.overTime,
+                    state:vm.state
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.total = res.data.count
+                        vm.tableData = res.data.data
+
+                    }
+                })
+            },
+            //    获取设备分类列表
+            requestType(){
+                let vm =this
+                vm.$http.post('equipmentConfigController/getDeviceTypeList',{}).then(res=>{
+                    if(res.code=='200'){
+                        vm.typeList = res.data
+                    }
+                })
+            },
+            //    wuye
+            requestComponeny(){
+                let vm = this
+                vm.$http.post(__PATH.BASEPATH+'outsourcedController/getOutsourcedCompanyList',{}).then(res=>{
+                    if(res.code==200){
+                        vm.componyList = res.data
+                    }
+                })
+            },
+            //    列表选择
+            handleSelectionChange(val){
+                this.selectData=val
+            },
+            showOrderInfo(row){//记录单号
+                let vm =this
+                vm.$http.post('maintainController/MaintainView',{
+                    id:row.id
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.orderData = res.data
+                        vm.jiludanhaoShow = true
+                    }
+                })
+
             },
             closeHandle(){
                 this.jiludanhaoShow = false
 
             },
-            showshebeiInfo(){//设备编号
-                this.shebeichakanShow=true
+            showshebeiInfo(row){//设备编号
+                let vm =this
+                vm.$http.post('equipmentListController/GetEquipmentById',{
+                    id:row.equipmentid,
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.deviceData = res.data
+                        vm.shebeichakanShow =true
+                    }
+                })
+                // this.shebeichakanShow=true
             },
             closeShebeiHandle(){
                 this.shebeichakanShow=false
 
+            },
+            //    分页
+            pageSizeChange(val){
+                this.pageSize =val
+                this.requestList()
+            },
+            pageCurrentChange(val){
+                this.currentPage =val
+                this.requestList()
             }
         },
         components:{

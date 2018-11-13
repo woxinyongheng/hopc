@@ -6,27 +6,29 @@
                     <tbody>
                     <tr>
                         <td class="table-title">记录单号</td>
-                        <td class="table-content">{{data.recordCode}}</td>
+                        <td class="table-content">{{orderData.recordCode}}</td>
                         <td class="table-title">处理时间</td>
-                        <td class="table-content">{{data.processTime}}</td>
+                        <td class="table-content">{{orderData.processTime}}</td>
                         <td class="table-title">处理人</td>
-                        <td class="table-content">{{data.processPersonName}}</td>
+                        <td class="table-content">{{orderData.processPersonName}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">确认人</td>
-                        <td class="table-content">{{data.confirmPersonName}}</td>
+                        <td class="table-content">{{orderData.confirmPersonName}}</td>
                         <td class="table-title">延期时间(月)</td>
-                        <td class="table-content">{{data.delayTime}}</td>
+                        <td class="table-content">{{orderData.delayTime}}</td>
                         <td class="table-title"></td>
                         <td class="table-content"></td>
                     </tr>
                     <tr>
                         <td class="table-title">处理说明</td>
-                        <td class="table-content" colspan="5">{{data.remarks}}</td>
+                        <td class="table-content" colspan="5">{{orderData.remarks}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">相关附件</td>
-                        <td class="table-content" colspan="5">{{data.contentAttachmentUrl}}</td>
+                        <td class="table-content" colspan="5">
+                            <img style="width: 80px;height: 80px;padding: 20px;" v-if="orderData.contentAttachmentUrl && orderData.contentAttachmentUrl.length" v-for="item in orderData.contentAttachmentUrl" :src="item" alt="">
+                        </td>
                     </tr>
 
                     </tbody>
@@ -49,23 +51,13 @@
             }
         },
         mounted(){
-            this.requesInfo()
+            // this.requesInfo()
         },
         methods:{
             closeHandle(){
                 this.$emit('closeShebeiHandle')
             },
-            requesInfo(){
-                let vm =this
-                vm.$http.post('equipmentRecordController/findRecord',{
-                    id:vm.orderData.id,
-                    category:'0'
-                }).then(res=>{
-                    if(res.code=='200'){
-                        vm.data=res.data[0]
-                    }
-                })
-            }
+
         },
 
     }

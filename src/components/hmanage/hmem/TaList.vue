@@ -2,44 +2,35 @@
     <!--管理任务分配-->
     <div class="talist">
         <div class="righttitle">
-            <p>管理任务分配</p>
+            <p>责任任务分配</p>
         </div>
         <div class="buttonbox">
             <div class="pullleft">
-                <el-tag type="success">同步</el-tag>
+                <el-button type="success" plain size="mini" @click="syncDevice">同步</el-button>
+
                 <el-button type="warning" size="mini">导出</el-button>
             </div>
             <div class="pullright">
-                <el-button type="success" size="mini" icon="el-icon-search">检索</el-button>
+                <el-button type="success" size="mini" icon="el-icon-search" @click="filterShow=!filterShow">检索</el-button>
             </div>
         </div>
-        <div class="filterbox">
+        <div class="filterbox" v-if="filterShow">
             <el-row>
                 <el-col :span="21">
                     <div class="grid-content">
                         <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
-                            <el-form-item label="类别编号">
-                                <el-input v-model="formInline.user" placeholder="设备编号"></el-input>
+                            <el-form-item label="编号">
+                                <el-input v-model="formInline.typeCode" placeholder="设备编号"></el-input>
                             </el-form-item>
                             <el-form-item label="设备类别">
-                                <el-cascader
-                                        :options="options"
-                                        v-model="formInline.tree"
-                                        :props="props">
-                                </el-cascader>
+                                <el-select v-model="formInline.typeCode" placeholder="设备类别">
+                                    <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeCode"></el-option>
+                                </el-select>
                             </el-form-item>
-                            <!--<el-form-item label="设备管理员">-->
-                            <!--<el-cascader-->
-                            <!--:options="options"-->
-                            <!--v-model="formInline.tree"-->
-                            <!--:props="props">-->
-                            <!--</el-cascader>-->
-                            <!--</el-form-item>-->
 
-                            <el-form-item label="设备管理员">
-                                <el-select v-model="formInline.region" placeholder="设备管理员">
-                                    <el-option label="区域一" value="1"></el-option>
-                                    <el-option label="区域二" value="2"></el-option>
+                            <el-form-item label="责任公司">
+                                <el-select v-model="formInline.companyCode" placeholder="责任公司">
+                                    <el-option v-for="(item,index) in componyList" :label="item.companyName" :value="item.companyCode"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-form>
@@ -47,8 +38,8 @@
                 </el-col>
                 <el-col :span="3">
                     <div class="grid-content searchbox">
-                        <el-button type="primary" size="mini" icon="el-icon-search">搜索</el-button>
-                        <el-button size="mini" icon="el-icon-refresh">重置</el-button>
+                        <el-button type="primary" size="mini" icon="el-icon-search" @click="searchClick">搜索</el-button>
+                        <el-button size="mini" icon="el-icon-refresh" @click="resetSearch">重置</el-button>
                     </div>
                 </el-col>
             </el-row>
@@ -56,10 +47,12 @@
         <div class="contentbox">
             <div class="batchSelectLabel">
                 <i class="el-icon-warning"></i>
-                已选择<span>0</span>项
+                已选择<span>{{selectData.length}}</span>项
             </div>
             <el-table
                     :data="tableData"
+                    @selection-change="handleSelectionChange"
+
                     stripe
                     border
                     style="width: 100%">
@@ -74,24 +67,24 @@
                 </el-table-column>
                 <el-table-column
                         label="设备编号"
-                        prop="status"
-                        width="80">
+                        prop="typeCode"
+                        show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="typeName"
                         show-overflow-tooltip
                         label="设备类别">
                     <template slot-scope="scope">
-                        <span  @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.name}}</span>
+                        <span  @click="showshebeiInfo(scope.row)" class="tableactive">{{scope.row.typeName}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="companyName"
                         show-overflow-tooltip
-                        label="设备管理员">
+                        label="责任公司">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="eqAdminRemarks"
                         show-overflow-tooltip
                         label="备注">
                 </el-table-column>
@@ -100,8 +93,8 @@
                         show-overflow-tooltip
                         label="操作">
                     <template slot-scope="scope">
-                        <span  class="tablebtn tablebtn-c1" @click="feipeiguanliyuanshowClick(scope.row)">管理任务分配</span>
-                        <span  @click="editClick(scope.row)" class="tablebtn tablebtn-c2">编辑</span>
+                        <span v-if="!scope.row.companyName"  class="tablebtn tablebtn-c1" @click="feipeiguanliyuanshowClick(scope.row)">责任任务分配</span>
+                        <span v-if="scope.row.companyName" @click="editClick(scope.row)" class="tablebtn tablebtn-c2">编辑</span>
 
                     </template>
                 </el-table-column>
@@ -109,10 +102,12 @@
             <div class="page">
                 <el-pagination
                         :current-page="1"
-                        :page-sizes="[100, 200, 300, 400]"
+                        :page-sizes="[10, 20, 30, 50]"
                         :page-size="100"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="400">
+                        @size-change="pageSizeChange"
+                        @current-change="pageCurrentChange"
+                        :total="total">
                 </el-pagination>
             </div>
         </div>
@@ -124,7 +119,7 @@
             <span slot="title" class="dialogtitle">
                 设备查看
               </span>
-            <shebeichakan @editHandle="editHandle"  @closeShebeiHandle="shebeichakanShow=false" ></shebeichakan>
+            <shebeichakan :deviceData="deviceData" @editHandle="editHandle"  @closeShebeiHandle="shebeichakanShow=false" ></shebeichakan>
         </el-dialog>
         <el-dialog
                 title="分配任务管理员"
@@ -134,7 +129,7 @@
             <span slot="title" class="dialogtitle">
                 分配任务管理员
               </span>
-            <feipeiguanliyuan :judgeUser="judgeUser"  @closeShebeiHandle="feipeiguanliyuanshow=false" ></feipeiguanliyuan>
+            <feipeiguanliyuan :componyList="componyList" :deviceData="deviceData" :judgeUser="judgeUser"  @closeShebeiHandle="closeShebeiHandle" ></feipeiguanliyuan>
         </el-dialog>
         <el-dialog
                 title="编辑页面"
@@ -144,7 +139,7 @@
             <span slot="title" class="dialogtitle">
                 编辑页面
               </span>
-            <feipeiguanliyuan :judgeUser="judgeUser"  @closeShebeiHandle="editShow=false" ></feipeiguanliyuan>
+            <feipeiguanliyuan :componyList="componyList" :deviceData="deviceData" :judgeUser="judgeUser"  @closeShebeiHandle="closeShebeiHandle" ></feipeiguanliyuan>
         </el-dialog>
     </div>
 </template>
@@ -158,52 +153,117 @@
         name: "TaList",
         data:function () {
             return{
+                //分页
+                total:0,
+                pageSize:10,
+                currentPage:1,
+                typeList:[],
+                adminList:[],
+                filterShow:false,
                 judgeUser:'person',
                 formInline:{
-                    user:'',
-                    region:'',
-                    tree:[]
-                },
-                options: [{
-                    label: '江苏',
-                    cities: []
-                }, {
-                    label: '浙江',
-                    cities: []
-                }],
-                props: {
-                    value: 'label',
-                    children: 'cities'
+                    typeCode:'',
+                    companyCode:'',
                 },
                 frequencyData:[{label:'='},{label:'!='},{label:'>='},{label:'=<'},{label:'>'},{label:'<'}],
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    status:'延期使用',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }],
+                tableData: [],
                 shebeichakanShow:false,
                 feipeiguanliyuanshow:false,
-                editShow:false
+                editShow:false,
+                selectData:[],
+                deviceData:[],
+                componyList:[]
+
             }
         },
+        mounted(){
+            this.requestList()
+            this.requestType()
+            this.requestAdmin()
+        },
         methods:{
-            showshebeiInfo(){
+            closeShebeiHandle(str){
+                this.editShow = false
+                this.feipeiguanliyuanshow=false
+                if(str){
+                    this.requestList()
+                }
+            },
+            //    列表选择
+            handleSelectionChange(val){
+                this.selectData=val
+            },
+            //筛选
+            searchClick(){
+                this.requestList()
+            },
+            resetSearch(){
+                this.formInline = {
+                    companyCode:'',
+                    typeCode:'',
+                }
+                this.requestList()
+            },
+            //列表
+            requestList(){
+                let vm =this
+                vm.$http.post('/equipmentConfigController/getEquipmentOfCompanyList',{
+                    pageSize:vm.pageSize,
+                    currentPage:vm.currentPage,
+                    companyCode:vm.formInline.companyCode,
+                    typeCode:vm.formInline.typeCode,
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.tableData = res.data.deviceConfigList
+                        vm.total = res.data.sum
+                    }
+                })
+            },
+            //同步
+            syncDevice(){
+                let vm =this
+                vm.$http.post('/equipmentConfigController/synchronousDeviceType',{}).then(res=>{
+                    if(res.code==200){
+                        vm.$message({
+                            message: res.message,
+                            type: 'success'
+                        });
+                    }
+                })
+            },
+            //    获取设备分类列表
+            requestType(){
+                let vm =this
+                vm.$http.post('equipmentConfigController/getDeviceTypeList',{}).then(res=>{
+                    if(res.code=='200'){
+                        vm.typeList = res.data
+                    }
+                })
+            },
+            //    获取物业公司
+            requestAdmin(){
+                // let vm =this
+                // vm.$http.post('userControl/getDeviceManagerList',{}).then(res=>{
+                //     if(res.code==200){
+                //         vm.adminList = res.data.userList
+                //     }
+                // })
+                let vm = this
+                vm.$http.post(__PATH.BASEPATH+'outsourcedController/getOutsourcedCompanyList',{
+                    type:'2'
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.componyList = res.data
+                    }
+                })
+            },
+
+            showshebeiInfo(row){
+                this.deviceData =row
                 this.shebeichakanShow =true
             },
-            feipeiguanliyuanshowClick(){
+            feipeiguanliyuanshowClick(row){
+                this.deviceData = row
                 this.feipeiguanliyuanshow =true
             },
             editClick(){
@@ -213,6 +273,15 @@
                 this.shebeichakanShow = false
                 this.editShow = true
 
+            },
+            //    分页
+            pageSizeChange(val){
+                this.pageSize =val
+                this.requestList()
+            },
+            pageCurrentChange(val){
+                this.currentPage =val
+                this.requestList()
             }
         },
         components:{

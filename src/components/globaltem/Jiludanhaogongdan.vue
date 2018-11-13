@@ -21,19 +21,23 @@
                                 <td class="table-title">报修人</td>
                                 <td class="table-content">{{data.reportPersonName}}</td>
                                 <td class="table-title">报修人电话</td>
-                                <td class="table-content">{{reportPersonPhone}}</td>
+                                <td class="table-content">{{data.reportPersonPhone}}</td>
                             </tr>
                             <tr>
-                                <td class="table-title">保养说明</td>
+                                <td class="table-title">报修说明</td>
                                 <td class="table-content" colspan="5">{{data.repairExplain}}</td>
                             </tr>
                             <tr>
                                 <td class="table-title">语音附件</td>
-                                <td class="table-content" colspan="5">{{data.repairContentAttachmentUrl}}</td>
+                                <td class="table-content" colspan="5">
+                                    <audio v-if="data.repairContentAttachmentUrl" :src="data.repairContentAttachmentUrl" controls="controls"></audio>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="table-title">相关组件</td>
-                                <td class="table-content" colspan="5">{{data.repairAttachmentUrl}}</td>
+                                <td class="table-content" colspan="5">
+                                    <img style="width: 80px;height: 80px;padding: 20px;" v-for="item in data.repairAttachmentUrl" :src="item" alt="">
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -96,17 +100,17 @@
                         <td class="table-title" rowspan="4">配件使用</td>
                     </tr>
                     <tr>
-                        <td class="table-content">空天滤芯</td>
+                        <td class="table-content">{{data.partsName}}</td>
                         <td class="table-content"></td>
                         <td class="table-content"></td>
-                        <td class="table-content" colspan="2"></td>
+                        <td class="table-content" colspan="2">{{data.partsSum}}</td>
                     </tr>
-                    <tr>
-                        <td class="table-content">空天滤芯</td>
-                        <td class="table-content"></td>
-                        <td class="table-content"></td>
-                        <td class="table-content" colspan="2"></td>
-                    </tr>
+                    <!--<tr>-->
+                        <!--<td class="table-content">空天滤芯</td>-->
+                        <!--<td class="table-content"></td>-->
+                        <!--<td class="table-content"></td>-->
+                        <!--<td class="table-content" colspan="2"></td>-->
+                    <!--</tr>-->
                     <tr>
                         <td class="table-content"></td>
                         <td class="table-title">配件支出</td>
@@ -116,11 +120,17 @@
                     </tr>
                     <tr>
                         <td class="table-title">语音附件</td>
-                        <td class="table-content" colspan="5"></td>
+                        <td class="table-content" colspan="5">
+                            <audio v-if="data.finishContentAttachmentUrl" :src="data.finishContentAttachmentUrl" controls="controls"></audio>
+
+                        </td>
                     </tr>
                     <tr>
                         <td class="table-title">相关组件</td>
-                        <td class="table-content" colspan="5"></td>
+                        <td class="table-content" colspan="5">
+                            <img style="width: 80px;height: 80px;padding: 20px;" v-for="item in data.finishAttachmentUrl" :src="item" alt="">
+
+                        </td>
                     </tr>
                     </tbody>
                 </table>

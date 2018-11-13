@@ -51,7 +51,17 @@ Vue.prototype.$http = {
             param.roleCode = obj.roleCode
             param.userName = obj.name
         }
-        let params = qs.stringify(param)
+        let params=''
+        if(param.flagkuayu){
+            debugger
+            var formdata = new FormData();
+            for(var item in param){
+                formdata.append(item, param[item]||'');
+            }
+            params = formdata
+        }else{
+            params = qs.stringify(param)
+        }
         return axios.post(url, params).then((res) => {
             return Promise.resolve(res.data)
         }).catch((res) => {
@@ -63,7 +73,7 @@ Vue.prototype.$http = {
 //全局请求响应配置
 axios.interceptors.request.use(config => { //spinShowSet
     store.commit('spinShowSet',true)
-    config.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8'
+    config.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8;multipart/form-data'
 
     return config
 }, error =>{

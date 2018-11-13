@@ -4,20 +4,18 @@
             <div class="list">
                 <el-form :inline="true" :model="formInline" class="demo-form-inline">
                     <el-form-item label="计划名称" required>
-                        <el-input v-model="formInline.user"></el-input>
+                        <el-input v-model="formInline.projectName"></el-input>
                     </el-form-item>
                     <el-form-item label="设备类别" style="margin-left: 50px" required>
-                        <el-cascader
-                                :options="options"
-                                v-model="formInline.tree"
-                                :props="props">
-                        </el-cascader>
+                        <el-select v-model="formInline.equipmentTypeId" placeholder="设备类别">
+                            <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeCode"></el-option>
+                        </el-select>
                     </el-form-item>
                 </el-form>
                 <el-form ref="form" :model="formInline" label-width="80px"  style="padding-right: 10px">
 
                     <el-form-item label="项目说明">
-                        <el-input type="textarea" v-model="formInline.user"></el-input>
+                        <el-input type="textarea" v-model="formInline.projectExplain"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
@@ -45,7 +43,7 @@
             </div>
         </div>
         <div class="dialogfooter" style="text-align: right">
-            <el-button type="primary" size="small" @click="closeHandle">确认</el-button>
+            <el-button type="primary" size="small" @click="sureClick">确认</el-button>
             <el-button  size="small" @click="closeHandle">取消</el-button>
         </div>
     </div>
@@ -54,6 +52,7 @@
 <script>
     export default {
         name: "addPro",
+        props:['typeList'],
         data:function () {
             return{
                 formInline: {
@@ -76,11 +75,22 @@
             }
         },
         methods:{
+            sureClick(){
+              let vm =this
+              vm.$http.post('maintainProjectController/addMaintainProject',{
+                  projectName:vm.formInline.projectName,
+                  equipmentTypeId:vm.formInline.equipmentTypeId,
+                  projectExplain:vm.formInline.projectExplain,
+                  content:JSON.stringify(vm.addItemList)
+              }).then(res=>{
+                  debugger
+              })
+            },
             closeHandle(){
                 this.$emit('closeHandle')
             },
             addList(i){
-                this.addItemList.splice(i, 0, {content:''});
+                this.addItemList.splice(i+1, 0, {content:''});
             },
             deleteList(i){
                 this.addItemList.splice(i, 1);

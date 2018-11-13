@@ -6,24 +6,23 @@
                     <div class="grid-content">
                         <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
                             <el-form-item label="设备编号">
-                                <el-input v-model="formInline.user" placeholder="设备编号"></el-input>
+                                <el-input v-model="formInline.assetsCode" placeholder="设备编号"></el-input>
                             </el-form-item>
                             <el-form-item label="设备名称">
-                                <el-input v-model="formInline.user" placeholder="设备名称"></el-input>
+                                <el-input v-model="formInline.assetsName" placeholder="设备名称"></el-input>
                             </el-form-item>
                             <el-form-item label="设备品牌">
-                                <el-select v-model="formInline.region" placeholder="设备品牌">
-                                    <el-option label="区域一" value="1"></el-option>
-                                    <el-option label="区域二" value="2"></el-option>
+                                <el-select v-model="formInline.brandId" placeholder="设备品牌">
+                                    <el-option v-for="item in brandList" :label="item" :value="item.id"></el-option>
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="规格型号">
-                                <el-input v-model="formInline.user" placeholder="规格型号"></el-input>
+                                <el-input v-model="formInline.model" placeholder="规格型号"></el-input>
                             </el-form-item>
                             <el-form-item label="所在区域">
                                 <el-cascader
-                                        :options="options"
-                                        v-model="formInline.tree"
+                                        :options="areaList"
+                                        v-model="areaSelect"
                                         :props="props">
                                 </el-cascader>
                             </el-form-item>
@@ -32,8 +31,8 @@
                 </el-col>
                 <el-col :span="3">
                     <div class="grid-content searchbox">
-                        <el-button type="primary" size="mini" icon="el-icon-search">搜索</el-button>
-                        <el-button size="mini" icon="el-icon-refresh">重置</el-button>
+                        <el-button type="primary" size="mini" icon="el-icon-search" @click="requestList">搜索</el-button>
+                        <el-button size="mini" icon="el-icon-refresh" @click="resetClick">重置</el-button>
                     </div>
                 </el-col>
             </el-row>
@@ -42,6 +41,8 @@
         <div class="contentbox">
             <el-table
                     :data="tableData"
+                    @selection-change="handleSelectionChange"
+
                     stripe
                     border
                     style="width: 100%">
@@ -59,32 +60,32 @@
                         show-overflow-tooltip
                         width="80">
                     <template slot-scope="scope">
-                        <img class="tebleimg" src="../../../../static/images/avatar.png" alt="">
+                        <img class="tebleimg" :src="scope.row.picture" alt="">
                     </template>
                 </el-table-column>
 
                 <el-table-column
-                        prop="date"
+                        prop="assetsCode"
                         label="设备编号"
                         show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column
-                        prop="date"
+                        prop="brandName"
                         label="品牌"
                         show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column
-                        prop="date"
+                        prop="model"
                         label="规格型号"
                         show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column
-                        prop="date"
+                        prop="areaName"
                         label="所处区域"
                         show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column
-                        prop="date"
+                        prop="storageLocation"
                         label="存放位置"
                         show-overflow-tooltip>
                 </el-table-column>
@@ -92,10 +93,12 @@
             <div class="page">
                 <el-pagination
                         :current-page="1"
-                        :page-sizes="[100, 200, 300, 400]"
+                        :page-sizes="[10, 20, 30, 50]"
                         :page-size="100"
+                        @size-change="pageSizeChange"
+                        @current-change="pageCurrentChange"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="400">
+                        :total="total">
                 </el-pagination>
             </div>
         </div>
@@ -109,49 +112,86 @@
 <script>
     export default {
         name: "selectDevice",
+        props:['facilityTypeCode','areaList'],
         data:function () {
             return{
+                brandList:[],
+                pageSize:10,
+                currentPage:1,
+                total:0,
                 formInline:{
-                    user:'',
-                    region:'1',
-                    tree:[]
+                    assetsCode:'',
+                    assetsName:'',
+
+
                 },
-                options: [{
-                    label: '江苏',
-                    cities: []
-                }, {
-                    label: '浙江',
-                    cities: []
-                }],
+                areaSelect:[],
                 props: {
-                    value: 'label',
-                    children: 'cities'
+                    label:'gridName',
+                    value:'gridName',
+                    children:'children'
                 },
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }],
+                tableData: [],
+                selectData:[]
             }
         },
+        mounted(){
+            this.requestList()
+        },
         methods:{
-            selectDevice(obj){
-                this.$emit('closeHandle',obj)
+            //    列表选择
+            handleSelectionChange(val){
+                this.selectData=val
+            },
+            resetClick(){
+                this.formInline={
+                    assetsCode:'',
+                     assetsName:'',
+                }
+                this.areaSelect=[]
+                this.requestList()
+            },
+            //设备列表
+            requestList(){
+                let vm =this
+                vm.$http.post('equipmentListController/equipmentList',{
+                    interfaceNum:'1',
+                    pageSize:vm.pageSize,
+                    currentPage:vm.currentPage,
+                    assetsTypeId:vm.facilityTypeCode,
+                    assetsCode:vm.formInline.assetsCode,
+                    assetsName:vm.formInline.assetsName,
+                    areaName:vm.tableData.length?vm.tableData[vm.tableData.length-1]:'',
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.total = res.data.count
+                        vm.tableData = res.data.list
+                    }
+                })
+            },
+            selectDevice(){
+                let vm =this
+                if(!vm.selectData.length){
+                    return
+                }
+                this.$emit('closeHandle',vm.selectData)
             },
             closeHandle(){
                 this.$emit('closeHandle')
+            },
+            //    分页
+            pageSizeChange(val){
+                this.pageSize =val
+                this.requestList()
+            },
+            pageCurrentChange(val){
+                this.currentPage =val
+                this.requestList()
+            }
+        },
+        watch:{
+            facilityTypeCode:function () {
+                this.requestList()
             }
         }
 

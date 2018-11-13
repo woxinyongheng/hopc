@@ -7,39 +7,39 @@
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="全部" name="0">
                     <el-row :gutter="20">
-                        <el-col :span="6" v-for="item in 4" ><div class="grid-content collist">
-                            <card @operateHandle="operateHandle" type="1"></card>
+                        <el-col :span="6" v-for="item in dataList" v-if="item.state==3"><div class="grid-content collist">
+                            <card :item="item"   @operateHandle="operateHandle" type="1"></card>
                         </div></el-col>
                     </el-row>
                     <el-row :gutter="20">
-                        <el-col :span="6" v-for="item in 4" ><div class="grid-content collist">
-                            <card  @operateHandle="operateHandle" type="2"></card>
+                        <el-col :span="6" v-for="item in dataList" v-if="item.state==1"><div class="grid-content collist">
+                            <card   :item="item"   @operateHandle="operateHandle" type="2"></card>
                         </div></el-col>
                     </el-row>
                     <el-row :gutter="20">
-                        <el-col :span="6" v-for="item in 4" ><div class="grid-content collist">
-                            <card  @operateHandle="operateHandle" type="3"></card>
+                        <el-col :span="6" v-for="item in dataList"  v-if="item.state==2"><div class="grid-content collist">
+                            <card   :item="item"   @operateHandle="operateHandle" type="3"></card>
                         </div></el-col>
                     </el-row>
                 </el-tab-pane>
                 <el-tab-pane label="计划审核" name="1">
                     <el-row :gutter="20">
-                        <el-col :span="6" v-for="item in 20" ><div class="grid-content collist">
-                            <card @operateHandle="operateHandle"  type="1"></card>
+                        <el-col :span="6" v-for="item in dataList" v-if="item.state==3"><div class="grid-content collist">
+                            <card   :item="item"  @operateHandle="operateHandle" type="1"></card>
                         </div></el-col>
                     </el-row>
                 </el-tab-pane>
                 <el-tab-pane label="寿命到期" name="2">
                     <el-row :gutter="20">
-                        <el-col :span="6" v-for="item in 20"><div class="grid-content collist">
-                            <card @operateHandle="operateHandle"  type="2"></card>
+                        <el-col :span="6" v-for="item in dataList" v-if="item.state==1"><div class="grid-content collist">
+                            <card   :item="item"   @operateHandle="operateHandle" type="2"></card>
                         </div></el-col>
                     </el-row>
                 </el-tab-pane>
                 <el-tab-pane label="质保到期" name="3">
                     <el-row :gutter="20">
-                        <el-col :span="6" v-for="item in 20" ><div class="grid-content collist">
-                            <card @operateHandle="operateHandle"  type="3"></card>
+                        <el-col :span="6" v-for="item in dataList"  v-if="item.state==2"><div class="grid-content collist">
+                            <card   :item="item"   @operateHandle="operateHandle" type="3"></card>
                         </div></el-col>
                     </el-row>
                 </el-tab-pane>
@@ -80,14 +80,30 @@
                 activeName:0,
                 checkplanShow:false,
                 typeNum:1,
-                deviceInfoShow:false
+                deviceInfoShow:false,
+                typeList:[],
+                dataList:[]
             }
         },
+        mounted(){
+            this.requestList()
+        },
         methods:{
+            requestList(){
+                let vm =this
+                vm.$http.post('assetsinfoController/getTodoTheWork',{
+
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.dataList = res.data.list
+                    }
+                })
+            },
             //切换tab选项
             handleClick(tab,event){
 
             },
+
             //点击操作选项
             operateHandle(type){
                 this.typeNum = type

@@ -361,10 +361,7 @@
             showshebeiInfo(row){//设备编号
                 let vm =this
                 vm.$http.post('equipmentListController/GetEquipmentById',{
-                    id:row.id,
-                    Id:row.id,
-
-
+                    id:row.equipmentId,
                 }).then(res=>{
                     if(res.code==200){
                         vm.deviceData = res.data

@@ -4,40 +4,40 @@
             <div class="list">
                 <el-form :inline="true" label-width="120px" :model="formInline" class="demo-form-inline" style="display: flex;justify-content: left;margin-left: 10px">
                     <el-form-item label="设备类型" >
-                        <el-input v-model="formInline.user"></el-input>
+                        <el-input disabled :value="selectData.typeName"></el-input>
                     </el-form-item>
                     <el-form-item label="设备管理员" >
-                        <el-input v-model="formInline.user"></el-input>
+                        <el-input disabled  :value="selectData.eqAdminName"></el-input>
                     </el-form-item>
                     <el-form-item label="提醒方式" required>
-                        <el-select v-model="formInline.region" placeholder="提醒方式" required>
-                            <el-option label="系统/短息" value="1"></el-option>
-                            <el-option label="系统" value="2"></el-option>
-                            <el-option label="短息" value="3"></el-option>
+                        <el-select v-model="formInline.remindWay" placeholder="提醒方式" required>
+                            <el-option label="系统/短息" value="0,1"></el-option>
+                            <el-option label="系统" value="0"></el-option>
+                            <el-option label="短信" value="1"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-form>
                 <el-form :inline="true" label-width="120px" :model="formInline" class="demo-form-inline" style="display: flex;justify-content: left;margin-left: 10px">
                     <el-form-item label="寿命到期提醒" required class="houzhui">
-                        <el-input type="number" v-model="formInline.user" >
+                        <el-input type="number" v-model="formInline.lifetimeExpiration" >
                             <template slot="append">天</template>
                         </el-input>
                     </el-form-item>
                     <el-form-item label="质保到期提醒" required class="houzhui">
-                        <el-input type="number"   v-model="formInline.user">
+                        <el-input type="number"   v-model="formInline.qualityExpiration">
                             <template slot="append">天</template>
                         </el-input>
                     </el-form-item>
                 </el-form>
                 <el-form ref="form" label-width="120px" :model="formInline"   style="margin-left: 10px;padding-right: 40px">
                     <el-form-item label="备注">
-                        <el-input type="textarea" v-model="formInline.user"></el-input>
+                        <el-input type="textarea" v-model="formInline.remindRemarks"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
         </div>
         <div class="dialogfooter" style="text-align: right">
-            <el-button type="primary" size="small" @click="closeHandle">确认</el-button>
+            <el-button type="primary" size="small" @click="sureClick">确认</el-button>
             <el-button  size="small" @click="closeHandle">取消</el-button>
         </div>
     </div>
@@ -46,33 +46,60 @@
 <script>
     export default {
         name: "Tixingshezhi",
+        props:['selectData'],
         data:function () {
             return{
-                activeName:'first',
-                tableData:[
-                    {
-                        date: '2016-05-04',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1517 弄'
-                    },{
-                        date: '2016-05-04',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1517 弄'
-                    },{
-                        date: '2016-05-04',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1517 弄'
-                    },
-                ],
                 formInline: {
-                    user: '',
-                    region: ''
+                    remindWay: '',
+                    lifetimeExpiration: '',
+                    qualityExpiration:'',
+                    remindRemarks:''
                 }
             }
         },
         methods:{
             closeHandle(){
                 this.$emit('closeHandle')
+            },
+            sureClick(){
+                let vm =this
+                if(!vm.formInline.remindWay){
+                    vm.$message({
+                        message:"请选择提醒方式",
+                        type:'warning'
+                    })
+                    return
+                }
+                if(!vm.formInline.lifetimeExpiration){
+                    vm.$message({
+                        message:"请输入寿命到期提醒",
+                        type:'warning'
+                    })
+                    return
+                }
+                if(!vm.formInline.qualityExpiration){
+                    vm.$message({
+                        message:"请输入质保到期提醒",
+                        type:'warning'
+                    })
+                    return
+                }
+                vm.$http.post(url,{
+                    id:vm.selectData.id,
+                    remindWay:vm.formInline.remindWay,
+                    lifetimeExpiration: vm.formInline.lifetimeExpiration,
+                    qualityExpiration:vm.formInline.qualityExpiration,
+                    remindRemarks:vm.formInline.remindRemarks,
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.$message({
+                            message:res.message,
+                            type:'success'
+                        })
+                        this.$emit('closeHandle',true)
+                    }
+                })
+
             }
         },
     }

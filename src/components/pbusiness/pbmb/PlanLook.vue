@@ -7,15 +7,15 @@
                     <tbody>
                     <tr>
                         <td class="table-title">计划编号</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.planCode}}</td>
                         <td class="table-title">计划名称</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.planName}}</td>
                         <td class="table-title">设备类别</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.facilityTypeName}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">保养类型</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.maintainType==0?'质保':'维保'}}</td>
                         <td class="table-title"></td>
                         <td class="table-content"></td>
                         <td class="table-title"></td>
@@ -23,15 +23,22 @@
                     </tr>
                     <tr>
                         <td class="table-title">保养项目</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.maintainName}}</td>
                         <td class="table-title">开始日期</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.startTime}}</td>
                         <td class="table-title">结束日期</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.endTime}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">周期类型</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">
+                            <span v-if="planData.maintainPlanDetail.cycleType==0">周</span>
+                            <span v-if="planData.maintainPlanDetail.cycleType==1">半月</span>
+                            <span v-if="planData.maintainPlanDetail.cycleType==2">月</span>
+                            <span v-if="planData.maintainPlanDetail.cycleType==3">季度</span>
+                            <span v-if="planData.maintainPlanDetail.cycleType==4">半年</span>
+                            <span v-if="planData.maintainPlanDetail.cycleType==5">年</span>
+                        </td>
                         <td class="table-title"></td>
                         <td class="table-content"></td>
                         <td class="table-title"></td>
@@ -39,15 +46,15 @@
                     </tr>
                     <tr>
                         <td class="table-title">开始日期</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.startTime}}</td>
                         <td class="table-title">完成期限(天)</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.finalTime}}</td>
                         <td class="table-title"></td>
                         <td class="table-content"></td>
                     </tr>
                     <tr>
                         <td class="table-title">负责单位</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.responsibleCompany}}</td>
                         <td class="table-title"></td>
                         <td class="table-content"></td>
                         <td class="table-title"></td>
@@ -55,15 +62,15 @@
                     </tr>
                     <tr>
                         <td class="table-title">维保单位</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.company}}</td>
                         <td class="table-title">联系人</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.linkman}}</td>
                         <td class="table-title">联系人电话</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.phone}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">备注</td>
-                        <td class="table-content" colspan="5"></td>
+                        <td class="table-content" colspan="5">{{planData.maintainPlanDetail.reamrks}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -76,32 +83,28 @@
                             <td class="table-title">序号</td>
                             <td class="table-title" colspan="5">保养内容</td>
                         </tr>
-                        <tr>
-                            <td class="table-title">1</td>
-                            <td class="table-content" colspan="5"></td>
-                        </tr>
-                        <tr>
-                            <td class="table-title">2</td>
-                            <td class="table-content" colspan="5"></td>
+                        <tr v-for="(item,index) in planData.maintainDetail">
+                            <td class="table-title">{{index+1}}</td>
+                            <td class="table-content" colspan="5">{{item.content}}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <p class="label">审核信息<i class="el-icon-question"></i></p>
             <div class="list">
-                <table class="dialogtablebox">
+                <table class="dialogtablebox" v-for="tt in planData.planAuditList">
                     <tbody>
                     <tr>
                         <td class="table-title">审核时间</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{tt.auditTime}}</td>
                         <td class="table-title">审核人</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{tt.auditPersonName}}</td>
                         <td class="table-title">审核结果</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{tt.auditResult==1?'退回':'通过'}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">退回原因</td>
-                        <td class="table-content" colspan="5"></td>
+                        <td class="table-content" colspan="5">{{tt.callbackReason}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -109,7 +112,7 @@
             <p class="label">保养设备详情<i class="el-icon-question"></i></p>
             <div class="list">
                 <el-table
-                        :data="tableData"
+                        :data="planData.assetsList.list"
                         stripe
                         border
                         style="width: 100%">
@@ -123,32 +126,32 @@
                             show-overflow-tooltip
                             width="80">
                         <template slot-scope="scope">
-                            <img class="tebleimg" src="../../../../static/images/avatar.png" alt="">
+                            <img class="tebleimg" :src="scope.row.picture" alt="">
                         </template>
                     </el-table-column>
 
                     <el-table-column
-                            prop="date"
+                            prop="assetsCode"
                             label="设备编号"
                             show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
-                            prop="date"
+                            prop="brandName"
                             label="品牌"
                             show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
-                            prop="date"
+                            prop="model"
                             label="规格型号"
                             show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
-                            prop="date"
+                            prop="areaName"
                             label="所处区域"
                             show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
-                            prop="date"
+                            prop="storageLocation"
                             label="存放位置"
                             show-overflow-tooltip>
                     </el-table-column>
@@ -156,10 +159,10 @@
                 <div class="page">
                     <el-pagination
                             :current-page="1"
-                            :page-sizes="[100, 200, 300, 400]"
+                            :page-sizes="[10, 20, 30, 50]"
                             :page-size="100"
                             layout="total, sizes, prev, pager, next, jumper"
-                            :total="400">
+                            :total="planData.assetsList.count">
                     </el-pagination>
                 </div>
             </div>
@@ -175,6 +178,7 @@
 <script>
     export default {
         name: "PlanLook",
+        props:['planData'],
         data:function () {
             return{
                 tableData:[

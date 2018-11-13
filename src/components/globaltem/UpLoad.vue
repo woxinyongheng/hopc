@@ -13,7 +13,8 @@
         data:function () {
             return{
                 photo:'',
-                imgurl:''
+                imgurl:'',
+                type:''
             }
         },
         methods:{
@@ -23,10 +24,20 @@
             upImage(e){
                 var vm =this
                 var _file = e.target.files[0];
+                if(_file.type.indexOf('image')>-1){
+                    vm.type='image'
+                }else if(_file.type.indexOf('audio')>-1){
+                    vm.type='audio'
+                }else{
+                    vm.$message({
+                        message: '请选择正确的格式',
+                        type: 'warning'
+                    });
+                    return
+                }
                 var form = new FormData(); // FormData 对象
                 form.append("file", _file); // 文件对象
-                // vm.add.photo = form
-                vm.photo = e.target.files[0]
+                vm.photo = form
                 var _reader = new FileReader();
                 _reader.readAsDataURL(_file);
                 _reader.onload = function(result){
@@ -37,13 +48,15 @@
                         data = result.target.result
                     }
                     vm.imgurl = data
-
+                    vm.$emit('uploadHandle',vm.photo,vm.imgurl,vm.type)
                 }
             }
         }
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+.upload{
+    display: inline-block;
+}
 </style>

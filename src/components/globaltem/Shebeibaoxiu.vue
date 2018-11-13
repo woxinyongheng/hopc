@@ -11,9 +11,10 @@
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="报修人" required>
-                        <el-select v-model="formInline.reportPersonCode" placeholder="报修人">
-                            <el-option v-for="item in customList" :label="item.name" :value="item.staffId"></el-option>
-                        </el-select>
+                        <el-input v-model="formInline.reportPersonName"></el-input>
+                        <!--<el-select v-model="formInline.reportPersonCode" placeholder="报修人">-->
+                            <!--<el-option v-for="item in customList" :label="item.name" :value="item.staffId"></el-option>-->
+                        <!--</el-select>-->
                     </el-form-item>
                     <el-form-item label="报修人电话" >
                         <el-input v-model="formInline.reportPersonPhone"></el-input>
@@ -27,7 +28,9 @@
                 </el-form>
                 <el-form :model="formInline" label-width="80px">
                     <el-form-item label="相关附件">
-                        <upload></upload>
+                        <vueaudio :audiourl="audiourl"></vueaudio>
+                        <img style="width: 148px;height: 148px;vertical-align: middle" v-for="item in imgurl" :src="item" alt="">
+                        <upload style="display: inline-block;vertical-align: middle" @uploadHandle="uploadHandle"></upload>
                     </el-form-item>
                 </el-form>
 
@@ -44,6 +47,7 @@
 
 <script>
     import upload from '@/components/globaltem/UpLoad'
+    import vueaudio  from '@/components/globaltem/Audio'
     export default {
         name: "Shebeibaoxiu",
         props:['selectData'],
@@ -52,36 +56,37 @@
                 activeName:'first',
                 formInline: {
                     reportTime:'',
-                    reportPersonCode:'',
-                    reportPersonName:'',
+                    reportPersonCode:JSON.parse(localStorage.getItem('LOGINDATA')).id,
+                    reportPersonName:JSON.parse(localStorage.getItem('LOGINDATA')).name,
                     reportPersonPhone:'',
                     repairExplain:'',
                     repairContentAttachmentUrl:'',
-                    repairAttachmentUrl:'',
+                    repairAttachmentUrl:[],
                 },
-                customList:[]
+                customList:[],
+                imgurl:[],
+                audiourl:''
             }
         },
         mounted(){
-            let vm =this
-            debugger
-            vm.$http.post('http://218.247.12.42:8196/staffController/getHospitalStaffList',{}).then(res=>{
-                if(res.code==200){
-                    vm.customList = res.data
-                }
-            })
 
         },
         methods:{
+            uploadHandle(file,url,type){
+                if(type=='image'){
+                    this.formInline.repairAttachmentUrl.push(file)
+                    this.imgurl.push(url)
+                }else{
+                    this.formInline.repairContentAttachmentUrl=file
+                    this.audiourl = url
+                }
+            },
             closeHandle(){
                 this.$emit('closeShebeiHandle')
             },
             sureRepair(){
                 let vm =this
-                let _index = vm.customList.findIndex(function (item) {
-                    return item.staffId == vm.formInline.reportPersonCode
-                })
-                vm.formInline.reportPersonName = vm.customList[_index].name
+                debugger
                 vm.$http.post('equipmentListController/equipmentRepair',{
                     createPersonCode:JSON.parse(localStorage.getItem('LOGINDATA')).id,
                     createPersonName:JSON.parse(localStorage.getItem('LOGINDATA')).name,
@@ -93,7 +98,8 @@
                     repairExplain:vm.formInline.repairExplain,
                     repairContentAttachmentUrl:vm.formInline.repairContentAttachmentUrl,
                     repairAttachmentUrl:vm.formInline.repairAttachmentUrl,
-                    equipmentId:vm.selectData[0].equipmentId
+                    equipmentId:vm.selectData[0].equipmentId,
+                    flagkuayu:true
                 }).then(res=>{
                     if(res.status==200){
                         vm.$message({
@@ -106,7 +112,7 @@
             }
         },
         components:{
-            upload
+            upload,vueaudio
         }
     }
 </script>

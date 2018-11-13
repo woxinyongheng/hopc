@@ -6,15 +6,15 @@
                     <tbody>
                     <tr>
                         <td class="table-title">记录单号</td>
-                        <td class="table-content">{{data.recordCode}}</td>
+                        <td class="table-content">{{orderData.recordCode}}</td>
                         <td class="table-title">处理时间</td>
-                        <td class="table-content">{{data.processTime}}</td>
+                        <td class="table-content">{{orderData.processTime}}</td>
                         <td class="table-title">处理人</td>
-                        <td class="table-content">{{data.processPersonName}}</td>
+                        <td class="table-content">{{orderData.processPersonName}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">确认人</td>
-                        <td class="table-content">{{data.confirmPersonName}}</td>
+                        <td class="table-content">{{orderData.confirmPersonName}}</td>
                         <td class="table-title"></td>
                         <td class="table-content"></td>
                         <td class="table-title"></td>
@@ -22,11 +22,13 @@
                     </tr>
                     <tr>
                         <td class="table-title">处理说明</td>
-                        <td class="table-content" colspan="5">{{data.remarks}}</td>
+                        <td class="table-content" colspan="5">{{orderData.remarks}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">相关附件</td>
-                        <td class="table-content" colspan="5">{{data.contentAttachmentUrl}}</td>
+                        <td class="table-content" colspan="5">
+                            <img style="width: 80px;height: 80px;padding: 20px;" v-for="item in orderData.contentAttachmentUrl" :src="item" alt="">
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -37,13 +39,15 @@
                     <tbody>
                     <tr>
                         <td class="table-title">报废确定人</td>
-                        <td class="table-content">{{data.scrapConfirmPersonName}}</td>
+                        <td class="table-content">{{orderData.scrapConfirmPersonName}}</td>
                         <td class="table-title">报废原因</td>
-                        <td class="table-content" colspan="3">{{data.scrapReason}}</td>
+                        <td class="table-content" colspan="3">{{orderData.scrapReason}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">相关附件</td>
-                        <td class="table-content" colspan="5">{{data.monitoringContentAttachmentUrl}}</td>
+                        <td class="table-content" colspan="5">
+                            <img style="width: 80px;height: 80px;padding: 20px;" v-for="item in orderData.monitoringContentAttachmentUrl" :src="item" alt="">
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -54,13 +58,15 @@
                     <tbody>
                     <tr>
                         <td class="table-title">报废处理人</td>
-                        <td class="table-content">{{data.scrapHandlePersonName}}</td>
+                        <td class="table-content">{{orderData.scrapHandlePersonName}}</td>
                         <td class="table-title">处理方式</td>
-                        <td class="table-content" colspan="3">{{data.processModeName}}</td>
+                        <td class="table-content" colspan="3">{{orderData.processModeName}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">相关附件</td>
-                        <td class="table-content" colspan="5">{{data.handleContentAttachmentUrl}}</td>
+                        <td class="table-content" colspan="5">
+                            <img style="width: 80px;height: 80px;padding: 20px;" v-for="item in orderData.handleContentAttachmentUrl" :src="item" alt="">
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -82,24 +88,12 @@
             }
         },
         mounted(){
-            this.requesInfo()
         },
         methods:{
             closeHandle(){
                 this.$emit('closeShebeiHandle')
             },
-            requesInfo(){
-                let vm =this
-                vm.$http.post('equipmentRecordController/findRecord',{
-                    id:vm.orderData.id,
-                    category:'1'
-                }).then(res=>{
-                    vm.data=res.data[0]
-                    if(res.code=='200'){
-                        vm.data=res.data[0]
-                    }
-                })
-            }
+
         },
 
     }

@@ -8,15 +8,15 @@
                     <tbody>
                     <tr>
                         <td class="table-title">计划编号</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.planCode}}</td>
                         <td class="table-title">计划名称</td>
-                        <td class="table-content"></td>
-                        <td class="table-title">制冷设备</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.planName}}</td>
+                        <td class="table-title">设备类别</td>
+                        <td class="table-content">{{planData.maintainPlanDetail.facilityTypeName}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">保养类型</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.maintainType==0?'质保':'维保'}}</td>
                         <td class="table-title"></td>
                         <td class="table-content"></td>
                         <td class="table-title"></td>
@@ -24,15 +24,22 @@
                     </tr>
                     <tr>
                         <td class="table-title">保养项目</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.maintainName}}</td>
                         <td class="table-title">开始日期</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.startTime}}</td>
                         <td class="table-title">结束日期</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.endTime}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">周期类型</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">
+                            <span v-if="planData.maintainPlanDetail.cycleType==0">周</span>
+                            <span v-if="planData.maintainPlanDetail.cycleType==1">半月</span>
+                            <span v-if="planData.maintainPlanDetail.cycleType==2">月</span>
+                            <span v-if="planData.maintainPlanDetail.cycleType==3">季度</span>
+                            <span v-if="planData.maintainPlanDetail.cycleType==4">半年</span>
+                            <span v-if="planData.maintainPlanDetail.cycleType==5">年</span>
+                        </td>
                         <td class="table-title"></td>
                         <td class="table-content"></td>
                         <td class="table-title"></td>
@@ -40,15 +47,15 @@
                     </tr>
                     <tr>
                         <td class="table-title">开始日期</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.startTime}}</td>
                         <td class="table-title">完成期限(天)</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.finalTime}}</td>
                         <td class="table-title"></td>
                         <td class="table-content"></td>
                     </tr>
                     <tr>
                         <td class="table-title">负责单位</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.company}}</td>
                         <td class="table-title"></td>
                         <td class="table-content"></td>
                         <td class="table-title"></td>
@@ -56,11 +63,11 @@
                     </tr>
                     <tr>
                         <td class="table-title">维保单位</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.company}}</td>
                         <td class="table-title">联系人</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.linkman}}</td>
                         <td class="table-title">联系人电话</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{planData.maintainPlanDetail.phone}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -73,13 +80,9 @@
                             <td class="table-title">序号</td>
                             <td class="table-title" colspan="5">保养内容</td>
                         </tr>
-                        <tr>
-                            <td class="table-title">1</td>
-                            <td class="table-content" colspan="5"></td>
-                        </tr>
-                        <tr>
-                            <td class="table-title">2</td>
-                            <td class="table-content" colspan="5"></td>
+                        <tr v-for="(item,index) in planData.maintainDetail">
+                            <td class="table-title">{{index+1}}</td>
+                            <td class="table-content" colspan="5"{{item.content}}></td>
                         </tr>
                     </tbody>
                 </table>
@@ -87,7 +90,7 @@
             <p class="label">保养设备详情<i class="el-icon-question"></i></p>
             <div class="list">
                 <el-table
-                        :data="tableData"
+                        :data="planData.assetsList.list"
                         stripe
                         border
                         style="width: 100%">
@@ -102,39 +105,39 @@
                             show-overflow-tooltip
                             width="50">
                         <template slot-scope="scope">
-                            <img class="tebleimg" src="../../../../../static/images/avatar.png" alt="">
+                            <img class="tebleimg" :src="scope.row.picture" alt="">
                         </template>
                     </el-table-column>
                     <el-table-column
-                            prop="name"
+                            prop="assetsCode"
                             label="设备编号"
                             show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
-                            prop="address"
+                            prop="assetsName"
                             show-overflow-tooltip
 
                             label="设备名称">
                     </el-table-column>
                     <el-table-column
-                            prop="address"
+                            prop="brandName"
                             show-overflow-tooltip
                             label="品牌">
                     </el-table-column>
                     <el-table-column
-                            prop="address"
+                            prop="model"
                             show-overflow-tooltip
 
                             label="规格型号">
                     </el-table-column>
                     <el-table-column
-                            prop="address"
+                            prop="areaName"
                             show-overflow-tooltip
 
                             label="所处区域">
                     </el-table-column>
                     <el-table-column
-                            prop="address"
+                            prop="storageLocation"
                             show-overflow-tooltip
 
                             label="存放位置">
@@ -143,28 +146,28 @@
                 <div class="page">
                     <el-pagination
                             :current-page="1"
-                            :page-sizes="[100, 200, 300, 400]"
+                            :page-sizes="[10, 20, 30,50]"
                             :page-size="100"
                             layout="total, sizes, prev, pager, next, jumper"
-                            :total="400">
+                            :total="planData.assetsList.count">
                     </el-pagination>
                 </div>
             </div>
             <p class="label">审核信息<i class="el-icon-question"></i></p>
             <div class="list">
                 <table class="dialogtablebox">
-                    <tbody>
+                    <tbody v-for="item in planData.planAuditList">
                     <tr>
                         <td class="table-title">审核时间</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{item.auditTime}}</td>
                         <td class="table-title">审核人</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{item.auditPersonName}}</td>
                         <td class="table-title">审核结果</td>
-                        <td class="table-content"></td>
+                        <td class="table-content">{{item.auditResult==0?'退回':'通过'}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">退回原因</td>
-                        <td class="table-content" colspan="5"></td>
+                        <td class="table-content" colspan="5">{{item.callbackReason}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -201,6 +204,7 @@
 <script>
     export default {
         name: "checkPlan",
+        props:['planData'],
         data:function () {
             return{
                 backShow:false,
@@ -226,17 +230,48 @@
         },
         methods:{
             closeHandle(){
-                this.$emit('closeHandle')
+                vm.requestCheck('1')
             },
             backcloseHandle(){
                 this.backShow = true
             },
             sureBack(){
+                let vm =this
                 this.backShow = false
-
+                vm.requestCheck('0')
             },
             cancleBack(){
                 this.backShow =false
+            },
+            requestCheck(num){
+                let vm =this
+                vm.$http.post('maintainPlanAudit/savePlanAudit',{
+                    auditTime:vm.getNowFormatDate(),
+                    auditPersonName:'',
+                    auditPersonCode:'',
+                    auditResult:num,
+                    callbackReason:vm.backinfo
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.backShow = false
+                        vm.$emit('closeHandle',true)
+                    }
+                })
+            },
+            getNowFormatDate() {
+                var date = new Date();
+                var seperator1 = "-";
+                var year = date.getFullYear();
+                var month = date.getMonth() + 1;
+                var strDate = date.getDate();
+                if (month >= 1 && month <= 9) {
+                    month = "0" + month;
+                }
+                if (strDate >= 0 && strDate <= 9) {
+                    strDate = "0" + strDate;
+                }
+                var currentdate = year + seperator1 + month + seperator1 + strDate;
+                return currentdate;
             }
         },
 

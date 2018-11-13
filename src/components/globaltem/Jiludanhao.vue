@@ -4,10 +4,10 @@
             <p class="label">编号  wx201808290001</p>
             <div class="list">
                 <el-steps :active="1" align-center>
-                    <el-step title="报修时间" :description="data.reportTime"></el-step>
-                    <el-step title="派工时间" :description="data.assignTime"></el-step>
-                    <el-step :title="type=='guadan'?'挂单时间':'维修时间'" :description="data.repairTime"></el-step>
-                    <el-step :title="type=='guadan'?'维修时间':'结束时间'" :description="data.repairTime"></el-step>
+                    <el-step title="报修时间" :description="orderData.reportTime"></el-step>
+                    <el-step title="派工时间" :description="orderData.assignTime"></el-step>
+                    <el-step :title="type=='guadan'?'挂单时间':'维修时间'" :description="orderData.repairTime"></el-step>
+                    <el-step :title="type=='guadan'?'维修时间':'结束时间'" :description="orderData.repairTime"></el-step>
 
                 </el-steps>
             </div>
@@ -17,23 +17,29 @@
                         <tbody>
                             <tr>
                                 <td class="table-title">{{type=='guadan'?'资产编号':'报修时间'}}</td>
-                                <td class="table-content">{{data.reportTime}}</td>
+                                <td class="table-content">{{orderData.reportTime}}</td>
                                 <td class="table-title">{{type=='guadan'?'资产类别':'报修人'}}</td>
-                                <td class="table-content">{{data.reportPersonName}}</td>
+                                <td class="table-content">{{orderData.reportPersonName}}</td>
                                 <td class="table-title">{{type=='guadan'?'资产名称':'报修人电话'}}</td>
-                                <td class="table-content">{{reportPersonPhone}}</td>
+                                <td class="table-content">{{orderData.reportPersonPhone}}</td>
                             </tr>
                             <tr>
-                                <td class="table-title">保养说明</td>
-                                <td class="table-content" colspan="5">{{data.repairExplain}}</td>
+                                <td class="table-title">报修说明</td>
+                                <td class="table-content" colspan="5">{{orderData.repairExplain}}</td>
                             </tr>
                             <tr>
                                 <td class="table-title">语音附件</td>
-                                <td class="table-content" colspan="5">{{data.repairContentAttachmentUrl}}</td>
+                                <td class="table-content" colspan="5">
+                                    <audio v-if="orderData.repairContentAttachmentUrl" :src="orderData.repairContentAttachmentUrl" controls="controls"></audio>
+
+                                </td>
                             </tr>
                             <tr>
                                 <td class="table-title">相关组件</td>
-                                <td class="table-content" colspan="5">{{data.repairAttachmentUrl}}</td>
+                                <td class="table-content" colspan="5">
+                                    <img style="width: 80px;height: 80px;padding: 20px;" v-for="item in orderData.repairAttachmentUrl" :src="item" alt="">
+
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -44,11 +50,11 @@
                     <tbody>
                         <tr>
                             <td class="table-title">派工时间</td>
-                            <td class="table-content">{{data.assignTime}}</td>
+                            <td class="table-content">{{orderData.assignTime}}</td>
                             <td class="table-title">派工人</td>
-                            <td class="table-content">{{data.assignPersonName}}</td>
+                            <td class="table-content">{{orderData.assignPersonName}}</td>
                             <td class="table-title">执行人</td>
-                            <td class="table-content">{{data.implementPersonName}}</td>
+                            <td class="table-content">{{orderData.implementPersonName}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -59,15 +65,15 @@
                     <tbody>
                         <tr>
                             <td class="table-title">挂单时间</td>
-                            <td class="table-content">{{data.paymentTime}}</td>
+                            <td class="table-content">{{orderData.paymentTime}}</td>
                             <td class="table-title">挂单原因</td>
-                            <td class="table-content">{{data.paymentCause}}</td>
+                            <td class="table-content">{{orderData.paymentCause}}</td>
                             <td class="table-title"></td>
                             <td class="table-content"></td>
                         </tr>
                         <tr>
                             <td class="table-title">其他说明</td>
-                            <td class="table-content" colspan="5">{{data.otherExplain}}</td>
+                            <td class="table-content" colspan="5">{{orderData.otherExplain}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -78,31 +84,31 @@
                     <tbody>
                     <tr>
                         <td class="table-title">维修日期</td>
-                        <td class="table-content">{{data.repairTime}}</td>
+                        <td class="table-content">{{orderData.repairTime}}</td>
                         <td class="table-title">维修人</td>
-                        <td class="table-content">{{data.repairPersonName}}</td>
+                        <td class="table-content">{{orderData.repairPersonName}}</td>
                         <td class="table-title">维修人电话</td>
-                        <td class="table-content">{{data.repairPersonPhone}}</td>
+                        <td class="table-content">{{orderData.repairPersonPhone}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">损坏原因</td>
-                        <td class="table-content" colspan="5">{{data.damageCause}}</td>
+                        <td class="table-content" colspan="5">{{orderData.damageCause}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">维修说明</td>
-                        <td class="table-content" colspan="5">{{data.repairFinishExplain}}</td>
+                        <td class="table-content" colspan="5">{{orderData.repairFinishExplain}}</td>
                     </tr>
                     <tr>
                         <td class="table-title" rowspan="4">配件使用</td>
                     </tr>
                     <tr>
-                        <td class="table-content">空天滤芯</td>
+                        <td class="table-content"></td>
                         <td class="table-content"></td>
                         <td class="table-content"></td>
                         <td class="table-content" colspan="2"></td>
                     </tr>
                     <tr>
-                        <td class="table-content">空天滤芯</td>
+                        <td class="table-content"></td>
                         <td class="table-content"></td>
                         <td class="table-content"></td>
                         <td class="table-content" colspan="2"></td>
@@ -110,17 +116,23 @@
                     <tr>
                         <td class="table-content"></td>
                         <td class="table-title">配件支出</td>
-                        <td class="table-content">{{data.partsPay}}</td>
+                        <td class="table-content">{{orderData.partsPay}}</td>
                         <td class="table-title">维修服务支出</td>
-                        <td class="table-content">{{data.servicePay}}</td>
+                        <td class="table-content">{{orderData.servicePay}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">语音附件</td>
-                        <td class="table-content" colspan="5"></td>
+                        <td class="table-content" colspan="5">
+                            <audio v-if="orderData.finishContentAttachmentUrl" :src="orderData.finishContentAttachmentUrl" controls="controls"></audio>
+
+                        </td>
                     </tr>
                     <tr>
                         <td class="table-title">相关组件</td>
-                        <td class="table-content" colspan="5"></td>
+                        <td class="table-content" colspan="5">
+                            <img style="width: 80px;height: 80px;padding: 20px;" v-for="item in orderData.finishAttachmentUrl" :src="item" alt="">
+
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -142,23 +154,12 @@
             }
         },
         mounted(){
-          this.requestInfo()
         },
         methods:{
             closeHandle(){
                 this.$emit('closeOrderHandle')
             },
-            requestInfo(){
-                let vm =this
-                vm.$http.post('equipmentListController/getRepairDetailById',{
-                    id:vm.orderData.id,
-                }).then(res=>{
-                    debugger
-                    if(res.code=='200'){
-                        vm.data=res.data.repair
-                    }
-                })
-            }
+
         },
 
     }
