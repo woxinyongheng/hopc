@@ -28,7 +28,7 @@
                 </el-form>
                 <el-form :model="formInline" label-width="80px">
                     <el-form-item label="相关附件">
-                        <vueaudio :audiourl="audiourl"></vueaudio>
+                        <vueaudio v-if="audiourl" :audiourl="audiourl"></vueaudio>
                         <img style="width: 148px;height: 148px;vertical-align: middle" v-for="item in imgurl" :src="item" alt="">
                         <upload style="display: inline-block;vertical-align: middle" @uploadHandle="uploadHandle"></upload>
                     </el-form-item>
@@ -58,7 +58,7 @@
                     reportTime:'',
                     reportPersonCode:JSON.parse(localStorage.getItem('LOGINDATA')).id,
                     reportPersonName:JSON.parse(localStorage.getItem('LOGINDATA')).name,
-                    reportPersonPhone:'',
+                    reportPersonPhone:JSON.parse(localStorage.getItem('LOGINDATA')).phone,
                     repairExplain:'',
                     repairContentAttachmentUrl:'',
                     repairAttachmentUrl:[],
@@ -86,7 +86,6 @@
             },
             sureRepair(){
                 let vm =this
-                debugger
                 vm.$http.post('equipmentListController/equipmentRepair',{
                     createPersonCode:JSON.parse(localStorage.getItem('LOGINDATA')).id,
                     createPersonName:JSON.parse(localStorage.getItem('LOGINDATA')).name,
@@ -101,12 +100,12 @@
                     equipmentId:vm.selectData[0].equipmentId,
                     flagkuayu:true
                 }).then(res=>{
-                    if(res.status==200){
+                    if(res.code==200){
                         vm.$message({
                             message: res.message,
                             type: 'success'
                         });
-                        vm.$emit('closeShebeiHandle')
+                        vm.$emit('closeShebeiHandle',true)
                     }
                 })
             }

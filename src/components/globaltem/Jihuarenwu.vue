@@ -1,8 +1,8 @@
 <template>
     <div class="jihua">
         <div class="dialogcontent">
-            <p class="label">计划任务详情<i class="el-icon-question"></i></p>
-            <div class="list">
+            <p class="label" @click="show1=!show1">计划任务详情<i class="el-icon-arrow-down"></i></p>
+            <div v-if="show1" class="list">
                 <table class="dialogtablebox">
                     <tbody>
                     <tr>
@@ -60,8 +60,8 @@
                     </tbody>
                 </table>
             </div>
-            <p class="label">保养项目作业书<i class="el-icon-question"></i></p>
-            <div class="list">
+            <p @click="sho2=!show2" class="label">保养项目作业书<i class="el-icon-arrow-down"></i></p>
+            <div v-if="show2" class="list">
                 <table class="dialogtablebox">
                     <tbody>
                         <tr>
@@ -79,8 +79,8 @@
                     </tbody>
                 </table>
             </div>
-            <p class="label">保养任务<i class="el-icon-question"></i></p>
-            <div class="list">
+            <p class="label" @click="show3=!show3">保养任务<i class="el-icon-arrow-down"></i></p>
+            <div v-if="show3" class="list">
                 <el-table
                         :data="planData.maintainDetail"
                         stripe
@@ -131,6 +131,9 @@
         props:['planData'],
         data:function () {
             return{
+                show1:true,
+                show2:true,
+                show3:true
             }
         },
         methods:{

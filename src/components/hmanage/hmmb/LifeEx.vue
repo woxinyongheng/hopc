@@ -343,6 +343,7 @@
                 })
             },
             showshebeiInfo(row){
+                this.operateRow=row
                 let vm =this
                 vm.$http.post('equipmentListController/GetEquipmentById',{
                     id:row.id

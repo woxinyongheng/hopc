@@ -11,8 +11,8 @@
 
                 </el-steps>
             </div>
-            <p class="label">任务信息<i class="el-icon-question"></i></p>
-                <div class="list">
+            <p class="label"  @click="show1=!show1">任务信息<i class="el-icon-arrow-down"></i></p>
+                <div class="list" v-if="show1">
                     <table class="dialogtablebox">
                         <tbody>
                             <tr>
@@ -44,8 +44,8 @@
                         </tbody>
                     </table>
                 </div>
-            <p class="label">派工信息<i class="el-icon-question"></i></p>
-            <div class="list">
+            <p class="label"  @click="show2=!show2">派工信息<i class="el-icon-arrow-down"></i></p>
+            <div class="list" v-if="show2">
                 <table class="dialogtablebox">
                     <tbody>
                         <tr>
@@ -59,8 +59,8 @@
                     </tbody>
                 </table>
             </div>
-            <p class="label">挂单信息<i class="el-icon-question"></i></p>
-            <div class="list">
+            <p class="label"  @click="show3=!show3">挂单信息<i class="el-icon-arrow-down"></i></p>
+            <div class="list" v-if="show3">
                 <table class="dialogtablebox">
                     <tbody>
                         <tr>
@@ -78,8 +78,8 @@
                     </tbody>
                 </table>
             </div>
-            <p class="label">完工信息<i class="el-icon-question"></i></p>
-            <div class="list">
+            <p class="label"  @click="show4=!show4">完工信息<i class="el-icon-arrow-down"></i></p>
+            <div class="list" v-if="show4">
                 <table class="dialogtablebox">
                     <tbody>
                     <tr>
@@ -150,7 +150,11 @@
         props:['type','orderData'],
         data:function () {
             return{
-                data:''
+                data:'',
+                show1:true,
+                show2:true,
+                show3:true,
+                show4:true
             }
         },
         mounted(){

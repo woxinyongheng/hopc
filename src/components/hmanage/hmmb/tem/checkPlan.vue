@@ -2,8 +2,8 @@
 <template>
     <div class="jilu">
         <div class="dialogcontent">
-            <p class="label">保养计划详情<i class="el-icon-question"></i></p>
-            <div class="list">
+            <p class="label" @click="show1=!show1">保养计划详情<i class="el-icon-arrow-down"></i></p>
+            <div v-if="show1" class="list">
                 <table class="dialogtablebox">
                     <tbody>
                     <tr>
@@ -72,8 +72,8 @@
                     </tbody>
                 </table>
             </div>
-            <p class="label">保养项目作业书<i class="el-icon-question"></i></p>
-            <div class="list">
+            <p @click="show2=!show2" class="label">保养项目作业书<i class="el-icon-arrow-down"></i></p>
+            <div v-if="show2" class="list">
                 <table class="dialogtablebox">
                     <tbody>
                         <tr>
@@ -87,8 +87,8 @@
                     </tbody>
                 </table>
             </div>
-            <p class="label">保养设备详情<i class="el-icon-question"></i></p>
-            <div class="list">
+            <p class="label" @click="show3=!show3">保养设备详情<i class="el-icon-arrow-down"></i></p>
+            <div v-if="show3" class="list">
                 <el-table
                         :data="planData.assetsList.list"
                         stripe
@@ -153,8 +153,8 @@
                     </el-pagination>
                 </div>
             </div>
-            <p class="label">审核信息<i class="el-icon-question"></i></p>
-            <div class="list">
+            <p class="label" @click="show4=!show4">审核信息<i class="el-icon-arrow-down"></i></p>
+            <div v-if="show4" class="list">
                 <table class="dialogtablebox">
                     <tbody v-for="item in planData.planAuditList">
                     <tr>
@@ -209,23 +209,11 @@
             return{
                 backShow:false,
                 backinfo:'',
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }],
+                tableData: [],
+                show1:true,
+                show2:true,
+                show3:true,
+                show4:true
             }
         },
         methods:{

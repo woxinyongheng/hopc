@@ -84,7 +84,7 @@
                     })
                     return
                 }
-                vm.$http.post(url,{
+                vm.$http.post('equipmentConfigController/updateEquipmentOfRemind ',{
                     id:vm.selectData.id,
                     remindWay:vm.formInline.remindWay,
                     lifetimeExpiration: vm.formInline.lifetimeExpiration,

@@ -5,11 +5,11 @@
         </div>
         <div class="buttonbox">
             <div class="pullleft">
-                <el-button size="mini" plain>全部</el-button>
-                <el-button type="danger" plain size="mini">未派工</el-button>
-                <el-button type="success" plain size="mini">已派工</el-button>
-                <el-button type="info" plain size="mini">已挂单</el-button>
-                <el-button type="warning" plain size="mini">已完成</el-button>
+                <el-button size="mini" plain @click="stateHandle('all')">全部</el-button>
+                <el-button type="danger" plain size="mini" @click="stateHandle('0')">未派工</el-button>
+                <el-button type="success" plain size="mini" @click="stateHandle('2')">已派工</el-button>
+                <el-button type="info" plain size="mini" @click="stateHandle('1')">已挂单</el-button>
+                <el-button type="warning" plain size="mini" @click="stateHandle('3')">已完成</el-button>
                 <el-button type="warning" plain size="mini">导出</el-button>
             </div>
             <div class="pullright">
@@ -73,10 +73,12 @@
         <div class="contentbox">
             <div class="batchSelectLabel">
                 <i class="el-icon-warning"></i>
-                已选择<span>0</span>项
+                已选择<span>{{selectData.length}}</span>项
             </div>
             <el-table
                     :data="tableData"
+                    @selection-change="handleSelectionChange"
+
                     stripe
                     border
                     style="width: 100%">
@@ -201,6 +203,7 @@
         name: "MyWarranty",
         data:function () {
             return{
+                state:'',
                 workOrderState:'',
                 //分页
                 total:0,
@@ -230,7 +233,8 @@
                 areaSelect:[],
                 tableData: [],
                 jiludanhaoShow:false,
-                shebeichakanShow:false
+                shebeichakanShow:false,
+                selectData:[]
 
             }
         },
@@ -242,6 +246,19 @@
 
         },
         methods:{
+            stateHandle(num){
+              if(num=='all'){
+                  this.state = ''
+              }  else{
+                  this.state=num
+              }
+                this.requestList()
+
+            },
+            //    列表选择
+            handleSelectionChange(val){
+                this.selectData=val
+            },
             //筛选
             searchClick(){
                 this.requestList()
@@ -265,7 +282,6 @@
                 vm.$http.post('equipmentListController/getRepairDetailById',{
                     id:row.id,
                 }).then(res=>{
-                    debugger
                     if(res.code=='200'){
                         vm.orderData=res.data.repair
                         vm.jiludanhaoShow = true
@@ -282,7 +298,7 @@
             showshebeiInfo(row){//设备编号
                 let vm =this
                 vm.$http.post('equipmentListController/GetEquipmentById',{
-                    id:row.id
+                    id:row.equipmentId
                 }).then(res=>{
                     if(res.code==200){
                         vm.deviceData = res.data
@@ -306,7 +322,8 @@
                     assetsTypeId:vm.formInline.assetsTypeId,
                     areaName:vm.areaSelect.length?vm.areaSelect[vm.areaSelect.length-1]:'',
                     liabilityName:vm.formInline.liabilityName,
-                    workOrderState:vm.workOrderState
+                    workOrderState:vm.workOrderState,
+                    state:vm.state
                 }).then(res=>{
                     if(res.code=='200'){
                         vm.tableData = res.data.list

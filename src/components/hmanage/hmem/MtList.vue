@@ -431,6 +431,13 @@
             },
             //    设备报修
             deviceRepairClick() {
+                if(this.selectData.length!=1){
+                    this.$message({
+                        message:'请选择一条设备',
+                        type:'warning'
+                    })
+                    return
+                }
                 this.shebeibaoxiuShow = true
             },
             //    状态控制

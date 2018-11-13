@@ -168,10 +168,10 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                        prop="assetsName"
+                        prop="propertyCompanyName"
                         show-overflow-tooltip
 
-                        label="propertyCompanyName">
+                        label="责任归属">
                 </el-table-column>
                 <el-table-column
                         prop="state"

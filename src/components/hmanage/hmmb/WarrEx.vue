@@ -166,7 +166,7 @@
             <span slot="title" class="dialogtitle">
                 设备查看
               </span>
-            <DeviceInfo :deviceData="deviceData" @closeHandle="deviceInfoShow=false" :type="3"  ></DeviceInfo>
+            <DeviceInfo :deviceData="deviceData" :operateRow="operateRow" @closeHandle="deviceInfoShow=false" :type="3"  ></DeviceInfo>
         </el-dialog>
         <!--质保到期弹框-->
         <el-dialog
@@ -295,6 +295,7 @@
                 })
             },
             showshebeiInfo(row){
+                this.operateRow =row
                 let vm =this
                 vm.$http.post('equipmentListController/GetEquipmentById',{
                     id:row.id

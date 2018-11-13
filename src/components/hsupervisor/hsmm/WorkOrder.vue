@@ -5,11 +5,11 @@
         </div>
         <div class="buttonbox">
             <div class="pullleft">
-                <el-tag>全部</el-tag>
-                <el-tag type="danger">未派工</el-tag>
-                <el-tag type="success">已派工</el-tag>
-                <el-tag type="info">已挂单</el-tag>
-                <el-tag type="warning">已完成</el-tag>
+                <el-button size="mini" plain @click="stateHandle('')">全部</el-button>
+                <el-button size="mini" plain type="danger" @click="stateHandle('0')">未派工</el-button>
+                <el-button size="mini" plain type="success" @click="stateHandle('1')">已派工</el-button>
+                <el-button size="mini" plain type="info" @click="stateHandle('2')">已挂单</el-button>
+                <el-button size="mini" plain type="warning" @click="stateHandle('3')">已完成</el-button>
                 <el-button type="warning" size="mini">导出</el-button>
             </div>
             <div class="pullright">
@@ -209,6 +209,7 @@
         name: "WorkOrder",
         data:function () {
             return{
+                state:'',
                 //分页
                 total:0,
                 pageSize:10,
@@ -256,6 +257,10 @@
             this.requestComponeny()
         },
         methods:{
+            stateHandle(s){
+                this.state =s
+                this.requestList()
+            },
             //    列表选择
             handleSelectionChange(val){
                 this.selectData=val
@@ -293,6 +298,7 @@
                   assetsTypeId:vm.formInline.assetsTypeId,
                   areaName:vm.formInline.areaName.length ? vm.formInline.areaName[vm.formInline.areaName.length -1]: '',
                   taskIdOrliabilityCode:vm.formInline.taskIdOrliabilityCode,
+                  state:vm.state
               }).then(res=>{
                     if(res.code==200){
                         vm.tableData = res.data.list

@@ -326,6 +326,7 @@
                         vm.checkPlanShow = true
                     }
                 })
+
             },
             closeHandleCheck(str){
                 this.checkPlanShow = true

@@ -223,7 +223,7 @@
             <span slot="title" class="dialogtitle">
                 设备报修
               </span>
-            <shebeibaoxiu :selectData="selectData" @closeShebeiHandle="shebeibaoxiuShow=false" ></shebeibaoxiu>
+            <shebeibaoxiu :selectData="selectData" @closeShebeiHandle="repairhandle" ></shebeibaoxiu>
         </el-dialog>
     </div>
 </template>
@@ -373,7 +373,20 @@
             },
         //    设备报修
             deviceRepairClick(){
+                if(this.selectData.length!=1){
+                    this.$message({
+                        message:'请选择一条设备',
+                        type:'warning'
+                    })
+                    return
+                }
                 this.shebeibaoxiuShow=true
+            },
+            repairhandle(dtr){
+                this.shebeibaoxiuShow=false
+                if(dtr){
+                    this.requestList()
+                }
             },
         //    状态控制
             normalStateClick(){
@@ -391,6 +404,7 @@
                 this.requestList()
             },
             repairStateClick(){
+
                 this.repirState = '1'
                 this.requestList()
 

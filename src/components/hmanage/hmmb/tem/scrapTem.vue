@@ -6,7 +6,7 @@
             <div class="list">
                 <el-form :inline="true" :model="formInline" class="demo-form-inline" style="display: flex;justify-content: space-between;margin-left: 25px">
                     <el-form-item label="记录号">
-                        <el-input disabled :value="operateRow.id"></el-input>
+                        <el-input disabled :value="operateRow.assetsCode"></el-input>
                     </el-form-item>
                     <el-form-item label="处理人" >
                         <el-input disabled v-model="formInline.user"></el-input>
@@ -148,7 +148,7 @@
             sureScrap(){
                 let vm =this
                 vm.$http.post('equipmentListController/equipmentScrapDisposition',{
-                    equipmentId:vm.operateRow.id,
+                    equipmentId:vm.operateRow.assetsCode,
                     businessTime:vm.formInline.businessTime,
                     scrapConfirmPersonName:vm.formInline.scrapConfirmPersonName,
                     scrapHandlePersonName:vm.formInline.scrapConfirmPersonName,

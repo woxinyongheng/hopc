@@ -1,11 +1,12 @@
 <template>
     <div class="shebei">
-        <div class="dialogcontent">
-            <div class="list">
-                <el-tabs v-model="activeName" @tab-click="tabCliclk">
-                    <el-tab-pane label="基本信息" name="first">
-                        <table class="dialogtablebox">
-                            <tbody>
+        <div class="box" v-if="!yanqichakanShow && !baoyangShow && !zhibaochulishow && !weixiudanhaoshow">
+            <div class="dialogcontent">
+                <div class="list">
+                    <el-tabs v-model="activeName" @tab-click="tabCliclk">
+                        <el-tab-pane label="基本信息" name="first">
+                            <table class="dialogtablebox">
+                                <tbody>
                                 <tr>
                                     <td class="table-title">设备编码</td>
                                     <td class="table-content">{{deviceData.list.assetsCode}}</td>
@@ -106,58 +107,72 @@
                                     <td class="table-title">任务归属</td>
                                     <td class="table-content">{{deviceData.list.taskName}}</td>
                                 </tr>
-                            </tbody>
-                        </table>
-                    </el-tab-pane>
-                    <el-tab-pane label="处理记录" name="second">
-                        <el-table
-                                :data="tableData"
-                                stripe
-                                align="center"
-                                style="width: 100%">
-                            <el-table-column
-                                    prop="createTime"
-                                    label="处理时间">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="category"
-                                    label="处理方式">
-                                <template slot-scope="scope">
-                                    <span v-if="scope.row.category==0">延期</span>
-                                    <span v-if="scope.row.category==1">报废</span>
-                                    <span v-if="scope.row.category==2">质保到期</span>
-                                    <span v-if="scope.row.category==3">还原</span>
-                                    <span v-if="scope.row.category==4">保养</span>
-                                    <span v-if="scope.row.category==5">维修</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                    prop="createPersonName"
-                                    label="处理人">
-                            </el-table-column>
-                        </el-table>
-                        <div class="page">
-                            <el-pagination
-                                    :current-page="1"
-                                    :page-sizes="[10, 20, 30, 50]"
-                                    :page-size="100"
-                                    @size-change="pageSizeChange"
-                                    @current-change="pageCurrentChange"
-                                    layout="total, sizes, prev, pager, next, jumper"
-                                    :total="total">
-                            </el-pagination>
-                        </div>
-                    </el-tab-pane>
-                </el-tabs>
+                                </tbody>
+                            </table>
+                        </el-tab-pane>
+                        <el-tab-pane label="处理记录" name="second">
+                            <el-table
+                                    :data="tableData"
+                                    stripe
+                                    align="center"
+                                    style="width: 100%">
+                                <el-table-column
+                                        prop="createTime"
+                                        label="处理时间">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="category"
+                                        label="处理方式">
+                                    <template slot-scope="scope">
+                                        <span  class="tableactive"  v-if="scope.row.category==0" @click="yanqiInfo(scope.row)">延期</span>
+                                        <span v-if="scope.row.category==1">报废</span>
+                                        <span  class="tableactive"  v-if="scope.row.category==2" @click="zhibaoInfo(scope.row)">质保到期</span>
+                                        <span v-if="scope.row.category==3">还原</span>
+                                        <span  class="tableactive"  v-if="scope.row.category==4" @click="baoyangInfo(scope.row)">保养</span>
+                                        <span  class="tableactive"  v-if="scope.row.category==5" @click="weixiuInfo(scope.row)">维修</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                        prop="createPersonName"
+                                        label="处理人">
+                                </el-table-column>
+                            </el-table>
+                            <div class="page">
+                                <el-pagination
+                                        :current-page="1"
+                                        :page-sizes="[10, 20, 30, 50]"
+                                        :page-size="100"
+                                        @size-change="pageSizeChange"
+                                        @current-change="pageCurrentChange"
+                                        layout="total, sizes, prev, pager, next, jumper"
+                                        :total="total">
+                                </el-pagination>
+                            </div>
+                        </el-tab-pane>
+                    </el-tabs>
+                </div>
+            </div>
+            <div class="dialogfooter" style="text-align: right">
+                <el-button type="primary" size="small" @click="closeHandle">关闭</el-button>
             </div>
         </div>
-        <div class="dialogfooter" style="text-align: right">
-            <el-button type="primary" size="small" @click="closeHandle">关闭</el-button>
-        </div>
+        <yanqichakan v-if="yanqichakanShow" :orderData="orderData" @closeShebeiHandle="yanqichakanShow=false"></yanqichakan>
+        <baoyangdanhao v-if="baoyangShow" :orderData="orderData" @closeOrderHandle="baoyangShow=false"></baoyangdanhao>
+        <zhibaochuli v-if="zhibaochulishow" :orderData="orderData" @closeShebeiHandle="zhibaochulishow=false"></zhibaochuli>
+        <weixiudanhao v-if="weixiudanhaoshow" :type="'guadan'" :data="orderData" @closeOrderHandle="weixiudanhaoshow=false"></weixiudanhao>
+
+
     </div>
 </template>
 
 <script>
+    import yanqichakan from '@/components/globaltem/YanqiChakan'
+    import baoyangdanhao from '@/components/globaltem/Baoyangdanhao'
+    import zhibaochuli from '@/components/globaltem/Zhibaochuli'
+    import weixiudanhao from '@/components/globaltem/Jiludanhaogongdan'
+
+
+
     export default {
         name: "Shebeichuli",
         props:['deviceData'],
@@ -169,6 +184,12 @@
                 total:0,
                 pageSize:10,
                 currentPage:1,
+
+                yanqichakanShow:false,
+                baoyangShow:false,
+                zhibaochulishow:false,
+                weixiudanhaoshow:false,
+                orderData:''
             }
         },
         methods:{
@@ -194,6 +215,54 @@
                     }
                 })
             },
+            //二级页面
+            yanqiInfo(row){//记录单号
+                let vm =this
+                vm.$http.post('equipmentRecordController/findRecord',{
+                    id:row.id,
+                    category:'0'
+                }).then(res=>{
+                    if(res.code=='200'){
+                        vm.orderData=res.data[0]
+                        vm.yanqichakanShow = true
+                    }
+                })
+
+            },
+            baoyangInfo(row){
+                let vm =this
+                vm.$http.post('maintainController/MaintainView',{
+                    id:row.id
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.orderData = res.data
+                        vm.baoyangShow = true
+                    }
+                })
+            },
+            zhibaoInfo(row){
+                let vm =this
+                vm.$http.post('equipmentRecordController/findRecord',{
+                    id:row.id,
+                    category:'2'
+                }).then(res=>{
+                    if(res.code=='200'){
+                        vm.orderData=res.data[0]
+                        vm.zhibaochulishow = true
+                    }
+                })
+            },
+            weixiuInfo(row){
+                let vm =this
+                vm.$http.post('equipmentListController/getRepairDetailById',{
+                    id:row.id
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.orderData = res.data.repair
+                        vm.weixiudanhaoshow = true
+                    }
+                })
+            },
             //    分页
             pageSizeChange(val){
                 this.pageSize =val
@@ -204,6 +273,9 @@
                 this.requestList()
             }
         },
+        components:{
+            yanqichakan,baoyangdanhao,zhibaochuli,weixiudanhao
+        }
     }
 </script>
 

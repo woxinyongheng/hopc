@@ -8,38 +8,38 @@
                 <el-tab-pane label="全部" name="0">
                     <el-row :gutter="20">
                         <el-col :span="6" v-for="item in dataList" v-if="item.state==3"><div class="grid-content collist">
-                            <card :item="item"   @operateHandle="operateHandle" type="1"></card>
+                            <card :item="item"   @operateHandle="operateHandle(1,item.id)" type="1"></card>
                         </div></el-col>
                     </el-row>
                     <el-row :gutter="20">
                         <el-col :span="6" v-for="item in dataList" v-if="item.state==1"><div class="grid-content collist">
-                            <card   :item="item"   @operateHandle="operateHandle" type="2"></card>
+                            <card   :item="item"  @operateHandle="operateHandle(2,item.id)" type="2"></card>
                         </div></el-col>
                     </el-row>
                     <el-row :gutter="20">
                         <el-col :span="6" v-for="item in dataList"  v-if="item.state==2"><div class="grid-content collist">
-                            <card   :item="item"   @operateHandle="operateHandle" type="3"></card>
+                            <card   :item="item"   @operateHandle="operateHandle(3,item.id)" type="3"></card>
                         </div></el-col>
                     </el-row>
                 </el-tab-pane>
                 <el-tab-pane label="计划审核" name="1">
                     <el-row :gutter="20">
                         <el-col :span="6" v-for="item in dataList" v-if="item.state==3"><div class="grid-content collist">
-                            <card   :item="item"  @operateHandle="operateHandle" type="1"></card>
+                            <card   :item="item"  @operateHandle="operateHandle(1,item.id)"type="1"></card>
                         </div></el-col>
                     </el-row>
                 </el-tab-pane>
                 <el-tab-pane label="寿命到期" name="2">
                     <el-row :gutter="20">
                         <el-col :span="6" v-for="item in dataList" v-if="item.state==1"><div class="grid-content collist">
-                            <card   :item="item"   @operateHandle="operateHandle" type="2"></card>
+                            <card   :item="item"   @operateHandle="operateHandle(2,item.id)" type="2"></card>
                         </div></el-col>
                     </el-row>
                 </el-tab-pane>
                 <el-tab-pane label="质保到期" name="3">
                     <el-row :gutter="20">
                         <el-col :span="6" v-for="item in dataList"  v-if="item.state==2"><div class="grid-content collist">
-                            <card   :item="item"   @operateHandle="operateHandle" type="3"></card>
+                            <card   :item="item"   @operateHandle="operateHandle(3,item.id)" type="3"></card>
                         </div></el-col>
                     </el-row>
                 </el-tab-pane>
@@ -53,7 +53,7 @@
             <span slot="title" class="dialogtitle">
                 计划审核
               </span>
-            <checkPlan @closeHandle="checkplanShow=false"></checkPlan>
+            <checkPlan :planData="planData" @closeHandle="checkplanShow=false"></checkPlan>
         </el-dialog>
         <el-dialog
                 title="设备查看"
@@ -63,7 +63,7 @@
             <span slot="title" class="dialogtitle">
                 设备查看
               </span>
-            <DeviceInfo :type="typeNum" @closeHandle="deviceInfoShow=false"></DeviceInfo>
+            <DeviceInfo :adminList="adminList" :type="typeNum" :operateRow="operateRow" :deviceData="deviceData" @closeHandle="deviceInfoShow=false"></DeviceInfo>
         </el-dialog>
 
     </div>
@@ -82,11 +82,16 @@
                 typeNum:1,
                 deviceInfoShow:false,
                 typeList:[],
-                dataList:[]
+                dataList:[],
+                adminList:[],
+                deviceData:'',
+                operateRow:{id:''},
+                planData:''
             }
         },
         mounted(){
             this.requestList()
+            this.requestAdmin()
         },
         methods:{
             requestList(){
@@ -99,23 +104,58 @@
                     }
                 })
             },
+            //    获取设备管理员
+            requestAdmin(){
+                let vm =this
+                vm.$http.post('userControl/getDeviceManagerList',{}).then(res=>{
+                    if(res.code==200){
+                        vm.adminList = res.data.userList
+                    }
+                })
+            },
             //切换tab选项
             handleClick(tab,event){
 
             },
 
             //点击操作选项
-            operateHandle(type){
+            operateHandle(type,id){
+                let vm =this
                 this.typeNum = type
                 switch (type*1) {
                     case 1:
-                        this.checkplanShow = true
+                        vm.$http.post('maintainPlanAudit/getMaintainPlanDetail',{
+                            pageSize:10,
+                            currentPage:1,
+                            id:row.planCode
+                        }).then(res=>{
+                            if(res.code==200){
+                                vm.planData=res.data
+                                vm.checkPlanShow = true
+                            }
+                        })
                         break;
                     case 2:
-                        this.deviceInfoShow=true
+                        vm.$http.post('equipmentListController/GetEquipmentById',{
+                            id:id
+                        }).then(res=>{
+                            if(res.code==200){
+                                vm.deviceData = res.data.list
+                                vm.operateRow= res.data.list
+                                vm.deviceInfoShow =true
+                            }
+                        })
                         break;
                     case 3:
-                        this.deviceInfoShow=true
+                        vm.$http.post('equipmentListController/GetEquipmentById',{
+                            id:id
+                        }).then(res=>{
+                            if(res.code==200){
+                                vm.deviceData = res.data.list
+                                vm.operateRow= res.data.list
+                                vm.deviceInfoShow =true
+                            }
+                        })
                         break;
                     default:
                         break;

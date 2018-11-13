@@ -135,7 +135,7 @@
             <span slot="title" class="dialogtitle">
                 分配任务管理员
               </span>
-            <feipeiguanliyuan :deviceData="deviceData" :adminList="adminList" @closeShebeiHandle="feipeiguanliyuanshow=false" ></feipeiguanliyuan>
+            <feipeiguanliyuan :deviceData="deviceData" :adminList="adminList" @closeShebeiHandle="fenpeiHandle" ></feipeiguanliyuan>
         </el-dialog>
         <el-dialog
                 title="编辑页面"
@@ -145,7 +145,7 @@
             <span slot="title" class="dialogtitle">
                 编辑页面
               </span>
-            <feipeiguanliyuan :deviceData="deviceData" :adminList="adminList" @closeShebeiHandle="editShow=false" ></feipeiguanliyuan>
+            <feipeiguanliyuan :deviceData="deviceData" :adminList="adminList" @closeShebeiHandle="edithandle" ></feipeiguanliyuan>
         </el-dialog>
     </div>
 </template>
@@ -181,8 +181,21 @@
         mounted(){
           this.requestList()
             this.requestAdmin()
+            this.requestType()
         },
         methods:{
+            fenpeiHandle(str){
+                this.feipeiguanliyuanshow=false
+                if(str){
+                    this.requestList()
+                }
+            },
+            edithandle(str){
+                this.editShow=false
+                if(str){
+                    this.requestList()
+                }
+            },
             searchClick(){
                 this.requestList()
             },
@@ -231,7 +244,6 @@
             },
             //同步
             syncDevice(){
-                debugger
                 let vm =this
                 vm.$http.post('/equipmentConfigController/synchronousDeviceType',{}).then(res=>{
                     if(res.code==200){
@@ -243,7 +255,6 @@
                 })
             },
             showshebeiInfo(row){
-                debugger
                 this.deviceData = row
                 this.shebeichakanShow =true
             },
@@ -252,7 +263,6 @@
                 this.feipeiguanliyuanshow =true
             },
             editClick(row){
-                debugger
                 this.deviceData = row
               this.editShow = true
             },
