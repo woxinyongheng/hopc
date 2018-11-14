@@ -8,7 +8,7 @@
                     </el-form-item>
                     <el-form-item label="设备类别" style="margin-left: 50px" required>
                         <el-select v-model="formInline.equipmentTypeId" placeholder="设备类别">
-                            <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeCode"></el-option>
+                            <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeId"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-form>

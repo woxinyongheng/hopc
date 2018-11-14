@@ -10,7 +10,7 @@
                 <el-button plain type="success" @click="commonStateClick" size="mini" >正常</el-button>
                 <el-button plain type="danger" @click="pullStateClick" size="mini" >延期</el-button>
                 <el-button plain type="warning" @click="repairStateClick" size="mini" >待维修</el-button>
-                <el-button type="success" size="mini" @click="editDevice">编辑</el-button>
+                <!--<el-button type="success" size="mini" @click="editDevice">编辑</el-button>-->
                 <el-button type="danger" size="mini" @click="deviceRepairClick">设备报修</el-button>
                 <el-button type="warning" size="mini">导出</el-button>
             </div>

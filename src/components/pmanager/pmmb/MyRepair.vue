@@ -5,11 +5,11 @@
         </div>
         <div class="buttonbox">
             <div class="pullleft">
-                <el-button size="mini" plain>全部</el-button>
-                <el-button type="danger" plain size="mini">未派工</el-button>
-                <el-button type="success" plain size="mini">已派工</el-button>
-                <el-button type="info" plain size="mini">已挂单</el-button>
-                <el-button type="warning" plain size="mini">已完成</el-button>
+                <el-button size="mini" plain @click="stateHandle('all')">全部</el-button>
+                <el-button type="danger" plain size="mini" @click="stateHandle('0')">未派工</el-button>
+                <el-button type="success" plain size="mini" @click="stateHandle('2')">已派工</el-button>
+                <el-button type="info" plain size="mini" @click="stateHandle('1')">已挂单</el-button>
+                <el-button type="warning" plain size="mini" @click="stateHandle('3')">已完成</el-button>
                 <el-button type="warning" plain size="mini">导出</el-button>
             </div>
             <div class="pullright">
@@ -242,6 +242,15 @@
 
         },
         methods:{
+            stateHandle(num){
+                if(num=='all'){
+                    this.workOrderState = ''
+                }  else{
+                    this.workOrderState=num
+                }
+                this.requestList()
+
+            },
             //筛选
             searchClick(){
                 this.requestList()
