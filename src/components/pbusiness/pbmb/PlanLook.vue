@@ -1,8 +1,8 @@
 <template>
     <div class="planlook">
         <div class="dialogcontent">
-            <p class="label">保养计划详情<i class="el-icon-question"></i></p>
-            <div class="list">
+            <p class="label" @click="show1=!show1">保养计划详情<i class="el-icon-arrow-down"></i></p>
+            <div v-if="show1" class="list">
                 <table class="dialogtablebox">
                     <tbody>
                     <tr>
@@ -75,8 +75,8 @@
                     </tbody>
                 </table>
             </div>
-            <p class="label">保养项目作业书<i class="el-icon-question"></i></p>
-            <div class="list">
+            <p class="label" @click="show2=!show2">保养项目作业书<i class="el-icon-arrow-down"></i></p>
+            <div v-if="show2" class="list">
                 <table class="dialogtablebox">
                     <tbody>
                         <tr>
@@ -90,8 +90,8 @@
                     </tbody>
                 </table>
             </div>
-            <p class="label">审核信息<i class="el-icon-question"></i></p>
-            <div class="list">
+            <p class="label" @click="show3=!show3">审核信息<i class="el-icon-arrow-down"></i></p>
+            <div v-if="show3" class="list">
                 <table class="dialogtablebox" v-for="tt in planData.planAuditList">
                     <tbody>
                     <tr>
@@ -109,8 +109,8 @@
                     </tbody>
                 </table>
             </div>
-            <p class="label">保养设备详情<i class="el-icon-question"></i></p>
-            <div class="list">
+            <p class="label" @click="show4=!show4">保养设备详情<i class="el-icon-arrow-down"></i></p>
+            <div v-if="show4" class="list">
                 <el-table
                         :data="planData.assetsList.list"
                         stripe
@@ -196,6 +196,10 @@
                         address: '上海市普陀区金沙江路 1517 弄'
                     },
                 ],
+                show1:true,
+                show2:true,
+                show3:true,
+                show4:true
             }
         },
         methods:{

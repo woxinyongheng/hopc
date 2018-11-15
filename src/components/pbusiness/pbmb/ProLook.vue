@@ -6,15 +6,15 @@
                     <tbody>
                     <tr>
                         <td class="table-title">项目编号</td>
-                        <td class="table-content" ></td>
+                        <td class="table-content" >{{editData.data.number}}</td>
                         <td class="table-title">项目名称</td>
-                        <td class="table-content" ></td>
+                        <td class="table-content" >{{editData.data.projectName}}</td>
                         <td class="table-title">设备类别</td>
-                        <td class="table-content" colspan="5" ></td>
+                        <td class="table-content" colspan="5" >{{editData.data.equipmentType}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">项目说明</td>
-                        <td class="table-content" colspan="5"></td>
+                        <td class="table-content" colspan="5">{{editData.data.projectExplain}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -27,7 +27,7 @@
                         <td class="table-title">序号</td>
                         <td class="table-title" colspan="5">保养内容</td>
                     </tr>
-                    <tr v-for="(item,index) in addItemList">
+                    <tr v-for="(item,index) in editData.details">
                         <td class="table-title">{{index+1}}</td>
                         <td class="table-content" colspan="4">
                             {{item.content}}
@@ -47,6 +47,7 @@
 <script>
     export default {
         name: "ProLook",
+        props:['editData'],
         data:function () {
             return{
                 formInline: {

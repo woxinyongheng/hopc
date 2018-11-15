@@ -6,7 +6,7 @@
                     <el-form-item label="计划名称" required>
                         <el-input v-model="formInline.planName"></el-input>
                     </el-form-item>
-                    <el-form-item label="设备类别" style="margin-left: 50px">
+                    <el-form-item label="设备类别" style="margin-left: 50px" required>
                         <el-select v-model="formInline.facilityTypeCode" placeholder="设备类别" @change="change">
                             <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeCode"></el-option>
                         </el-select>
@@ -225,7 +225,7 @@
     import selectDevice from './selectDevice'
     export default {
         name: "addPlan",
-        props:['typeList','areaList'],
+        props:['typeList','areaList','editData','addeditid'],
         data:function () {
             return{
                 selectData:[],
@@ -241,6 +241,7 @@
                     maintainCode:'',
                     startTime:'',
                     endTime:'',
+                    cycleType:'',
                     cycleRole:{
                         0:{
                             key:'',
@@ -265,7 +266,11 @@
                         }
                     },
                     finalTime:'',
-                    responsibleCompany:''
+                    responsibleCompany:'',
+                    company:'',
+                    linkman:'',
+                    phone:'',
+                    remarks:''
 
 
                 },
@@ -284,7 +289,9 @@
             }
         },
         mounted(){
-          // this.requestList()
+          if(this.addeditid){
+              this.editNum()
+          }
         },
         methods:{
             //    列表选择
@@ -382,13 +389,92 @@
             },
             save(num){
                 let vm =this
-                debugger
                 let _ids = []
                 vm.tableDataSelect.forEach(function (item) {
                     _ids.push(item.equipmentId)
                 })
-                vm.$http.post('maintainPlan/addOrUpdateMaintainPlan',{
-                    id:'',
+                //验证
+                if(!vm.formInline.planName){
+                    vm.$message({
+                        message:'计划名称不能为空',
+                        type:'warning'
+                    })
+                    return
+                }
+                if(!vm.formInline.facilityTypeCode){
+                    vm.$message({
+                        message:'设备类别不能为空',
+                        type:'warning'
+                    })
+                    return
+                }
+                if(!vm.formInline.maintainType){
+                    vm.$message({
+                        message:'保养类型不能为空',
+                        type:'warning'
+                    })
+                    return
+                }
+                if(!_ids.length){
+                    vm.$message({
+                        message:'必须选择设备',
+                        type:'warning'
+                    })
+                    return
+                }
+                if(!vm.formInline.maintainCode){
+                    vm.$message({
+                        message:'必须选择保养项目',
+                        type:'warning'
+                    })
+                    return
+                }
+                if(!vm.formInline.startTime){
+                    vm.$message({
+                        message:'开始日期不能为空',
+                        type:'warning'
+                    })
+                    return
+                }
+                if(!vm.formInline.endTime){
+                    vm.$message({
+                        message:'结束日期不能为空',
+                        type:'warning'
+                    })
+                    return
+                }
+                if(!vm.formInline.cycleType){
+                    vm.$message({
+                        message:'周期类型必须选择',
+                        type:'warning'
+                    })
+                    return
+                }
+                if(!vm.formInline.cycleType){
+                    vm.$message({
+                        message:'周期类型必须选择',
+                        type:'warning'
+                    })
+                    return
+                }
+                let _cycleRole=vm.formInline.cycleRole[vm.formInline.cycleType].key1?(vm.formInline.cycleRole[vm.formInline.cycleType].key1+vm.formInline.cycleRole[vm.formInline.cycleType].key2):vm.formInline.cycleRole[vm.formInline.cycleType].key
+                if(!_cycleRole){
+                    vm.$message({
+                        message:'周期类型说明必须选择',
+                        type:'warning'
+                    })
+                    return
+                }
+                if(!vm.formInline.finalTime){
+                    vm.$message({
+                        message:'完成期限必须填写',
+                        type:'warning'
+                    })
+                    return
+                }
+
+                    vm.$http.post('maintainPlan/addOrUpdateMaintainPlan',{
+                    id:vm.addeditid,
                     planName:vm.formInline.planName,
                     facilityTypeCode:vm.formInline.facilityTypeCode,
                     facilityTypeName:vm.formInline.facilityTypeName,
@@ -416,11 +502,50 @@
                         vm.$emit('closeHandle')
                     }
                 })
+            },
+            editNum(){
+                let vm =this
+                if(vm.addeditid){
+                    vm.formInline.planName = vm.editData.maintainPlanDetail.planName
+                    vm.typeList.forEach(function (item) {
+                        if(item.typeName == vm.editData.maintainPlanDetail.facilityTypeName){
+                            vm.formInline.facilityTypeCode = item.typeCode
+                            vm.formInline.facilityTypeName = vm.editData.maintainPlanDetail.typeName
+                        }
+                    })
+                    vm.formInline.maintainType = vm.editData.maintainPlanDetail.maintainType+''
+                    vm.tableDataSelect = vm.editData.assetsList.list
+                    vm.requestmain()
+                    vm.formInline.maintainName = vm.editData.maintainPlanDetail.maintainName
+                    setTimeout(function () {
+                        vm.mainList.forEach(function (item) {
+                            if(item.projectName==vm.formInline.maintainName){
+                                vm.formInline.maintainCode = item.number
+
+                            }
+                        })
+                    })
+                    vm.formInline.startTime=vm.editData.maintainPlanDetail.startTime
+                    vm.formInline.endTime = vm.editData.maintainPlanDetail.endTime
+                    vm.formInline.cycleType = vm.editData.maintainPlanDetail.cycleType
+                    vm.formInline.finalTime = vm.editData.maintainPlanDetail.finalTime
+                    vm.formInline.responsibleCompany = vm.editData.maintainPlanDetail.responsibleCompany+''
+                    vm.formInline.company=vm.editData.maintainPlanDetail.company
+
+                    vm.formInline.linkman = vm.editData.maintainPlanDetail.linkman
+                    vm.formInline.phone=vm.editData.maintainPlanDetail.phone
+                    vm.formInline.remarks = vm.editData.maintainPlanDetail.remarks
+                }
             }
 
         },
         components:{
             selectDevice
+        },
+        watch:{
+            addeditid:function () {
+               this.editNum()
+            }
         }
     }
 </script>

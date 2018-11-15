@@ -8,7 +8,6 @@ const mutations = {
     if(!localStorage.getItem('LIST')){
       return
     }
-    debugger
     var listData = JSON.parse(localStorage.getItem('LIST'))
     var itemList = []
     listData.forEach(function (item) {

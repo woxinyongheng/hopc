@@ -52,13 +52,13 @@
 <script>
     export default {
         name: "addPro",
-        props:['typeList'],
+        props:['typeList','editData','addeditid'],
         data:function () {
             return{
                 formInline: {
-                    user: '',
-                    region: '',
-                    tree:[]
+                    projectName:'',
+                    equipmentTypeId:'',
+                    projectExplain:''
                 },
                 options: [{
                     label: '江苏',
@@ -74,16 +74,55 @@
                 addItemList:[{content:''}]
             }
         },
+        mounted(){
+            let vm =this
+            if(vm.addeditid){
+                vm.formInline.projectName = vm.editData.data.projectName
+                vm.formInline.projectExplain = vm.editData.data.projectExplain
+                vm.typeList.forEach(function (item) {
+                    if(item.typeName==vm.editData.data.equipmentType){
+                        vm.formInline.equipmentTypeId = item.typeId
+                    }
+                })
+                vm.addItemList = vm.editData.details
+
+            }
+        },
         methods:{
             sureClick(){
               let vm =this
+                if(vm.addeditid){
+                    vm.$http.post('maintainProjectController/updateMaintainProject',{
+                        id:vm.addeditid,
+                        projectName:vm.formInline.projectName,
+                        equipmentTypeId:vm.formInline.equipmentTypeId,
+                        projectExplain:vm.formInline.projectExplain,
+                        contents:JSON.stringify(vm.addItemList)
+                    }).then(res=>{
+                        if(res.code==200){
+                            vm.$message({
+                                message:'编辑成功',
+                                type:'success'
+                            })
+                            vm.$emit('closeHandle',true)
+
+                        }
+                    })
+                    return
+                }
               vm.$http.post('maintainProjectController/addMaintainProject',{
                   projectName:vm.formInline.projectName,
                   equipmentTypeId:vm.formInline.equipmentTypeId,
                   projectExplain:vm.formInline.projectExplain,
-                  content:JSON.stringify(vm.addItemList)
+                  contents:JSON.stringify(vm.addItemList)
               }).then(res=>{
-                  debugger
+                  if(res.code==200){
+                      vm.$message({
+                          message:'添加成功',
+                          type:'success'
+                      })
+                    vm.$emit('closeHandle',true)
+                  }
               })
             },
             closeHandle(){
@@ -96,6 +135,23 @@
                 this.addItemList.splice(i, 1);
             }
         },
+        watch:{
+            addeditid:function () {
+                debugger
+                let vm =this
+                if(vm.addeditid){
+                    vm.formInline.projectName = vm.editData.data.projectName
+                    vm.formInline.projectExplain = vm.editData.data.projectExplain
+                    vm.typeList.forEach(function (item) {
+                        if(item.typeName==vm.editData.data.equipmentType){
+                            vm.formInline.equipmentTypeId = item.typeId
+                        }
+                    })
+                    vm.addItemList = vm.editData.details
+
+                }
+            }
+        }
 
     }
 </script>

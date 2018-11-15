@@ -289,7 +289,7 @@
                     maintainName:vm.formInline.maintainName,
                     startDateTime:vm.formInline.startDateTime,
                     endDateTime:vm.formInline.endDateTime,
-                    company:vm.formInline.company,
+                    company:JSON.parse(localStorage.getItem('LOGINDATA')).companyCode,
                     columnName:vm.formInline.columnName,
                     sort:vm.formInline.sort,
                     taskState:vm.formInline.taskState,

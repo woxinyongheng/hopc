@@ -96,7 +96,7 @@
                                 show-overflow-tooltip
                                 label="设备类型">
                             <template slot-scope="scope">
-                                <span @click="lookUser(scope.row.id)" class="tablebtn tablebtn-c1">{{scope.row.typeName}}</span>
+                                <span @click="lookUser(scope.row)" class="tablebtn tablebtn-c1">{{scope.row.typeName}}</span>
 
                             </template>
                         </el-table-column>
@@ -198,6 +198,9 @@
                                 width="180px"
                                 label="操作">
                             <template slot-scope="scope">
+                                <span @click="editPlan(scope.row)" class="tablebtn tablebtn-c1">编辑</span>
+                                <!--<span @click="deletePlan(scope.row)" class="tablebtn tablebtn-c2">删除</span>-->
+                                <!--<span  @click="submitPlan(scope.row)" class="tablebtn tablebtn-c1">提交</span>-->
                                 <span v-if="scope.row.planAuditState!=1 && scope.row.planAuditState!=2" @click="editPlan(scope.row)" class="tablebtn tablebtn-c1">编辑</span>
                                 <span v-if="scope.row.planAuditState!=1 && scope.row.planAuditState!=2" @click="deletePlan(scope.row)" class="tablebtn tablebtn-c2">删除</span>
                                 <span v-if="scope.row.planAuditState==0" @click="submitPlan(scope.row)" class="tablebtn tablebtn-c1">提交</span>
@@ -229,7 +232,7 @@
             <span slot="title" class="dialogtitle">
                 {{addOrEdit=='edit'?'编辑':'新增'}}页面
               </span>
-            <addPlan :areaList="areaList" :typeList="typeList" @closeHandle="addplanShow=false"></addPlan>
+            <addPlan :editData="editData" :addeditid="addeditid" :areaList="areaList" :typeList="typeList" @closeHandle="addplanShow=false"></addPlan>
         </el-dialog>
         <!--查看-->
         <el-dialog
@@ -261,7 +264,7 @@
                 //filter
                 typeList:[],
                 selectData:[],
-                gridspan:8,
+                gridspan:24,
                 lookId:'',
                 roleData:[],
                 formInline:{
@@ -272,13 +275,16 @@
                     planAuditState:'',
                     startTime:'',
                     endTime:'',
-                    company:''
+                    company:'',
+                    facilityTypeCode:''
                 },
                 addplanShow:false,
                 planlookShow:false,
                 addOrEdit:'',
                 areaList:[],
-                planData:[]
+                planData:[],
+                addeditid:'',
+                editData:''
             }
         },
         mounted(){
@@ -329,6 +335,7 @@
                   startTime:vm.formInline.startTime,
                   endTime:vm.formInline.endTime,
                   company:vm.formInline.company,
+                  facilityTypeCode:vm.formInline.facilityTypeCode
               }).then(res=>{
                   if(res.code==200){
                       vm.total = res.data.count*1
@@ -360,20 +367,36 @@
                     }
                 })
             },
-            lookUser(id){
-                // let vm =this
-                // vm.gridspan = 8
+            lookUser(arr){
+                let vm =this
+                vm.gridspan = 8
                 // vm.lookId = id
+                vm.formInline.facilityTypeCode = arr.typeCode
+                vm.requestList()
             },
             addplanClick(){
+                this.addeditid = ''
                 this.addOrEdit = 'add'
                 this.addplanShow = true
             },
-            editPlan(){
-                this.addOrEdit = 'edit'
-                this.addplanShow = true
+            editPlan(row){
+                this.addeditid=row.id
+                let vm =this
+                vm.$http.post('maintainPlan/maintainPlanDetailOrUpdate',{
+                    id:row.id,
+                    pageSize:'100',
+                    currentPage:'1'
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.addOrEdit = 'edit'
+                        vm.addplanShow = true
+                        vm.editData = res.data
+                    }
+                })
+
             },
             deletePlan(row){
+                debugger
                 let vm =this
                 this.$confirm('确定要删除这个保养计划吗?', '提示', {
                     confirmButtonText: '确定',
@@ -381,7 +404,8 @@
                     type: 'warning'
                 }).then(() => {
                     vm.$http.post('maintainPlan/deleteMaintainPlan',{
-                        id:row.id
+                        id:row.id,
+                        planAuditState:row.planAuditState
                     }).then(res=>{
                         if(res.code==200){
                             vm.$message({
@@ -405,7 +429,7 @@
                 }).then(() => {
                     vm.$http.post('maintainPlan/submitMaintainPlan',{
                         id:row.id,
-                        planAuditState:1
+                        planAuditState:row.planAuditState
                     }).then(res=>{
                         if(res.code==200){
                             vm.$message({

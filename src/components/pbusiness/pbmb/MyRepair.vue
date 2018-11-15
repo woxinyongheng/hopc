@@ -73,10 +73,12 @@
         <div class="contentbox">
             <div class="batchSelectLabel">
                 <i class="el-icon-warning"></i>
-                已选择<span>0</span>项
+                已选择<span>{{selectData.length}}</span>项
             </div>
             <el-table
                     :data="tableData"
+                    @selection-change="handleSelectionChange"
+
                     stripe
                     border
                     style="width: 100%">
@@ -230,7 +232,8 @@
                 areaSelect:[],
                 tableData: [],
                 jiludanhaoShow:false,
-                shebeichakanShow:false
+                shebeichakanShow:false,
+                selectData:[]
 
             }
         },
@@ -242,6 +245,10 @@
 
         },
         methods:{
+            //    列表选择
+            handleSelectionChange(val){
+                this.selectData=val
+            },
             stateHandle(num){
                 if(num=='all'){
                     this.workOrderState = ''
@@ -291,7 +298,7 @@
             showshebeiInfo(row){//设备编号
                 let vm =this
                 vm.$http.post('equipmentListController/GetEquipmentById',{
-                    id:row.id
+                    id:row.equipmentId
                 }).then(res=>{
                     if(res.code==200){
                         vm.deviceData = res.data

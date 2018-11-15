@@ -42,7 +42,7 @@
                 <el-col :span="24-gridspan"><div class="grid-content">
                     <div class="batchSelectLabel">
                         <i class="el-icon-warning"></i>
-                        已选择<span>0</span>项
+                        已选择<span>{{selectData.length}}</span>项
                     </div>
                     <div class="contentheader">
                         保养项目
@@ -50,6 +50,8 @@
                     <el-table
                             ref="multipleTable"
                             :data="roleData"
+                            @selection-change="handleSelectionChange"
+
                             stripe
                             border
                             style="width: 100%">
@@ -113,7 +115,7 @@
             <span slot="title" class="dialogtitle">
                 {{addOrEdit=='edit'?'编辑':'新增'}}页面
               </span>
-            <addPro :typeList="typeList" @closeHandle="addproShow=false"></addPro>
+            <addPro :editData="editData" :addeditid="addeditid"  :typeList="typeList" @closeHandle="closeAddHandle"></addPro>
         </el-dialog>
         <!--查看-->
         <el-dialog
@@ -124,7 +126,7 @@
             <span slot="title" class="dialogtitle">
                 查看页面
               </span>
-            <ProLook @closeHandle="planlookShowHandle"></ProLook>
+            <ProLook :editData="editData" @closeHandle="planlookShowHandle"></ProLook>
         </el-dialog>
     </div>
 </template>
@@ -154,13 +156,25 @@
                 },
                 addproShow:false,
                 prolookShow:false,
-                addOrEdit:''
+                addOrEdit:'',
+                editData:'',
+                addeditid:''
             }
         },
         mounted(){
             this.requestType()
         },
         methods:{
+            closeAddHandle(str){
+                this.addproShow=false
+                if(str){
+                    this.requestList()
+                }
+            },
+            //    列表选择
+            handleSelectionChange(val){
+                this.selectData=val
+            },
             //    获取设备分类列表
             requestType(){
                 let vm =this
@@ -194,53 +208,95 @@
                 this.requestList()
             },
             addplanClick(){
+                this. addeditid=''
                 this.addOrEdit = 'add'
                 this.addproShow = true
             },
-            editPro(){
-                this.addOrEdit = 'edit'
-                this.addproShow = true
+            editPro(row){
+                let vm =this
+                vm.addeditid = row.id
+                vm.$http.post('maintainProjectController/findMaintainProjectById',{
+                    id:row.id
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.addOrEdit = 'edit'
+                        vm.addproShow = true
+                        vm.editData=res.data
+
+                    }
+                })
+
             },
             //删除
-            deletePro(){
+            deletePro(row){
+                let vm =this
                 this.$confirm('确定要删除这个保养项目吗?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '复制成功!'
-                    });
+                    vm.$http.post('maintainProjectController/deleteProjectAndDetails',{
+                        id:row.id
+                    }).then(res=>{
+                        if(res.code==200){
+                            vm.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            vm.requestList()
+                        }
+                    })
+
                 }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消复制'
-                    });
+
                 });
             },
 
             //复制
             copyPro(){
+                let vm =this
+                if(vm.selectData.length!=1){
+                    vm.$message({
+                        message:'请选择一个项目',
+                        type:'warning'
+                    })
+                    return
+                }
                 this.$confirm('确定要复制此保养项目吗?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '复制成功!'
-                    });
+                    vm.$http.post('maintainProjectController/copyMaintainProject',{
+                        id:vm.selectData[0].id
+                    }).then(res=>{
+                        if(res.code==200){
+                            vm.$message({
+                                type: 'success',
+                                message: res.message
+                            });
+                            vm.requestList()
+                        }
+                    })
                 }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消复制'
-                    });
+
                 });
             },
             //查看
-            planLookHandle(){
-                this.prolookShow =true
+            planLookHandle(row){
+                let vm =this
+                vm.addeditid = row.id
+                vm.$http.post('maintainProjectController/findMaintainProjectById',{
+                    id:row.id
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.addOrEdit = 'edit'
+                        // vm.addproShow = true
+                        vm.editData=res.data
+                        vm.prolookShow =true
+
+                    }
+                })
             },
             //查看内部编辑
             planlookShowHandle(){
