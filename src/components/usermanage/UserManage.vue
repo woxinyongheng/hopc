@@ -6,7 +6,7 @@
         <div class="buttonbox">
             <div class="pullleft">
                 <el-button type="primary" size="mini" @click="distributionUserClick">分配用户</el-button>
-                <el-button type="warning" size="mini">导出</el-button>
+                <el-button type="warning" size="mini" @click="exportHandle">导出</el-button>
             </div>
             <div class="pullright">
                 <el-button @click="filterShow=!filterShow" type="success" size="mini" icon="el-icon-search">检索</el-button>
@@ -392,6 +392,26 @@
                     }
                 })
                 return arr
+            },
+            //导出
+            exportHandle(){
+                let vm =this
+                let _id =[]
+                vm.selectData.forEach(function (item) {
+                    _id.push(item.equipmentId)
+                })
+                vm.$http.post('userControl/importStaffList',{
+                    staffRole:vm.roleCode,
+                    userName:vm.formInline.userName,
+                    staffName:vm.formInline.staffName,
+                    officeId:vm.formInline.officeId,
+                    status:vm.formInline.status,
+                    officeType:vm.formInline.officeId?'1':'',
+                    staffIds:_id.join(',')
+                }).then(res=>{
+                    if(res.code==200){
+                    }
+                })
             },
 
         },

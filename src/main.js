@@ -21,6 +21,10 @@ import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI)
 import axios from 'axios'
 import qs from 'qs'
+// 引入echarts
+import echarts from 'echarts'
+
+Vue.prototype.$echarts = echarts
 
 
 
@@ -82,10 +86,15 @@ axios.interceptors.request.use(config => { //spinShowSet
 })
 
 axios.interceptors.response.use(data => {
+    store.commit('spinShowSet',false)
+    if(!data.data.code){
+        download(data.data)
+    }
     if(data.data.code!=200){
         Message.error(data.data.message)
     }
-    store.commit('spinShowSet',false)
+
+
     return data
 }, error => {
     store.commit('spinShowSet',false)
@@ -93,6 +102,19 @@ axios.interceptors.response.use(data => {
 })
 
 
+function download (data) {
+    if (!data) {
+        return
+    }
+    let url = window.URL.createObjectURL(new Blob([data]))
+    let link = document.createElement('a')
+    link.style.display = 'none'
+    link.href = url
+    link.setAttribute('download', 'excel.xlsx')
+
+    document.body.appendChild(link)
+    link.click()
+}
 
 /* eslint-disable no-new */
 new Vue({

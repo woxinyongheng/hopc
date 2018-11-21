@@ -12,7 +12,7 @@
                 <el-button plain type="warning" @click="repairStateClick" size="mini" >待维修</el-button>
                 <!--<el-button type="success" size="mini" @click="editDevice">编辑</el-button>-->
                 <el-button type="danger" size="mini" @click="deviceRepairClick">设备报修</el-button>
-                <el-button type="warning" size="mini">导出</el-button>
+                <el-button type="warning" size="mini" @click="exportHandle">导出</el-button>
             </div>
             <div class="pullright">
                 <el-button type="success" size="mini" icon="el-icon-search" @click="filterShow=!filterShow">检索</el-button>
@@ -459,6 +459,36 @@
                 this.repirState = '1'
                 this.requestList()
 
+            },
+            //导出
+            exportHandle(){
+                let vm =this
+                let _id =[]
+                vm.selectData.forEach(function (item) {
+                    _id.push(item.equipmentId)
+                })
+                vm.$http.post('equipmentExportController/equipmentExport',{
+                    equipmentState:vm.equipmentState,
+                    repirState:vm.repirState,
+                    assetsCode:vm.formInline.assetsCode,
+                    assetsName:vm.formInline.assetsName,
+                    assetsTypeId:vm.formInline.assetsTypeId,
+                    brandId:vm.formInline.brandId,
+                    model:vm.formInline.model,
+                    repairNumberSymbol:vm.formInline.repairNumberSymbol,
+                    repairNumber:vm.formInline.repairNumber,
+                    repairExpenditureSymbol:vm.formInline.repairExpenditureSymbol,
+                    repairExpenditure:vm.formInline.repairExpenditure,
+                    maintainNumberSymbol:vm.formInline.maintainNumberSymbol,
+                    maintainNumber:vm.formInline.maintainNumber,
+                    equipmentAdminCode:vm.formInline.equipmentAdminCode,
+                    propertyCompanyCode:vm.formInline.propertyCompanyCode,
+                    equipmentid:_id.join(',')
+                }).then(res=>{
+                    if(res.code==200){
+                        debugger
+                    }
+                })
             },
             //    分页
             pageSizeChange(val) {

@@ -10,7 +10,7 @@
                 <el-button type="success" plain size="mini" @click="stateHandle('2')">已派工</el-button>
                 <el-button type="info" plain size="mini" @click="stateHandle('1')">已挂单</el-button>
                 <el-button type="warning" plain size="mini" @click="stateHandle('3')">已完成</el-button>
-                <el-button type="warning" plain size="mini">导出</el-button>
+                <el-button type="warning" plain size="mini" @click="exportHandle">导出</el-button>
             </div>
             <div class="pullright">
                 <el-button type="success" size="mini" icon="el-icon-search" @click="filterShow=!filterShow">检索</el-button>
@@ -371,6 +371,29 @@
                         })
                         var _arr = vm.recursiveFun(arr,arrChild)
                         vm.areaList = _arr
+                    }
+                })
+            },
+            //导出
+            exportHandle(){
+                let vm =this
+                let _id =[]
+                vm.selectData.forEach(function (item) {
+                    _id.push(item.equipmentId)
+                })
+                vm.$http.post('equipmentListController/getExportMyRepairs',{
+                    reportStartTime:vm.formInline.reportStartTime,
+                    reportEndTime:vm.formInline.reportEndTime,
+                    assetsCode:vm.formInline.assetsCode,
+                    assetsName:vm.formInline.assetsName,
+                    assetsTypeId:vm.formInline.assetsTypeId,
+                    areaName:vm.areaSelect.length?vm.areaSelect[vm.areaSelect.length-1]:'',
+                    liabilityName:vm.formInline.liabilityName,
+                    workOrderState:vm.workOrderState,
+                    state:vm.state,
+                    ids:_id.join(',')
+                }).then(res=>{
+                    if(res.code==200){
                     }
                 })
             },

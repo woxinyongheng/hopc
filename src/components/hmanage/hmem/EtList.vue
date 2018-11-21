@@ -5,7 +5,7 @@
         </div>
         <div class="buttonbox">
             <div class="pullleft">
-                <el-button type="warning" size="mini">导出</el-button>
+                <el-button type="warning" size="mini" @click="exportHandle">导出</el-button>
             </div>
             <div class="pullright">
                 <el-button type="success" size="mini" icon="el-icon-search" @click="filterShow=!filterShow">检索</el-button>
@@ -324,6 +324,30 @@
                 vm.$http.post('equipmentConfigController/getDeviceTypeList',{}).then(res=>{
                     if(res.code=='200'){
                         vm.typeList = res.data
+                    }
+                })
+            },
+            //导出
+            exportHandle(){
+                let vm =this
+                let _id =[]
+                vm.selectData.forEach(function (item) {
+                    _id.push(item.equipmentId)
+                })
+                vm.$http.post('equipmentRecordController/importPostponeRecordList',{
+                    recordCode:vm.formInline.recordCode,
+                    starTime:vm.formInline.starTime,
+                    endTime:vm.formInline.endTime,
+                    createPersonName:vm.formInline.createPersonName,
+                    confirmPersonName:vm.formInline.confirmPersonName,
+                    equipmentNumber:vm.formInline.equipmentNumber,
+                    equipmentName:vm.formInline.equipmentName,
+                    equipmentTypeId:vm.formInline.equipmentTypeId,
+                    brandName:vm.formInline.brandName,
+                    model:vm.formInline.model,
+                    recordIds:_id.join(',')
+                }).then(res=>{
+                    if(res.code==200){
                     }
                 })
             },
