@@ -10,8 +10,6 @@
         <div class="item">
           <el-button @click="loginClick">登陆</el-button>
         </div>
-
-
       </div>
     </div>
 </template>
@@ -25,7 +23,19 @@
             password:''
           }
         },
+        mounted(){
+            // this.loginClick()
+        },
         methods:{
+            getUrl(para){
+                let paraArr = location.search.substring(1).split('&')
+                for (let i = 0; i < paraArr.length; i++) {
+                  if(para == paraArr[i].split('=')[0]){
+                      return paraArr[i].split('=')[1]
+                  }
+                }
+                return ''
+            },
           loginClick(){
             var vm =this
             if(!vm.userName || !vm.password){
@@ -33,29 +43,23 @@
             }
             vm.$http.post('userLoginController/userLogin', {
                 userName: vm.userName,
-                password: vm.password
+                password: vm.password,
+                // userName: vm.getUrl('userName'),
+                // password: vm.getUrl('password'),
+                // sessionId:vm.getUrl('sessionId')
+
               }
             ).then(function (res) {
               if(res.code==200){
                   localStorage.setItem('LOGINDATA',JSON.stringify(res.data))
                   localStorage.setItem('LIST',JSON.stringify(res.data.menuList))
                   vm.$store.commit('listChange')
-
                   vm.$store.commit('loginChangeTrue')
-                  vm.$router.push('/index')
+                  let _path = vm.$store.state.itemList[0].list[0].menuHref
+                  vm.$router.push('/'+_path)
               }
 
             })
-            // var obj = {
-            //   unitCode:'BJSCSYGJ',
-            //   hospitalCode:'ZXYSHJ',
-            //   userId:'4a00ebaa0219423daa55e07046f2edf9',
-            //   userName:'张鹏',
-            //   roleCode:'corpAdmin,default'
-            // }
-            // localStorage.setItem('LOGINDATA',JSON.stringify(obj))
-            // this.$store.commit('loginChangeTrue')
-            // this.$router.push('/index')
           }
         }
     }

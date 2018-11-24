@@ -288,7 +288,6 @@
             }
         },
         mounted(){
-            this.requestList()
             this.requestType()
             this.requestArea()
         },

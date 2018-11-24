@@ -231,7 +231,7 @@
             }
         },
         mounted(){
-            this.requestList()
+            // this.requestList()
             this.requestOffice()
         },
         methods:{

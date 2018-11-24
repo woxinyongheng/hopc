@@ -7,6 +7,7 @@
             </div></el-col>
             <el-col :span="7"><div class="grid-content">
                 <p class="title">管理统计</p>
+                <div class="chart" id="myChart2"></div>
 
             </div></el-col>
             <el-col :span="10"><div class="grid-content">
@@ -43,9 +44,9 @@
             return{
                 options1: {
                     tooltip: {
-                        show:false,
+                        show:true,
                         trigger: 'item',
-                        formatter: "{a} <br/>{b}: {c} ({d}%)"
+                        formatter: "{b}: {c} ({d}%)"
                     },
                     //环形颜色
                     color: ['#38C7C4', '#FCB635','#FFB6C1','#9932CC','0000FF','00008B','#778899','#7FFFAA','#FFFF00','#FF0000'],
@@ -110,12 +111,83 @@
                         }
                     ]
                 },
-                option3:{
+                option2:{
+
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: "{b} : {c} ({d}%)"
+                    },
+                    color: ['#38C7C4', '#FCB635','#FFB6C1','#9932CC','0000FF','00008B','#778899','#7FFFAA','#FFFF00','#FF0000'],
+
+                    legend: {
+                        x : 'center',
+                        y : 'bottom',
+                        data: ['直接访问','邮件营销','联盟广告','视频广告','搜索引擎']
+                    },
+                    series : [
+                        {
+                            name: '访问来源',
+                            type: 'pie',
+                            radius : '65%',
+                            center: ['50%', '50%'],
+                            data:[],
+                            labelLine: {
+                                normal: {
+                                    show:false,
+                                    length: 0,
+                                    length2: 20,
+                                    lineStyle: {
+                                        color: '#999999'
+                                    }
+                                }
+                            },
+                            label: {
+                                normal: {
+                                    show:false,
+                                    // \n\n可让文字居于牵引线上方，很关键
+                                    //  {b}  代表显示的内容标题
+                                    // {c}代表数据
+                                    formatter: '{c}\n{b|{b}}',
+                                    borderWidth: 0,
+                                    borderRadius: 4,
+                                    rich: {
+                                        a: {
+                                            color: '#333',
+                                            fontSize: 12,
+                                            lineHeight: 20,
+                                            left: 'center'
+                                        },
+                                        b: {
+                                            fontSize: 12,
+                                            lineHeight: 20,
+                                            color: '#333',
+                                            left: 'center'
+                                        }
+                                    }
+                                }
+                            },
+                            // itemStyle: {
+                            //     show:false,
+                            //     emphasis: {
+                            //         shadowBlur: 10,
+                            //         shadowOffsetX: 0,
+                            //         shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            //     }
+                            // }
+                        }
+                    ]
+                },
+
+            option3:{
                     color: ['#3398DB'],
                     xAxis: {
                         type: 'category',
-                        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                    },
+                        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        axisLabel: {
+                            interval: 0,
+                            rotate: 40
+                        }
+                        },
                     yAxis: {
                         type: 'value'
                     },
@@ -127,7 +199,7 @@
                 option4:{
                     tooltip : {
                         trigger: 'item',
-                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        formatter: "{b} : {c} ({d}%)"
                     },
                     legend: {
                         x : 'center',
@@ -174,7 +246,7 @@
                 option5:{
                     tooltip : {
                         trigger: 'item',
-                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        formatter: "{b} : {c} ({d}%)"
                     },
                     legend: {
                         x : 'center',
@@ -332,8 +404,16 @@
         //    管理统计
             requestManage(){
                 let vm =this
+
+                let mycharts = vm.$echarts.init(document.getElementById('myChart2'));
+                mycharts.setOption(vm.option2)
                 vm.$http.post('statisticsController/managementStatistics',{}).then(res=>{
-                    // debugger
+                    if(res.code==200){
+                        vm.option2.legend.data = res.data.legenddata
+                        vm.option2.series[0].data = res.data.seriesdata
+                        let mycharts = vm.$echarts.init(document.getElementById('myChart2'));
+                        mycharts.setOption(vm.option2)
+                    }
                 })
             }
         }

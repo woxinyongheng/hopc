@@ -6,7 +6,7 @@
                     <tbody>
                         <tr>
                             <td class="table-title">设备编码</td>
-                            <td class="table-content">{{deviceData.list.maintainNumber}}</td>
+                            <td class="table-content">{{deviceData.list.assetsCode}}</td>
                             <td class="table-title">设备类别</td>
                             <td class="table-content">{{deviceData.list.classifyName}}</td>
                             <td class="table-title">设备名称</td>
@@ -54,7 +54,7 @@
                         </tr>
                         <tr>
                             <td class="table-title">折后金额(元)</td>
-                            <td class="table-content">{{deviceData.list.moneye}}</td>
+                            <td class="table-content">{{deviceData.list.residualValue}}</td>
                             <td class="table-title"></td>
                             <td class="table-content"></td>
                             <td class="table-title"></td>
@@ -72,7 +72,7 @@
                         </tr>
                         <tr>
                             <td class="table-title">供应商</td>
-                            <td class="table-content">{{deviceData.list.supplierv}}</td>
+                            <td class="table-content">{{deviceData.list.supplier}}</td>
                             <td class="table-title">联系人</td>
                             <td class="table-content">{{deviceData.list.contacts}}</td>
                             <td class="table-title">联系电话</td>
@@ -92,7 +92,7 @@
                             <td class="table-title">累计支出(元)</td>
                             <td class="table-content">{{deviceData.list.repairExpenditure}}</td>
                             <td class="table-title">保养次数</td>
-                            <td class="table-content">{{deviceData.list.d}}</td>
+                            <td class="table-content">{{deviceData.list.maintainNumber}}</td>
                         </tr>
                         <tr>
                             <td class="table-title">设备管理员</td>

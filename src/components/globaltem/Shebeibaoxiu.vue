@@ -7,6 +7,9 @@
                         <el-date-picker
                                 v-model="formInline.reportTime"
                                 type="date"
+                                format="yyyy-MM-dd"
+                                @change="changeTime"
+                                value-format="yyyy-MM-dd"
                                 placeholder="选择日期">
                         </el-date-picker>
                     </el-form-item>
@@ -72,6 +75,9 @@
 
         },
         methods:{
+            changeTime(val){
+                this.formInline.reportTime=val
+            },
             uploadHandle(file,url,type){
                 if(type=='image'){
                     this.formInline.repairAttachmentUrl.push(file)

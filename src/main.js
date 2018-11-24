@@ -49,18 +49,40 @@ Vue.prototype.$http = {
     post: (url, param, flag) => {
         if(localStorage.getItem('LOGINDATA')){
             var obj = JSON.parse(localStorage.getItem('LOGINDATA'))
-            param.unitCode = obj.unitCode
-            param.hospitalCode = obj.hospitalCode
-            param.userId = obj.id
-            param.roleCode = obj.roleCode
-            param.userName = obj.name
+            //设备类别统一接口
+            if(url=='equipmentConfigController/getDeviceTypeList'){
+                param.unitCode = obj.unitCode
+                param.hospitalCode = obj.hospitalCode
+                param.roleCode = obj.roleCode
+                if(obj.roleCode=='dcmanager'){//设备管理员
+                    param.eqAdminCode = obj.id
+                }else if(obj.roleCode=='ybadmin'){
+                    param.userId = obj.id
+                }else{
+                    param.companyCode = obj.companyCode
+                }
+            }else{
+                param.unitCode = obj.unitCode
+                param.hospitalCode = obj.hospitalCode
+                param.userId = obj.id
+                param.roleCode = obj.roleCode
+                param.userName = obj.name
+            }
+
         }
         let params=''
         if(param.flagkuayu){
-            debugger
             var formdata = new FormData();
             for(var item in param){
-                formdata.append(item, param[item]||'');
+                //设备报修
+                if(item=='repairAttachmentUrl' && param[item].length){
+                    param[item].forEach(function (i) {
+                        formdata.append(item, i);
+                    })
+                }else{
+                    formdata.append(item, param[item]||'');
+
+                }
             }
             params = formdata
         }else{

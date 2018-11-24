@@ -270,6 +270,7 @@
             },
             //状态
             stateClick(num){
+                this.overTime = ''
                 if(num=='all'){
                     this.state=''
                     this.overTime = ''

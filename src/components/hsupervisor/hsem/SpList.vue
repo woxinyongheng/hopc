@@ -46,8 +46,8 @@
                             <el-input v-model="formInline.equipmentName" placeholder="设备名称"></el-input>
                         </el-form-item>
                         <el-form-item label="设备类别">
-                            <el-select v-model="formInline.equipmentTypeId" placeholder="设备类别">
-                                <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeCode"></el-option>
+                            <el-select v-model="formInline.equipmentTypeId" placeholder="设备类别" @change="changeBrand">
+                                <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeId"></el-option>
                             </el-select>
                             <!--<el-cascader-->
                                     <!--:options="options"-->
@@ -56,7 +56,9 @@
                             <!--</el-cascader>-->
                         </el-form-item>
                         <el-form-item label="设备品牌">
-                            <el-input v-model="formInline.brandName" placeholder="设备品牌"></el-input>
+                            <el-select v-model="formInline.brandId" placeholder="设备品牌">
+                                <el-option v-for="(item,index) in brandList" :label="item.brandName" :value="item.brandName"></el-option>
+                            </el-select>
                         </el-form-item>
                         <el-form-item label="规格型号">
                             <el-input v-model="formInline.model" placeholder="规格型号"></el-input>
@@ -203,6 +205,7 @@
                 pageSize:10,
                 currentPage:1,
                 typeList:[],
+                brandList:[],
                 filterShow:false,
                 orderData:'',
                 formInline:{
@@ -297,6 +300,25 @@
                 vm.$http.post('equipmentConfigController/getDeviceTypeList',{}).then(res=>{
                     if(res.code=='200'){
                         vm.typeList = res.data
+                    }
+                })
+            },
+            changeBrand(val){
+                // let _i = vm.typeList.findIndex(function (item) {
+                //     return item.typeCode == val
+                // })
+                this.requestBrand(val)
+            },
+            //    获取设备品牌
+            requestBrand(val){
+                let vm =this
+                vm.$http.post(__PATH.OTHPATH+'assetsBrand/listData',{
+                    pageSize:100,
+                    currentPage:1,
+                    classifyId:val
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.brandList = res.data
                     }
                 })
             },

@@ -7,7 +7,7 @@
                     <tbody>
                     <tr>
                         <td class="table-title">计划编号</td>
-                        <td class="table-content">{{planData.taskDetail.planCode}}</td>
+                        <td class="table-content">{{planData.taskDetail.planTaskCode}}</td>
                         <td class="table-title">计划名称</td>
                         <td class="table-content">{{planData.taskDetail.planName}}</td>
                         <td class="table-title">设备类别</td>
@@ -39,7 +39,7 @@
                     </tr>
                     <tr>
                         <td class="table-title">负责单位</td>
-                        <td class="table-content">{{planData.taskDetail.planCode}}</td>
+                        <td class="table-content">{{planData.taskDetail.responsibleCompany==0?'本部':'外包'}}</td>
                         <td class="table-title"></td>
                         <td class="table-content"></td>
                         <td class="table-title"></td>
@@ -68,9 +68,9 @@
                             <td class="table-title">序号</td>
                             <td class="table-title" colspan="5">保养内容</td>
                         </tr>
-                        <tr>
-                            <td class="table-title">1</td>
-                            <td class="table-content" colspan="5">{{planData.taskDetail.maintainDetail}}</td>
+                        <tr v-for="(item,index) in planData.maintainDetail">
+                            <td class="table-title">{{index+1}}</td>
+                            <td class="table-content" colspan="5">{{item.content}}</td>
                         </tr>
                         <!--<tr>-->
                             <!--<td class="table-title">2</td>-->
@@ -82,7 +82,7 @@
             <p class="label" @click="show3=!show3">保养任务<i class="el-icon-arrow-down"></i></p>
             <div v-if="show3" class="list">
                 <el-table
-                        :data="planData.maintainDetail"
+                        :data="planData.maintainTaskList"
                         stripe
                         align="center"
                         style="width: 100%">

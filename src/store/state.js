@@ -5,7 +5,7 @@ const state = {
     //#409eff
   // itemList:'',
   loadingShow:false,
-    // itemList:''
+    // itemList:'',
         itemList:[
     {
         menuName: '首页',

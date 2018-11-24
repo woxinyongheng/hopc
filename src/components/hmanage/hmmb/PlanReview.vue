@@ -51,6 +51,9 @@
                             <el-form-item label="开始日期">
                                 <el-date-picker
                                         v-model="formInline.startTime"
+                                        format="yyyy-MM-dd"
+                                        value-format="yyyy-MM-dd"
+                                        @change="formatTime"
                                         type="date"
                                         placeholder="">
                                 </el-date-picker>
@@ -58,6 +61,10 @@
                             <el-form-item label="至">
                                 <el-date-picker
                                         v-model="formInline.endTime"
+                                        format="yyyy-MM-dd"
+                                        value-format="yyyy-MM-dd"
+
+                                        @change="formatTime1"
                                         type="date"
                                         placeholder="">
                                 </el-date-picker>
@@ -65,6 +72,10 @@
                             <el-form-item label="结束日期">
                                 <el-date-picker
                                         v-model="formInline.endBeginTime"
+                                        @change="formatTime2"
+                                        value-format="yyyy-MM-dd"
+
+                                        format="yyyy-MM-dd"
                                         type="date"
                                         placeholder="">
                                 </el-date-picker>
@@ -72,6 +83,10 @@
                             <el-form-item label="至">
                                 <el-date-picker
                                         v-model="formInline.endOverTime"
+                                        @change="formatTime3"
+                                        format="yyyy-MM-dd"
+                                        value-format="yyyy-MM-dd"
+
                                         type="date"
                                         placeholder="">
                                 </el-date-picker>
@@ -160,7 +175,6 @@
                 <el-table-column
                         prop="startTime"
                         show-overflow-tooltip
-
                         label="开始日期">
                 </el-table-column>
                 <el-table-column
@@ -319,7 +333,7 @@
                 vm.$http.post('maintainPlanAudit/getMaintainPlanDetail',{
                     pageSize:10,
                     currentPage:1,
-                    id:row.planCode
+                    id:row.id
                 }).then(res=>{
                     if(res.code==200){
                         vm.planData=res.data
@@ -333,6 +347,21 @@
                 if(str){
                     this.requestList()
                 }
+            },
+            formatTime(val){
+                this.formInline.startTime =val
+            },
+            formatTime1(val){
+                this.formInline.endTime =val
+
+            },
+            formatTime2(val){
+                this.formInline.endBeginTime =val
+
+            },
+            formatTime3(val){
+                this.formInline.endOverTime =val
+
             },
             //    分页
             pageSizeChange(val){

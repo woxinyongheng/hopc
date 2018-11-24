@@ -111,7 +111,7 @@
                         width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="repairPersonName"
+                        prop="reportPersonName"
                         show-overflow-tooltip
 
                         label="报修人">

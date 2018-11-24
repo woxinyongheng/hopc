@@ -29,8 +29,8 @@
                                 <el-input v-model="formInline.assetsName" placeholder="设备名称"></el-input>
                             </el-form-item>
                             <el-form-item label="设备类别">
-                                <el-select v-model="formInline.assetsTypeId" placeholder="设备类别">
-                                    <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeCode"></el-option>
+                                <el-select v-model="formInline.assetsTypeId" placeholder="设备类别" @change="changeBrand">
+                                    <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeId"></el-option>
                                 </el-select>
                                 <!--<el-cascader-->
                                 <!--:options="options"-->
@@ -39,7 +39,9 @@
                                 <!--</el-cascader>-->
                             </el-form-item>
                             <el-form-item label="设备品牌">
-                                <el-input v-model="formInline.brandId" placeholder="设备品牌"></el-input>
+                                <el-select v-model="formInline.brandId" placeholder="设备品牌">
+                                    <el-option v-for="(item,index) in brandList" :label="item.brandName" :value="item.id"></el-option>
+                                </el-select>
 
                                 <!--<el-cascader-->
                                 <!--:options="options"-->
@@ -256,6 +258,7 @@
                 typeList:[],
                 adminList:[],
                 componyList:[],
+                brandList:[],
                 //状态控制
                 equipmentState:'',
                 repirState:'',
@@ -376,6 +379,25 @@
                 vm.$http.post('equipmentConfigController/getDeviceTypeList',{}).then(res=>{
                     if(res.code=='200'){
                         vm.typeList = res.data
+                    }
+                })
+            },
+            changeBrand(val){
+                // let _i = vm.typeList.findIndex(function (item) {
+                //     return item.typeCode == val
+                // })
+                this.requestBrand(val)
+            },
+            //    获取设备品牌
+            requestBrand(val){
+                let vm =this
+                vm.$http.post(__PATH.OTHPATH+'assetsBrand/listData',{
+                    pageSize:100,
+                    currentPage:1,
+                    classifyId:val
+                }).then(res=>{
+                    if(res.code==200){
+                        vm.brandList = res.data
                     }
                 })
             },

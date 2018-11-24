@@ -343,6 +343,9 @@
                 vm.tableDataSelect.forEach(function (item) {
                     str.push(item.equipmentId)
                 })
+                if(!str.length){
+                    return
+                }
                 vm.$http.post('maintainProjectController/findMaintainProjectList',{
                     pageSize:'999',
                     currentPage:'1',
