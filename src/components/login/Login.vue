@@ -1,6 +1,6 @@
 <template>
     <div class="login">
-      <div class="box">
+      <div class="box" v-if="showLog">
         <div class="item">
           <el-input v-model="userName" placeholder="请输入账号"></el-input>
         </div>
@@ -20,33 +20,33 @@
         data:function () {
           return{
             userName:'',
-            password:''
+            password:'',
+            showLog:false
           }
         },
         mounted(){
-            // this.loginClick()
+            if(!sessionStorage.getItem('SESSIONID')){
+                this.showLog=true
+            }
+            if(sessionStorage.getItem('SESSIONID')){
+                this.loginClick('session')
+            }
+
         },
         methods:{
-            getUrl(para){
-                let paraArr = location.search.substring(1).split('&')
-                for (let i = 0; i < paraArr.length; i++) {
-                  if(para == paraArr[i].split('=')[0]){
-                      return paraArr[i].split('=')[1]
-                  }
-                }
-                return ''
-            },
-          loginClick(){
+          loginClick(judge){
+             let str = (judge=='session')?true:false
             var vm =this
-            if(!vm.userName || !vm.password){
+            if(!str && (!vm.userName || !vm.password)){
               return
             }
+            if(str && !JSON.parse(sessionStorage.getItem('SESSIONID')).sessionId){
+                return
+            }
             vm.$http.post('userLoginController/userLogin', {
-                userName: vm.userName,
-                password: vm.password,
-                // userName: vm.getUrl('userName'),
-                // password: vm.getUrl('password'),
-                // sessionId:vm.getUrl('sessionId')
+                userName: str?JSON.parse(sessionStorage.getItem('SESSIONID')).userName:vm.userName,
+                password: str?JSON.parse(sessionStorage.getItem('SESSIONID')).password:vm.password,
+                sessionId:str?JSON.parse(sessionStorage.getItem('SESSIONID')).sessionId:'',
 
               }
             ).then(function (res) {
@@ -57,6 +57,9 @@
                   vm.$store.commit('loginChangeTrue')
                   let _path = vm.$store.state.itemList[0].list[0].menuHref
                   vm.$router.push('/'+_path)
+              }else{
+                  vm.showLog=true
+                  sessionStorage.removeItem('SESSIONID')
               }
 
             })
