@@ -313,7 +313,7 @@
                     }
                 })
             },
-            //联动
+            //联动设备分类联动
             change(val){
                let vm =this
                 let _index = vm.typeList.findIndex(function (item) {
@@ -323,6 +323,8 @@
                     vm.formInline.facilityTypeName = vm.typeList[_index].typeName
 
                 }
+                this.tableDataSelect =[]
+                this.formInline.maintainCode=''
                 // this.requestList()
 
             },

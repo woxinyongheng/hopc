@@ -110,7 +110,7 @@ axios.interceptors.request.use(config => { //spinShowSet
 axios.interceptors.response.use(data => {
     store.commit('spinShowSet',false)
     if(!data.data.code){
-        download(data.data)
+        download(data)
     }
     if(data.data.code!=200){
         Message.error(data.data.message)
@@ -125,16 +125,12 @@ axios.interceptors.response.use(data => {
 
 
 function download (data) {
-    if (!data) {
+    if(!data){
         return
     }
-    let url = window.URL.createObjectURL(new Blob([data]))
-    let link = document.createElement('a')
-    link.style.display = 'none'
-    link.href = url
-    link.setAttribute('download', 'excel.xlsx')
-
-    document.body.appendChild(link)
+    let  link = document.createElement('a')
+    link.style.display='none'
+    link.href =data.config.url+'?'+data.config.data
     link.click()
 }
 
