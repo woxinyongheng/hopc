@@ -122,11 +122,21 @@ body{
   margin: 0 10px;
   cursor: pointer;
 }
+/*通用*/
 .tablebtn-c1{
   color: #0c7ff2;
 }
+/*警告*/
 .tablebtn-c2{
   color: #e6a23c;
+}
+/*失败*/
+.tablebtn-c3{
+color:#f56c6c;
+}
+/*成功*/
+.tablebtn-c4{
+color:#67c23a;
 }
 .tebleimg{
   width: 30px;

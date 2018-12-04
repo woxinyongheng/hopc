@@ -225,7 +225,7 @@
             <span slot="title" class="dialogtitle">
                 设备报修
               </span>
-            <shebeibaoxiu :selectData="selectData"  @closeShebeiHandle="shebeibaoxiuShow=false" ></shebeibaoxiu>
+            <shebeibaoxiu :clear="clear" :selectData="selectData"  @closeShebeiHandle="shebeibaoxiuShow=false" ></shebeibaoxiu>
         </el-dialog>
         <el-dialog
                 title="任务分配"
@@ -235,7 +235,7 @@
             <span slot="title" class="dialogtitle">
                 任务分配
               </span>
-            <renwufenpei :teamList="teamList" :selectData="selectData" @closeShebeiHandle="taskGoSuccess" ></renwufenpei>
+            <renwufenpei  :teamList="teamList" :selectData="selectData" @closeShebeiHandle="taskGoSuccess" ></renwufenpei>
         </el-dialog>
     </div>
 </template>
@@ -284,7 +284,8 @@
                 selectData:'',
                 deviceData:{},
                 renwufenpeiShow:false,
-                teamList:[]
+                teamList:[],
+                clear:0
             }
         },
         mounted(){
@@ -419,6 +420,7 @@
                     })
                     return
                 }
+                this.clear++
                 this.shebeibaoxiuShow=true
             },
             //    wuye

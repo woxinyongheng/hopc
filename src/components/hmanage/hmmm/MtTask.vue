@@ -177,6 +177,12 @@
                         prop="state"
                         show-overflow-tooltip
                         label="状态">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.state==3" type="success" class="tablebtn-c4">已完成</span>
+                        <span v-if="scope.row.state==2"  type="info" class="tablebtn-c1">已派工</span>
+                        <span v-if="scope.row.state==1"  type="warning" class="tablebtn-c2">已挂单</span>
+                        <span v-if="scope.row.state==0"  type="danger" class="tablebtn-c3">未派工</span>
+                    </template>
                 </el-table-column>
             </el-table>
             <div class="page">

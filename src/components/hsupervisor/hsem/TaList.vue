@@ -251,6 +251,7 @@
                             message: res.message,
                             type: 'success'
                         });
+                        vm.requestList()
                     }
                 })
             },

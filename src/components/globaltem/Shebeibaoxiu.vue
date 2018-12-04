@@ -32,7 +32,10 @@
                 <el-form :model="formInline" label-width="80px">
                     <el-form-item label="相关附件">
                         <vueaudio v-if="audiourl" :audiourl="audiourl"></vueaudio>
-                        <img style="width: 148px;height: 148px;vertical-align: middle" v-for="item in imgurl" :src="item" alt="">
+                        <span style="display:inline-block;width: 148px;height: 148px;vertical-align: middle;position: relative;" v-for="(item,index) in imgurl">
+                           <img style="width: 148px;height: 148px;vertical-align: middle"   :src="item" alt="">
+                            <img @click="deleteImg(index)" style="width: 30px;height: 30px;position: absolute;top: 0px;right: 0px;z-index: 999;background-color:#fff;" src="../../../static/images/close.png" alt="">
+                        </span>
                         <upload style="display: inline-block;vertical-align: middle" @uploadHandle="uploadHandle"></upload>
                     </el-form-item>
                 </el-form>
@@ -53,7 +56,7 @@
     import vueaudio  from '@/components/globaltem/Audio'
     export default {
         name: "Shebeibaoxiu",
-        props:['selectData'],
+        props:['selectData','clear'],
         data:function () {
             return{
                 activeName:'first',
@@ -72,9 +75,38 @@
             }
         },
         mounted(){
-
+            this.imgurl=[]
+            this.audiourl=''
+            this.formInline={
+                reportTime:'',
+                reportPersonCode:JSON.parse(localStorage.getItem('LOGINDATA')).id,
+                reportPersonName:JSON.parse(localStorage.getItem('LOGINDATA')).name,
+                reportPersonPhone:JSON.parse(localStorage.getItem('LOGINDATA')).phone,
+                repairExplain:'',
+                repairContentAttachmentUrl:'',
+                repairAttachmentUrl:[],
+            }
+        },
+        watch:{
+            clear:function () {
+                this.imgurl=[]
+                this.audiourl=''
+                this.formInline={
+                    reportTime:'',
+                    reportPersonCode:JSON.parse(localStorage.getItem('LOGINDATA')).id,
+                    reportPersonName:JSON.parse(localStorage.getItem('LOGINDATA')).name,
+                    reportPersonPhone:JSON.parse(localStorage.getItem('LOGINDATA')).phone,
+                    repairExplain:'',
+                    repairContentAttachmentUrl:'',
+                    repairAttachmentUrl:[],
+                }
+            }
         },
         methods:{
+            deleteImg(i){
+                this.imgurl.splice(i,1)
+                this.formInline.repairAttachmentUrl.splice(i,1)
+            },
             changeTime(val){
                 this.formInline.reportTime=val
             },

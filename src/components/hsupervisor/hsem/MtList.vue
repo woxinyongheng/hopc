@@ -226,7 +226,7 @@
             <span slot="title" class="dialogtitle">
                 设备报修
               </span>
-            <shebeibaoxiu :selectData="selectData" @closeShebeiHandle="repairhandle" ></shebeibaoxiu>
+            <shebeibaoxiu :clear="clear" :selectData="selectData" @closeShebeiHandle="repairhandle" ></shebeibaoxiu>
         </el-dialog>
     </div>
 </template>
@@ -271,7 +271,8 @@
                 shebeichakanShow:false,
                 shebeibaoxiuShow:false,
                 selectData:[],
-                deviceData:{}
+                deviceData:{},
+                clear:0
 
             }
         },
@@ -403,6 +404,7 @@
                     })
                     return
                 }
+                this.clear++
                 this.shebeibaoxiuShow=true
             },
             repairhandle(dtr){

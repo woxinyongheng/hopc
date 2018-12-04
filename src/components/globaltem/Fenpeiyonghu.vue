@@ -33,7 +33,7 @@
                                 <el-col :span="15"><div class="grid-content">
                                     <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
                                         <el-form-item label="用户名">
-                                            <el-input v-model="formInline.name" placeholder="用户名"></el-input>
+                                            <el-input v-model="name" placeholder="用户名"></el-input>
                                         </el-form-item>
                                     </el-form>
                                 </div></el-col>
@@ -109,13 +109,12 @@
 <script>
     export default {
         name: "Renwufenpei",
-        props:['roleTree','selectData'],
+        props:['roleTree','selectData','clear'],
         data:function () {
             return{
                 roleData:[],
-                formInline:{
-                    name:''
-                },
+                name:'',
+                formInline:{},
                 defaultProps: {
                     children: 'children',
                     label: 'name'
@@ -129,6 +128,12 @@
             }
         },
         mounted(){
+            this.name=''
+        },
+        watch:{
+            clear:function () {
+                this.name=''
+            }
         },
         methods:{
             //分配
@@ -178,16 +183,16 @@
             },
             requestStraff(){
                 let vm =this
-                vm.$http.post(__PATH.BASEPATH+'outsourcedController/getStaffListByOfficeOrTeam',{
-                    id:vm.id,
+                vm.$http.post('userControl/getRoleListAndStaffList',{
                     type:1,
                     pageSize:vm.pageSize,
                     currentPage:vm.currentPage,
-                    name:vm.formInline.name
+                    officeType:vm.name,
+                    officeType:'1'
                 }).then(res=>{
                     if(res.code==200){
-                        vm.roleData = res.data.staffList
-                        vm.total = res.data.sum*1
+                        vm.roleData = res.data.userList
+                        vm.total = res.data.userListCount*1
                     }
                 })
             },

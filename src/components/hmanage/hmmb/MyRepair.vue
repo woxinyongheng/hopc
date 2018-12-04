@@ -153,10 +153,10 @@
                         show-overflow-tooltip
                         label="状态">
                     <template slot-scope="scope">
-                        <el-tag v-if="scope.row.status==3" type="success">已完成</el-tag>
-                        <el-tag v-if="scope.row.status==2"  type="info">已派工</el-tag>
-                        <el-tag v-if="scope.row.status==1"  type="warning">已挂单</el-tag>
-                        <el-tag v-if="scope.row.status==0"  type="danger">未处理</el-tag>
+                        <span v-if="scope.row.state==3" type="success" class="tablebtn-c4">已完成</span>
+                        <span v-if="scope.row.state==2"  type="info" class="tablebtn-c1">已派工</span>
+                        <span v-if="scope.row.state==1"  type="warning" class="tablebtn-c2">已挂单</span>
+                        <span v-if="scope.row.state==0"  type="danger" class="tablebtn-c3">未处理</span>
                     </template>
 
                 </el-table-column>
@@ -368,7 +368,7 @@
                 let vm =this
                 let _id =[]
                 vm.selectData.forEach(function (item) {
-                    _id.push(item.equipmentId)
+                    _id.push(item.id)
                 })
                 vm.$http.post('equipmentListController/getExportMyRepairs',{
                     reportStartTime:vm.formInline.reportStartTime,

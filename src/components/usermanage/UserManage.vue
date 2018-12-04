@@ -23,9 +23,15 @@
                             <el-input v-model="formInline.staffName" placeholder="姓名"></el-input>
                         </el-form-item>
                         <el-form-item label="所属部门">
-                            <el-select v-model="formInline.officeId" placeholder="所属部门">
-                                <el-option v-for="item in officeList" :label="item.name" :value="item.id"></el-option>
-                            </el-select>
+                            <el-cascader
+                                    v-model="officeId"
+                                    :options="officeList"
+                                    @change="handleItemChange"
+                                    :props="props"
+                            ></el-cascader>
+                            <!--<el-select v-model="formInline.officeId" placeholder="所属部门">-->
+                                <!--<el-option v-for="item in officeList" :label="item.name" :value="item.id"></el-option>-->
+                            <!--</el-select>-->
                         </el-form-item>
                         <el-form-item label="状态">
                             <el-select v-model="formInline.status" placeholder="状态">
@@ -191,7 +197,7 @@
             <span slot="title" class="dialogtitle">
                 分配用户
               </span>
-            <fenpeiyonghu :selectData="selectData" :roleTree="roleTree" @closeHandle="closeHnadle"></fenpeiyonghu>
+            <fenpeiyonghu :selectData="selectData" :roleTree="roleTree" :clear="clear" @closeHandle="closeHnadle"></fenpeiyonghu>
 
         </el-dialog>
     </div>
@@ -226,15 +232,26 @@
                 selectData:[],
                 filterShow:false,
                 roleTree:[],
-                officeList:[]
+                officeList:[],
+                //  联级
+                props:{
+                    label:'name',
+                    value:'id',
+                    children:'children'
+                },
+                officeId:[],
+                clear:0
 
             }
         },
         mounted(){
-            // this.requestList()
+            this.requestList()
             this.requestOffice()
         },
         methods:{
+            handleItemChange(val){
+                this.formInline.officeId = val[val.length-1]
+            },
             //筛选
             searchClick(){
                 this.requestList()
@@ -246,6 +263,7 @@
                     officeId:'',
                     status:''
                 }
+                this.officeId=[]
                 this.requestList()
             },
             deleteCLOSE(str){
@@ -301,6 +319,7 @@
                         })
                         var _arr = vm.recursiveFun(arr,arrChild)
                         vm.roleTree = _arr
+                        vm.clear++
                         vm.distributionUser=true
 
                     }
@@ -337,11 +356,23 @@
             //获取部门
             requestOffice(){
                 let vm =this
-                vm.$http.post(__PATH.BASEPATH+'outsourcedController/getOfficeAndTeamList',{
-                    type:'1',
+                vm.$http.post('userControl/getOfficeByTree',{
+
                 }).then(res=>{
                     if(res.code==200){
-                        vm.officeList = res.data.officeList
+                        var arrData = res.data.officeInfoLists
+                        var arr=[]
+                        var arrChild =[]
+                        arrData.forEach(function (item) {
+                            if(item.pid=='#'){
+                                arr.push(item)
+                            }else{
+                                arrChild.push(item)
+                            }
+                        })
+                        var _arr = vm.recursiveFun(arr,arrChild)
+                        vm.officeList = _arr
+                        // vm.officeList = res.data.officeInfoLists
                     }
                 })
             },

@@ -37,7 +37,7 @@
                 }
                 var form = new FormData(); // FormData 对象
                 form.append("file", _file); // 文件对象
-                vm.photo = form
+                vm.photo = _file
                 var _reader = new FileReader();
                 _reader.readAsDataURL(_file);
                 _reader.onload = function(result){

@@ -237,7 +237,7 @@
             <span slot="title" class="dialogtitle">
                 设备报修
               </span>
-            <shebeibaoxiu :selectData="selectData" @closeShebeiHandle="shebeibaoxiuShow=false" ></shebeibaoxiu>
+            <shebeibaoxiu :clear="clear" :selectData="selectData" @closeShebeiHandle="shebeibaoxiuShow=false" ></shebeibaoxiu>
         </el-dialog>
     </div>
 </template>
@@ -288,6 +288,7 @@
                 shebeibianjiShow: false,
                 //  区域
                 areaList:[],
+                clear:0,
 
             }
         },
@@ -461,6 +462,7 @@
                     })
                     return
                 }
+                this.clear++
                 this.shebeibaoxiuShow = true
             },
             //    状态控制
