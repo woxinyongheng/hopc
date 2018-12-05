@@ -235,7 +235,7 @@
             <span slot="title" class="dialogtitle">
                 任务分配
               </span>
-            <renwufenpei  :teamList="teamList" :selectData="selectData" @closeShebeiHandle="taskGoSuccess" ></renwufenpei>
+            <renwufenpei :clear="clear" :teamList="teamList" :selectData="selectData" @closeShebeiHandle="taskGoSuccess" ></renwufenpei>
         </el-dialog>
     </div>
 </template>
@@ -249,6 +249,7 @@
         name: "MtList",
         data:function () {
             return{
+                clear:0,
                 //分页
                 total:0,
                 pageSize:10,
@@ -325,6 +326,7 @@
                     })
                     return
                 }
+                this.clear++
                 this.renwufenpeiShow =true
             },
             taskGoSuccess(str){

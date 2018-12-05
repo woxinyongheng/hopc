@@ -27,12 +27,18 @@
                             <el-date-picker
                                     v-model="formInline.reportStartTime"
                                     type="date"
+                                    format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd"
+                                    @change="changeTimestart"
                                     placeholder="开始日期">
                             </el-date-picker>
                         </el-form-item>
                         <el-form-item label="至">
                             <el-date-picker
                                     v-model="formInline.reportEndTime"
+                                    @change="changeTimeend"
+                                    format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd"
                                     type="date"
                                     placeholder="结束日期">
                             </el-date-picker>
@@ -245,6 +251,13 @@
 
         },
         methods:{
+            //时间参数过滤
+            changeTimestart(val){
+                this.formInline.reportStartTime=val
+            },
+            changeTimeend(val){
+                this.formInline.reportEndTime=val
+            },
             //    列表选择
             handleSelectionChange(val){
                 this.selectData=val

@@ -216,7 +216,7 @@
             <span slot="title" class="dialogtitle">
                 选择设备
               </span>
-            <selectDevice :areaList="areaList" :facilityTypeCode="formInline.facilityTypeCode" @closeHandle="selectCloseHandle" ></selectDevice>
+            <selectDevice :areaList="areaList" :typeList="typeList" :facilityTypeCode="formInline.facilityTypeCode" @closeHandle="selectCloseHandle" ></selectDevice>
         </el-dialog>
     </div>
 </template>

@@ -41,6 +41,7 @@
               return
             }
             if(str && !JSON.parse(sessionStorage.getItem('SESSIONID')).sessionId){
+                this.showLog=true
                 return
             }
             vm.$http.post('userLoginController/userLogin', {

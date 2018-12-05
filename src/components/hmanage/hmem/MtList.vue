@@ -77,16 +77,16 @@
                             </el-form-item>
 
 
-                            <el-form-item label="设备管理员">
-                                <el-select v-model="formInline.equipmentAdminCode" placeholder="设备管理员">
-                                    <el-option v-for="(item,index) in adminList" :label="item.name" :value="item.id"></el-option>
-                                </el-select>
-                                <!--<el-cascader  adminList-->
-                                <!--:options="options"-->
-                                <!--v-model="formInline.tree"-->
-                                <!--:props="props">-->
-                                <!--</el-cascader>-->
-                            </el-form-item>
+                            <!--<el-form-item label="设备管理员">-->
+                                <!--<el-select v-model="formInline.equipmentAdminCode" placeholder="设备管理员">-->
+                                    <!--<el-option v-for="(item,index) in adminList" :label="item.name" :value="item.id"></el-option>-->
+                                <!--</el-select>-->
+                                <!--&lt;!&ndash;<el-cascader  adminList&ndash;&gt;-->
+                                <!--&lt;!&ndash;:options="options"&ndash;&gt;-->
+                                <!--&lt;!&ndash;v-model="formInline.tree"&ndash;&gt;-->
+                                <!--&lt;!&ndash;:props="props">&ndash;&gt;-->
+                                <!--&lt;!&ndash;</el-cascader>&ndash;&gt;-->
+                            <!--</el-form-item>-->
                             <el-form-item label="责任归属">
                                 <el-select v-model="formInline.propertyCompanyCode" placeholder="责任归属">
                                     <el-option v-for="item in componyList" :label="item.companyName" :value="item.companyCode"></el-option>

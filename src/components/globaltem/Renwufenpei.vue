@@ -24,7 +24,7 @@
 <script>
     export default {
         name: "Renwufenpei",
-        props:['selectData','teamList'],
+        props:['selectData','teamList','clear'],
         data:function () {
             return{
                 formInline: {
@@ -32,6 +32,20 @@
                     taskName:''
                 }
             }
+        },
+        mounted(){
+            this.formInline={
+                taskCode: '',
+                taskName:''
+            }
+        },
+        watch:{
+          clear:function () {
+              this.formInline={
+                  taskCode: '',
+                  taskName:''
+              }
+          }
         },
         methods:{
             closeHandle(){

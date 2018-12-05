@@ -334,7 +334,8 @@
                   startTime:vm.formInline.startTime,
                   endTime:vm.formInline.endTime,
                   company:vm.formInline.company,
-                  facilityTypeCode:vm.formInline.facilityTypeCode
+                  facilityTypeCode:vm.formInline.facilityTypeCode,
+                  userCompanyCode:JSON.parse(localStorage.getItem('LOGINDATA')).companyCode
               }).then(res=>{
                   if(res.code==200){
                       vm.total = res.data.count*1

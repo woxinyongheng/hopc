@@ -112,7 +112,7 @@
 <script>
     export default {
         name: "selectDevice",
-        props:['facilityTypeCode','areaList'],
+        props:['facilityTypeCode','areaList','typeList'],
         data:function () {
             return{
                 brandList:[],
@@ -154,11 +154,18 @@
             //设备列表
             requestList(){
                 let vm =this
+                let _i = vm.typeList.findIndex(function (item) {
+                    return item.typeCode == vm.facilityTypeCode
+                })
+                let typeid=''
+                if(_i>-1){
+                    typeid = vm.typeList[_i].typeId
+                }
                 vm.$http.post('equipmentListController/equipmentList',{
                     interfaceNum:'1',
                     pageSize:vm.pageSize,
                     currentPage:vm.currentPage,
-                    assetsTypeId:vm.facilityTypeCode,
+                    assetsTypeId:vm.typeid,
                     assetsCode:vm.formInline.assetsCode,
                     assetsName:vm.formInline.assetsName,
                     areaName:vm.tableData.length?vm.tableData[vm.tableData.length-1]:'',

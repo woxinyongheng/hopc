@@ -109,12 +109,14 @@
 <script>
     export default {
         name: "Renwufenpei",
-        props:['roleTree','selectData','clear'],
+        props:['roleTree','selectData'],
         data:function () {
             return{
                 roleData:[],
+                formInline:{
+                    // name:''
+                },
                 name:'',
-                formInline:{},
                 defaultProps: {
                     children: 'children',
                     label: 'name'
@@ -183,16 +185,16 @@
             },
             requestStraff(){
                 let vm =this
-                vm.$http.post('userControl/getRoleListAndStaffList',{
+                vm.$http.post(__PATH.BASEPATH+'outsourcedController/getStaffListByOfficeOrTeam',{
+                    id:vm.id,
                     type:1,
                     pageSize:vm.pageSize,
                     currentPage:vm.currentPage,
-                    officeType:vm.name,
-                    officeType:'1'
+                    name:vm.name
                 }).then(res=>{
                     if(res.code==200){
-                        vm.roleData = res.data.userList
-                        vm.total = res.data.userListCount*1
+                        vm.roleData = res.data.staffList
+                        vm.total = res.data.sum*1
                     }
                 })
             },
