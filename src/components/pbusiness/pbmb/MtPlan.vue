@@ -193,6 +193,16 @@
                                 label="结束日期">
                         </el-table-column>
                         <el-table-column
+                                prop="maintainType"
+                                show-overflow-tooltip
+                                label="在用状态">
+                            <!--cycleType-->
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.useState==0" class="tablebtn-c4">启用</span>
+                                <span v-if="scope.row.useState==1" class="tablebtn-c3">停用</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
                                 prop="name"
                                 show-overflow-tooltip
                                 width="180px"
@@ -232,7 +242,7 @@
             <span slot="title" class="dialogtitle">
                 {{addOrEdit=='edit'?'编辑':'新增'}}页面
               </span>
-            <addPlan :editData="editData" :addeditid="addeditid" :areaList="areaList" :typeList="typeList" @closeHandle="addplanShow=false"></addPlan>
+            <addPlan :clear="clear" :editData="editData" :addeditid="addeditid" :areaList="areaList" :typeList="typeList" @closeHandle="closeAdd"></addPlan>
         </el-dialog>
         <!--查看-->
         <el-dialog
@@ -256,6 +266,8 @@
         name: "MtPlan",
         data:function(){
             return{
+                lookData:'',
+                clear:0,
                 //分页
                 total:0,
                 pageSize:10,
@@ -292,6 +304,12 @@
             this.requestArea()
         },
         methods:{
+            closeAdd(str){
+              this.addplanShow=false
+              if(str){
+                  this.requestList()
+              }
+            },
             //筛选
             resetSearch(){
                 this.formInline={
@@ -378,6 +396,7 @@
                 this.addeditid = ''
                 this.addOrEdit = 'add'
                 this.addplanShow = true
+                this.clear++
             },
             editPlan(row){
                 this.addeditid=row.id
@@ -390,6 +409,7 @@
                     if(res.code==200){
                         vm.addOrEdit = 'edit'
                         vm.addplanShow = true
+                        this.clear++
                         vm.editData = res.data
                     }
                 })
@@ -476,6 +496,7 @@
             //查看
             planLookHandle(row){
                 let vm =this
+                vm.lookData=row
                 vm.$http.post('maintainPlan/maintainPlanDetailOrUpdate',{
                     id:row.id,
                     pageSize:'10',
@@ -484,15 +505,18 @@
                    if(res.code==200){
                        vm.planlookShow =true
                        vm.planData=res.data
-
                    }
                 })
             },
             //查看内部编辑
-            planlookShowHandle(){
+            planlookShowHandle(str){
                 this.planlookShow =false
-                this.addOrEdit = 'edit'
-                this.addplanShow = true
+                if(str=='edit'){ //lookData
+                    this.editPlan(this.lookData)
+                    // this.addOrEdit = 'edit'
+                    // this.addplanShow = true
+                    // this.clear++
+                }
             },
             //    分页
             pageSizeChange(val){

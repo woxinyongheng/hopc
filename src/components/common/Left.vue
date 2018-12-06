@@ -35,6 +35,12 @@
 
           }
         },
+        mounted(){
+
+            if(!this.$store.state.itemList){
+                this.$store.commit('listChange')
+            }
+        },
         created(){
           if(!this.$store.state.itemList){
             this.$store.commit('listChange')

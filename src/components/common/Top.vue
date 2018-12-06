@@ -31,7 +31,8 @@
             return{
                 showlogout:true,
                 name:JSON.parse(localStorage.getItem('LOGINDATA')).name,
-                value3:true
+                value3:true,
+
             }
         },
         methods:{
@@ -40,6 +41,9 @@
                     localStorage.removeItem('LOGINDATA')
                     localStorage.removeItem('LIST')
                     localStorage.removeItem('activePath')
+                    if(sessionStorage.getItem('SESSIONID')){
+                        sessionStorage.removeItem('SESSIONID')
+                    }
                     this.$store.commit('loginChangeTrue')
                     this.$router.push('/login')
                 }

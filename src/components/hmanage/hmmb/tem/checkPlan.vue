@@ -218,7 +218,7 @@
         },
         methods:{
             closeHandle(){
-                vm.requestCheck('1')
+                this.requestCheck('1')
             },
             backcloseHandle(){
                 this.backShow = true
@@ -233,15 +233,21 @@
             },
             requestCheck(num){
                 let vm =this
+                debugger
                 vm.$http.post('maintainPlanAudit/savePlanAudit',{
-                    auditTime:vm.getNowFormatDate(),
-                    auditPersonName:'',
-                    auditPersonCode:'',
+                    // auditTime:vm.getNowFormatDate(),
+                    maintainPlanId:vm.planData.id,
+                    auditPersonName:JSON.parse(localStorage.getItem('LOGINDATA')).name,
+                    auditPersonCode:JSON.parse(localStorage.getItem('LOGINDATA')).id,
                     auditResult:num,
                     callbackReason:vm.backinfo
                 }).then(res=>{
                     if(res.code==200){
                         vm.backShow = false
+                        vm.$message({
+                            message:res.message,
+                            type:'success'
+                        })
                         vm.$emit('closeHandle',true)
                     }
                 })

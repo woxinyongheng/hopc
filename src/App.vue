@@ -68,6 +68,9 @@
 
             }
         },
+        mounted(){
+
+        },
         computed:{
             isLogin(){
                 return this.$store.state.isLogin

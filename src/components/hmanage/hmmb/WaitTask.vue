@@ -127,11 +127,12 @@
                         vm.$http.post('maintainPlanAudit/getMaintainPlanDetail',{
                             pageSize:10,
                             currentPage:1,
-                            id:row.planCode
+                            id:id
                         }).then(res=>{
                             if(res.code==200){
                                 vm.planData=res.data
-                                vm.checkPlanShow = true
+                                vm.planData.id = id
+                                vm.checkplanShow = true
                             }
                         })
                         break;

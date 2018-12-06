@@ -6,12 +6,12 @@
                     <el-form-item label="计划名称" required>
                         <el-input v-model="formInline.planName"></el-input>
                     </el-form-item>
-                    <el-form-item label="设备类别" style="margin-left: 50px" required>
+                    <el-form-item label="设备类别" style="margin-left: 20px" required>
                         <el-select v-model="formInline.facilityTypeCode" placeholder="设备类别" @change="change">
                             <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeCode"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="保养类型" required style="margin-left: 60px">
+                    <el-form-item label="保养类型" required style="margin-left: 20px">
                         <el-select v-model="formInline.maintainType" placeholder="保养类型">
                             <el-option label="质保" value="0"></el-option>
                             <el-option label="维保" value="1"></el-option>
@@ -79,19 +79,25 @@
                 <el-form :inline="true" :model="formInline" class="demo-form-inline">
                     <el-form-item label="保养项目" required>
                         <el-select v-model="formInline.maintainCode" placeholder="保养项目" @change="changeMain">
-                            <el-option v-for="item in mainList" :label="item.projectName" :value="item.number"></el-option>
+                            <el-option v-for="item in mainList" :label="item.projectName" :value="item.id"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="开始日期" required style="margin-left: 25px">
+                    <el-form-item label="开始日期" required style="margin-left: 20px">
                         <el-date-picker
                                 v-model="formInline.startTime"
+                                format="yyyy-MM-dd"
+                                value-format="yyyy-MM-dd"
+                                @change="changeTimestart"
                                 type="date"
                                 placeholder="选择日期">
                         </el-date-picker>
                     </el-form-item>
-                    <el-form-item label="结束日期" required style="margin-left: 35px">
+                    <el-form-item label="结束日期" required style="margin-left: 20px">
                         <el-date-picker
                                 v-model="formInline.endTime"
+                                format="yyyy-MM-dd"
+                                value-format="yyyy-MM-dd"
+                                @change="changeTimesend"
                                 type="date"
                                 placeholder="选择日期">
                         </el-date-picker>
@@ -109,7 +115,7 @@
                         </el-select>
                     </el-form-item>
                     <!--动态组合-->
-                    <el-form-item v-if="formInline.cycleType==0" label="开始日期" required style="margin-left: 25px">
+                    <el-form-item v-if="formInline.cycleType==0" label="开始日期" required >
                         <el-select v-model="formInline.cycleRole[0].key" placeholder="开始日期">
                             <el-option label="每周一" value="每周一"></el-option>
                             <el-option label="每周二" value="每周二"></el-option>
@@ -120,34 +126,34 @@
                             <el-option label="每周天" value="每周天"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item v-if="formInline.cycleType==1" label="上半月开始日期" required style="margin-left: 25px">
+                    <el-form-item v-if="formInline.cycleType==1" label="上半月开始日期" required >
                         <el-select v-model="formInline.cycleRole[1].key1" placeholder="开始日期">
                             <el-option v-for="i in 15" :label="i" :value="i"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item v-if="formInline.cycleType==1" label="下半月开始日期" required style="margin-left: 25px">
+                    <el-form-item v-if="formInline.cycleType==1" label="下半月开始日期" required >
                         <el-select v-model="formInline.cycleRole[1].key2" placeholder="开始日期">
                             <el-option v-for="i in 15" :label="i+15" :value="i+15"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item v-if="formInline.cycleType==2" label="开始日期" required style="margin-left: 25px">
+                    <el-form-item v-if="formInline.cycleType==2" label="开始日期" required >
                         <el-select v-model="formInline.region" placeholder="开始日期">
                             <el-option v-for="i in 30" :label="i" :value="i"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item v-if="formInline.cycleType==3" label="开始月份" required style="margin-left: 25px">
+                    <el-form-item v-if="formInline.cycleType==3" label="开始月份" required >
                     <el-select v-model="formInline.cycleRole[3].key1" placeholder="开始月份">
                         <el-option label="第一个月" value="第一个月"></el-option>
                         <el-option label="第二个月" value="第二个月"></el-option>
                         <el-option label="第三个月" value="第三个月"></el-option>
                     </el-select>
                 </el-form-item>
-                    <el-form-item v-if="formInline.cycleType==3" label="开始日期" required style="margin-left: 25px">
+                    <el-form-item v-if="formInline.cycleType==3" label="开始日期" required >
                         <el-select v-model="formInline.cycleRole[3].key2" placeholder="开始日期">
                             <el-option v-for="i in 30" :label="i" :value="i"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item v-if="formInline.cycleType==4" label="开始月份" required style="margin-left: 25px">
+                    <el-form-item v-if="formInline.cycleType==4" label="开始月份" required >
                         <el-select v-model="formInline.cycleRole[4].key1" placeholder="开始月份">
                             <el-option label="第一个月" value="第一个月"></el-option>
                             <el-option label="第二个月" value="第二个月"></el-option>
@@ -157,20 +163,23 @@
                             <el-option label="第六个月" value="第三个月"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item v-if="formInline.cycleType==4" label="开始日期" required style="margin-left: 25px">
+                    <el-form-item v-if="formInline.cycleType==4" label="开始日期" required >
                         <el-select v-model="formInline.cycleRole[4].key2" placeholder="开始日期">
                             <el-option v-for="i in 30" :label="i" :value="i"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item v-if="formInline.cycleType==5" label="开始日期" required style="margin-left: 25px">
+                    <el-form-item v-if="formInline.cycleType==5" label="开始日期" required >
                         <el-date-picker
                                 v-model="formInline.cycleRole[5].key"
+                                format="yyyy-MM-dd"
+                                value-format="yyyy-MM-dd"
+                                @change="changeTimeselect"
                                 type="date"
                                 placeholder="选择日期">
                         </el-date-picker>
                     </el-form-item>
-                    <el-form-item   label="完成期限" required style="margin-left: 35px">
-                        <el-input v-model="formInline.finalTime">
+                    <el-form-item   label="完成期限" required >
+                        <el-input v-model="formInline.finalTime" type="number">
                             <template slot="append">天</template>
                         </el-input>
                     </el-form-item>
@@ -183,15 +192,15 @@
                         </el-radio-group>
                     </el-form-item>
                 </el-form>
-                <el-form :inline="true" :model="formInline" class="demo-form-inline" >
+                <el-form :inline="true" :model="formInline" class="demo-form-inline" v-if="formInline.responsibleCompany==1">
 
                     <el-form-item label="维保单位" required>
                         <el-input v-model="formInline.company"></el-input>
                     </el-form-item>
-                    <el-form-item label="联系人" required style="margin-left: 55px">
+                    <el-form-item label="联系人" required style="margin-left: 20px">
                         <el-input v-model="formInline.linkman"></el-input>
                     </el-form-item>
-                    <el-form-item label="联系电话" required style="margin-left: 75px">
+                    <el-form-item label="联系电话" required style="margin-left: 20px">
                         <el-input v-model="formInline.phone"></el-input>
                     </el-form-item>
                 </el-form>
@@ -204,8 +213,8 @@
             </div>
         </div>
         <div class="dialogfooter" style="text-align: right">
-            <el-button type="primary" size="small" @click="sureClick">确认</el-button>
             <el-button  size="small" @click="zancun">暂存</el-button>
+            <el-button type="primary" size="small" @click="sureClick">提交</el-button>
         </div>
         <el-dialog
                 title="选择设备"
@@ -225,7 +234,7 @@
     import selectDevice from './selectDevice'
     export default {
         name: "addPlan",
-        props:['typeList','areaList','editData','addeditid'],
+        props:['typeList','areaList','editData','addeditid','clear'],
         data:function () {
             return{
                 selectData:[],
@@ -271,8 +280,6 @@
                     linkman:'',
                     phone:'',
                     remarks:''
-
-
                 },
                 options: [{
                     label: '江苏',
@@ -291,9 +298,62 @@
         mounted(){
           if(this.addeditid){
               this.editNum()
+          }else{
+              this.mainList=[]
+              this.tableData=[]
+              this.tableDataSelect=[]
+              this.formInline= {
+                  planName:'',
+                      facilityTypeCode:'',
+                      facilityTypeName:'',
+                      maintainType:'',
+                      maintainName:'',
+                      maintainCode:'',
+                      startTime:'',
+                      endTime:'',
+                      cycleType:'',
+                      cycleRole:{
+                      0:{
+                          key:'',
+                      },
+                      1:{
+                          key1:'',
+                              key2:''
+                      },
+                      2:{
+                          key:''
+                      },
+                      3:{
+                          key1:'',
+                              key2:''
+                      },
+                      4:{
+                          key1:'',
+                              key2:''
+                      },
+                      5:{
+                          key:'',
+                      }
+                  },
+                  finalTime:'',
+                      responsibleCompany:'',
+                      company:'',
+                      linkman:'',
+                      phone:'',
+                      remarks:''
+              }
           }
         },
         methods:{
+            changeTimestart(val){
+                this.formInline.startTime = val
+            },
+            changeTimesend(val){
+                this.formInline.endTime = val
+            },
+            changeTimeselect(val){
+                this.formInline.cycleRole[5].key=val
+            },
             //    列表选择
             handleSelectionChange(val){
                 this.selectData=val
@@ -326,32 +386,33 @@
                 this.tableDataSelect =[]
                 this.formInline.maintainCode=''
                 // this.requestList()
+                this.requestmain()
 
             },
             changeMain(val){
                 let vm =this
                 let _index = vm.mainList.findIndex(function (item) {
-                    return item.number == vm.formInline.maintainCode
+                    return item.id == vm.formInline.maintainCode
                 })
                 if(_index>-1){
-                    vm.formInline.maintainName = vm.typeList[_index].projectName
+                    vm.formInline.maintainName = vm.mainList[_index].projectName
 
                 }
             },
             //获取保养项目
             requestmain(){
                 let vm =this
-                let str = []
-                vm.tableDataSelect.forEach(function (item) {
-                    str.push(item.equipmentId)
+                let _i = vm.typeList.findIndex(function (item) {
+                    return item.typeCode == vm.formInline.facilityTypeCode
                 })
-                if(!str.length){
-                    return
+                let typeid=''
+                if(_i>-1){
+                    typeid = vm.typeList[_i].typeId
                 }
                 vm.$http.post('maintainProjectController/findMaintainProjectList',{
                     pageSize:'999',
                     currentPage:'1',
-                    equipmentTypeId:str.join(',')
+                    equipmentTypeId:typeid
                 }).then(res=>{
                     if(res.code==200){
                         vm.mainList=res.data.list
@@ -384,7 +445,7 @@
             selectCloseHandle(arr){
                 this.selectDeviceShow=false
                 this.tableDataSelect = arr||[]
-                this.requestmain()
+                // this.requestmain()
             },
             sureClick(){
                 this.save(1)
@@ -493,9 +554,9 @@
                     cycleRole:vm.formInline.cycleRole[vm.formInline.cycleType].key1?(vm.formInline.cycleRole[vm.formInline.cycleType].key1+','+vm.formInline.cycleRole[vm.formInline.cycleType].key2):vm.formInline.cycleRole[vm.formInline.cycleType].key,
                     finalTime:vm.formInline.finalTime,
                     responsibleCompany:vm.formInline.responsibleCompany,
-                    company:vm.formInline.company,
-                    linkman:vm.formInline.linkman,
-                    phone:vm.formInline.phone,
+                    company:vm.formInline.responsibleCompany==1?vm.formInline.company :JSON.parse(localStorage.getItem('LOGINDATA')).companyName,
+                    linkman:vm.formInline.responsibleCompany==1?vm.formInline.linkman:JSON.parse(localStorage.getItem('LOGINDATA')).name,
+                    phone:vm.formInline.responsibleCompany==1?vm.formInline.phone:JSON.parse(localStorage.getItem('LOGINDATA')).phone,
                     reamrks:vm.formInline.reamrks,
                     submitFlag:num
                 }).then(res=>{
@@ -504,7 +565,7 @@
                             message:res.message,
                             type:'success'
                         })
-                        vm.$emit('closeHandle')
+                        vm.$emit('closeHandle',true)
                     }
                 })
             },
@@ -525,7 +586,7 @@
                     setTimeout(function () {
                         vm.mainList.forEach(function (item) {
                             if(item.projectName==vm.formInline.maintainName){
-                                vm.formInline.maintainCode = item.number
+                                vm.formInline.maintainCode = item.id
 
                             }
                         })
@@ -548,8 +609,54 @@
             selectDevice
         },
         watch:{
-            addeditid:function () {
-               this.editNum()
+            clear:function () {
+                if(this.addeditid){
+                    this.editNum()
+                }else{
+                    this.mainList=[]
+                    this.tableData=[]
+                    this.tableDataSelect=[]
+                    this.formInline= {
+                        planName:'',
+                        facilityTypeCode:'',
+                        facilityTypeName:'',
+                        maintainType:'',
+                        maintainName:'',
+                        maintainCode:'',
+                        startTime:'',
+                        endTime:'',
+                        cycleType:'',
+                        cycleRole:{
+                            0:{
+                                key:'',
+                            },
+                            1:{
+                                key1:'',
+                                key2:''
+                            },
+                            2:{
+                                key:''
+                            },
+                            3:{
+                                key1:'',
+                                key2:''
+                            },
+                            4:{
+                                key1:'',
+                                key2:''
+                            },
+                            5:{
+                                key:'',
+                            }
+                        },
+                        finalTime:'',
+                        responsibleCompany:'',
+                        company:'',
+                        linkman:'',
+                        phone:'',
+                        remarks:''
+                    }
+                }
             }
         }
     }
@@ -557,10 +664,11 @@
 
 <style scoped lang="scss">
     .addplan{
+        width: 100%;
         height: 600px;
         .dialogcontent{
             height: 580px;
-            overflow-y: scroll;
+            overflow-y: auto;
             .label{
                 background-color: #E9EEF3;
                 height: 40px;

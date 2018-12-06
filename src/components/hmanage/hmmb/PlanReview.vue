@@ -9,6 +9,9 @@
                 <el-button size="mini" plain type="danger" @click="statusHandle('1')">待审核</el-button>
                 <el-button size="mini" plain type="success" @click="statusHandle('2')">已通过</el-button>
                 <el-button size="mini" plain type="warning" @click="statusHandle('3')">已退回</el-button>
+
+                <el-button size="mini" plain type="danger" @click="usestate('1')">禁用</el-button>
+                <el-button size="mini" plain type="success" @click="usestate('0')">启用</el-button>
             </div>
             <div class="pullright">
                 <el-button type="success" size="mini" icon="el-icon-search" @click="filterShow=!filterShow">检索</el-button>
@@ -111,9 +114,15 @@
         <div class="contentbox">
             <el-table
                     :data="tableData"
+                    @selection-change="handleSelectionChange"
+
                     stripe
                     border
                     style="width: 100%">
+                <el-table-column
+                        type="selection"
+                        width="55">
+                </el-table-column>
                 <el-table-column
                         type="index"
                         label="序号"
@@ -190,14 +199,25 @@
                         label="责任归属">
                 </el-table-column>
                 <el-table-column
+                    prop="planAuditState"
+                    show-overflow-tooltip
+
+                    label="审核状态">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.planAuditState==1" class="tablebtn-c3">待审核</span>
+                    <span v-if="scope.row.planAuditState==2" class="tablebtn-c4">已通过</span>
+                    <span v-if="scope.row.planAuditState==3" class="tablebtn-c2">已退回</span>
+
+                </template>
+            </el-table-column>
+                <el-table-column
                         prop="planAuditState"
                         show-overflow-tooltip
 
-                        label="状态">
+                        label="在用状态">
                     <template slot-scope="scope">
-                        <span v-if="scope.row.planAuditState==1">待审核</span>
-                        <span v-if="scope.row.planAuditState==2">已通过</span>
-                        <span v-if="scope.row.planAuditState==3">已退回</span>
+                        <span v-if="scope.row.useState==0" class="tablebtn-c4">启用</span>
+                        <span v-if="scope.row.useState==1" class="tablebtn-c3">禁用</span>
 
                     </template>
                 </el-table-column>
@@ -254,7 +274,8 @@
                 },
                 tableData: [],
                 checkPlanShow:false,
-                planData:[]
+                planData:[],
+                selectData:[]
 
             }
         },
@@ -264,6 +285,47 @@
             this.requestComponeny()
         },
         methods:{
+            //禁用启用
+            usestate(str){
+                let vm =this
+                if(!vm.selectData.length){
+                    vm.$message({
+                        type:'warning',
+                        message:'请选择要'+(str==1?'禁用':"启用")+'的计划'
+                    })
+                    return
+                }
+                let _idarr = []
+                vm.selectData.forEach(function (item) {
+                    _idarr.push(item.id)
+                })
+                let _s = '确定要'+(str==1?'禁用':"启用")+'这些计划吗？'
+                vm.$confirm(_s, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    vm.$http.post('maintainPlanAudit/updateUseState',{
+                        planIds:_idarr.join(','),
+                        useState:str
+                    }).then(res=>{
+                        if(res.code==200){
+                            vm.$message({
+                                type:'success',
+                                message:res.message
+                            })
+                            vm.requestList()
+                        }
+                    })
+                }).catch(() => {
+
+                });
+
+            },
+            //    列表选择
+            handleSelectionChange(val) {
+                this.selectData = val
+            },
 
             //重置筛选
             resetSearch(){
@@ -337,13 +399,14 @@
                 }).then(res=>{
                     if(res.code==200){
                         vm.planData=res.data
+                        vm.planData.id=row.id
                         vm.checkPlanShow = true
                     }
                 })
 
             },
             closeHandleCheck(str){
-                this.checkPlanShow = true
+                this.checkPlanShow = false
                 if(str){
                     this.requestList()
                 }
