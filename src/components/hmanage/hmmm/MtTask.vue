@@ -50,14 +50,20 @@
                         </el-form-item>
                         <el-form-item label="要求完成时间">
                             <el-date-picker
-                                    v-model="formInline.requirementPlanTime"
+                                    v-model="formInline.starTime"
+                                    format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd"
+                                    @change="changeTimestart"
                                     type="date"
                                     placeholder="开始日期">
                             </el-date-picker>
                         </el-form-item>
                         <el-form-item label="至">
                             <el-date-picker
-                                    v-model="formInline.user"
+                                    v-model="formInline.endTime"
+                                    format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd"
+                                    @change="changeTimeend"
                                     type="date"
                                     placeholder="结束日期">
                             </el-date-picker>
@@ -242,7 +248,9 @@
                     maintainItem:'',
                     propertyCompanyCode:'',
                     assetsCode:'',
-                    assetsName:''
+                    assetsName:'',
+                    endTime:'',
+                    starTime:''
                 },
                 tableData: [],
                 jiludanhaoShow:false,
@@ -260,6 +268,12 @@
             this.requestComponeny()
         },
         methods:{
+            changeTimestart(val){
+                this.formInline.starTime=val
+            },
+            changeTimeend(val){
+                this.formInline.endTime=val
+            },
             //重置筛选
             resetSearch(){
                 this.formInline={
@@ -270,7 +284,9 @@
                     maintainItem:'',
                     propertyCompanyCode:'',
                     assetsCode:'',
-                    assetsName:''
+                    assetsName:'',
+                    starTime:'',
+                    endTime:''
                 }
                 this.requestList()
             },
@@ -304,7 +320,9 @@
                     assetsCode:vm.formInline.assetsCode,
                     assetsName:vm.formInline.assetsName,
                     overTime:vm.overTime,
-                    state:vm.state
+                    state:vm.state,
+                    starTime:vm.formInline.starTime,
+                    endTime:vm.formInline.endTime
                 }).then(res=>{
                     if(res.code==200){
                         vm.total = res.data.count

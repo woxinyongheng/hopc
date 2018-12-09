@@ -12,6 +12,9 @@
                     <el-form-item label="处理日期" required>
                         <el-date-picker
                                 v-model="formInline.businessTime"
+                                format="yyyy-MM-dd"
+                                value-format="yyyy-MM-dd"
+                                @change="changeTimestart"
                                 type="date"
                                 placeholder="选择日期">
                         </el-date-picker>
@@ -44,7 +47,7 @@
 
     export default {
         name: "warrTem",
-        props:['operateRow'],
+        props:['operateRow','clear'],
         data:function () {
             return{
                 formInline: {
@@ -56,7 +59,19 @@
                 imgurl:''
             }
         },
+        mounted(){
+            this.formInline={
+                user: JSON.parse(localStorage.getItem('LOGINDATA')).name,
+                    businessTime: '',
+                    remarks:'',
+                    contentAttachmentUrl:''
+            }
+            this.imgurl=''
+        },
         methods:{
+            changeTimestart(val){
+                this.formInline.businessTime=val
+            },
             uploadHandle(file,url,type){
                 this.formInline.contentAttachmentUrl=file
                 this.imgurl=url
@@ -95,6 +110,17 @@
         },
         components:{
             upload
+        },
+        watch:{
+            clear:function () {
+                this.formInline={
+                    user: JSON.parse(localStorage.getItem('LOGINDATA')).name,
+                    businessTime: '',
+                    remarks:'',
+                    contentAttachmentUrl:''
+                }
+                this.imgurl=''
+            }
         }
     }
 </script>

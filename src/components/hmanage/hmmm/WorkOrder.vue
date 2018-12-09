@@ -26,6 +26,9 @@
                         <el-form-item label="报修时间">
                             <el-date-picker
                                     v-model="formInline.reportTimeStart"
+                                    format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd"
+                                    @change="changeTimestart"
                                     type="date"
                                     placeholder="开始日期">
                             </el-date-picker>
@@ -33,6 +36,9 @@
                         <el-form-item label="至">
                             <el-date-picker
                                     v-model="formInline.reportTimeEnd"
+                                    format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd"
+                                    @change="changeTimeend"
                                     type="date"
                                     placeholder="结束日期">
                             </el-date-picker>
@@ -257,6 +263,12 @@
             this.requestComponeny()
         },
         methods:{
+            changeTimestart(val){
+                this.formInline.reportTimeStart=val
+            },
+            changeTimeend(val){
+                this.formInline.reportTimeEnd=val
+            },
             stateHandle(str){
                 this.state=str
                 this.requestList()

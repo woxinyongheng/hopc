@@ -41,6 +41,9 @@
                             <el-form-item label="到期日期">
                                 <el-date-picker
                                         v-model="formInline.lifeExpectancyStarts"
+                                        format="yyyy-MM-dd"
+                                        value-format="yyyy-MM-dd"
+                                        @change="changeTimestart"
                                         type="date"
                                         placeholder="">
                                 </el-date-picker>
@@ -48,6 +51,9 @@
                             <el-form-item label="至">
                                 <el-date-picker
                                         v-model="formInline.lifeExpectancyEnd"
+                                        format="yyyy-MM-dd"
+                                        value-format="yyyy-MM-dd"
+                                        @change="changeTimeend"
                                         type="date"
                                         placeholder="">
                                 </el-date-picker>
@@ -176,7 +182,7 @@
                 width="1000px"
                 append-to-body>
             <span slot="title" class="dialogtitle">质保到期处理</span>
-            <warrTem :operateRow="operateRow" @closeHandle="warrType=false"></warrTem>
+            <warrTem :clear="clear" :operateRow="operateRow" @closeHandle="warrType=false"></warrTem>
         </el-dialog>
 
     </div>
@@ -189,6 +195,7 @@
         name: "WarrEx",
         data:function () {
             return{
+                clear:0,
                 //分页
                 total:0,
                 pageSize:10,
@@ -224,6 +231,12 @@
             this.requestType()
         },
         methods:{
+            changeTimestart(val){
+                this.formInline.lifeExpectancyStarts=val
+            },
+            changeTimeend(val){
+                this.formInline.lifeExpectancyEnd=val
+            },
             //筛选
             resetSearch(){
                 var state = this.formInline.state
@@ -268,7 +281,7 @@
                     model:vm.formInline.model,
                     lifeExpectancyStarts:vm.formInline.lifeExpectancyStarts,
                     lifeExpectancyEnd:vm.formInline.lifeExpectancyEnd,
-                    liabilityName:vm.formInline.liabilityName,
+                    propertyCompanyCode:vm.formInline.liabilityName,
                 }).then(res=>{
                     if(res.code==200){
                         vm.tableData = res.data.list
@@ -308,7 +321,7 @@
             },
             warrInfo(row){
                 this.operateRow=row
-
+                this.clear++
                 this.warrType =true
             },
             //    分页

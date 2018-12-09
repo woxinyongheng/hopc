@@ -14,6 +14,9 @@
                     <el-form-item label="业务日期" required>
                         <el-date-picker
                                 v-model="formInline.businessTime"
+                                format="yyyy-MM-dd"
+                                value-format="yyyy-MM-dd"
+                                @change="changeTimestart"
                                 type="date"
                                 placeholder="选择日期">
                         </el-date-picker>
@@ -53,7 +56,7 @@
                     </el-form-item>
                     <el-form-item label="报废原因" required>
                         <el-select v-model="formInline.scrapReasonCode" placeholder="报废原因">
-                            <el-option label="彻底损坏" value="0"></el-option>
+                            <el-option v-for="item in scrapeReason" :label="item.dictLabel" :value="item.dictValue"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-form>
@@ -77,9 +80,9 @@
                     </el-form-item>
                     <el-form-item label="处理方式" required>
                         <el-select v-model="formInline.processModeCode" placeholder="处理方式">
-                            <el-option label="拍卖" value="0"></el-option>
-                            <el-option label="废品处理" value="1"></el-option>
-                            <el-option label="其他处理" value="2"></el-option>
+                            <el-option v-for="item in ltyArr" :label="item.dictLabel" :value="item.dictValue"></el-option>
+                            <!--<el-option label="废品处理" value="1"></el-option>-->
+                            <!--<el-option label="其他处理" value="2"></el-option>-->
 
                         </el-select>
                     </el-form-item>
@@ -104,7 +107,7 @@
 
     export default {
         name: "scrapTem",
-        props:['operateRow','adminList'],
+        props:['operateRow','adminList','clear','scrapeReason','ltyArr'],
         data:function () {
             return{
                 formInline: {
@@ -117,16 +120,32 @@
                     monitoringContentAttachmentUrl:'',
                     scrapHandlePersonCode:'',
                     handleContentAttachmentUrl:''
-
-
-
                 },
                 imgurl:'',
                 imgurltwo:'',
                 imgurlthree:''
             }
         },
+        mounted(){
+            this.formInline={
+                user: JSON.parse(localStorage.getItem('LOGINDATA')).name,
+                    businessTime: '',
+                    confirmPersonCode:'', //confirmPersonName
+                    remarks:'',
+                    scrapConfirmPersonName:'',
+                    scrapReasonCode:'',//scrapReason
+                    monitoringContentAttachmentUrl:'',
+                    scrapHandlePersonCode:'',
+                    handleContentAttachmentUrl:''
+            }
+            this.imgurl=''
+                this.imgurltwo=''
+                this.imgurlthree=''
+        },
         methods:{
+            changeTimestart(val){
+                this.formInline.businessTime=val
+            },
             uploadHandleone(file,url,type){
                 this.formInline.contentAttachmentUrl=file
                 this.imgurl=url
@@ -147,28 +166,51 @@
             },
             sureScrap(){
                 let vm =this
+                let _i = vm.adminList.findIndex(function (item) {
+                    return item.id==vm.formInline.confirmPersonCode
+                })
+                if(_i>-1){
+                    vm.formInline.confirmPersonName = vm.adminList[_i].name
+                }
+                let _r = vm.scrapeReason.findIndex(function (item) {
+                    return item.dictValue == vm.formInline.scrapReasonCode
+                })
+                if(_r>-1){
+                    debugger
+                    vm.formInline.scrapReason = vm.scrapeReason[_r].dictLabel
+                }
+
+                let _j = vm.ltyArr.findIndex(function (item) {
+                    return item.dictValue == vm.formInline.processModeCode
+                })
+                if(_j>-1){
+                    vm.formInline.processModeName = vm.ltyArr[_r].dictLabel
+                }
+
+
                 vm.$http.post('equipmentListController/equipmentScrapDisposition',{
                     equipmentId:vm.operateRow.assetsCode,
                     businessTime:vm.formInline.businessTime,
                     scrapConfirmPersonName:vm.formInline.scrapConfirmPersonName,
-                    scrapHandlePersonName:vm.formInline.scrapConfirmPersonName,
-                    confirmPersonCode:vm.formInline.scrapConfirmPersonName,
+                    scrapHandlePersonName:vm.formInline.scrapHandlePersonName,
+                    confirmPersonCode:vm.formInline.confirmPersonCode,
 
-                    confirmPersonName:vm.formInline.scrapConfirmPersonName,
+                    confirmPersonName:vm.formInline.confirmPersonName,
 
-                    scrapConfirmPersonCode:vm.formInline.scrapConfirmPersonName,
+                    scrapConfirmPersonCode:vm.formInline.scrapConfirmPersonCode,
 
-                    scrapReasonCode:vm.formInline.scrapConfirmPersonName,
+                    scrapReasonCode:vm.formInline.scrapReasonCode,
 
-                    scrapReason:vm.formInline.scrapConfirmPersonName,
+                    scrapReason:vm.formInline.scrapReason,
 
-                    monitoringContentAttachmentUrl:vm.formInline.scrapConfirmPersonName,
-                    scrapHandlePersonCode:vm.formInline.scrapConfirmPersonName,
-                    processModeCode:vm.formInline.scrapConfirmPersonName,
-                    processModeName:vm.formInline.scrapConfirmPersonName,
-                    handleContentAttachmentUrl:vm.formInline.scrapConfirmPersonName,
-                    remarks:vm.formInline.scrapConfirmPersonName,
-                    contentAttachmentUrl:vm.formInline.scrapConfirmPersonName,
+                    monitoringContentAttachmentUrl:vm.formInline.monitoringContentAttachmentUrl,
+                    scrapHandlePersonCode:vm.formInline.scrapHandlePersonCode,
+                    processModeCode:vm.formInline.processModeCode,
+                    processModeName:vm.formInline.processModeName,
+                    handleContentAttachmentUrl:vm.formInline.handleContentAttachmentUrl,
+                    remarks:vm.formInline.remarks,
+                    contentAttachmentUrl:vm.formInline.contentAttachmentUrl,
+                    flagkuayu:true
                 }).then(res=>{
                     if(res.code==200){
                         vm.$message({
@@ -183,6 +225,24 @@
         },
         components:{
             upload
+        },
+        watch:{
+            clear:function () {
+                this.formInline={
+                    user: JSON.parse(localStorage.getItem('LOGINDATA')).name,
+                    businessTime: '',
+                    confirmPersonCode:'', //confirmPersonName
+                    remarks:'',
+                    scrapConfirmPersonName:'',
+                    scrapReasonCode:'',//scrapReason
+                    monitoringContentAttachmentUrl:'',
+                    scrapHandlePersonCode:'',
+                    handleContentAttachmentUrl:''
+                }
+                this.imgurl=''
+                this.imgurltwo=''
+                this.imgurlthree=''
+            }
         }
     }
 </script>

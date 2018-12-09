@@ -402,7 +402,7 @@
                     assetsTypeId:vm.formInline.assetsTypeId,
                     areaName:vm.areaSelect.length?vm.areaSelect[vm.areaSelect.length-1]:'',
                     liabilityName:vm.formInline.liabilityName,
-                    workOrderState:vm.workOrderState,
+                    state:vm.workOrderState,
                     state:vm.state,
                     ids:_id.join(',')
                 }).then(res=>{

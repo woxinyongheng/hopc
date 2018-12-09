@@ -105,7 +105,7 @@
                 </el-form>
                 <el-form :inline="true" :model="formInline" class="demo-form-inline">
                     <el-form-item label="周期类型" required>
-                        <el-select v-model="formInline.cycleType" placeholder="周期类型">
+                        <el-select v-model="formInline.cycleType" placeholder="周期类型" @change="changeCycle">
                             <el-option label="周" value="0"></el-option>
                             <el-option label="半月" value="1"></el-option>
                             <el-option label="月" value="2"></el-option>
@@ -116,7 +116,7 @@
                     </el-form-item>
                     <!--动态组合-->
                     <el-form-item v-if="formInline.cycleType==0" label="开始日期" required >
-                        <el-select v-model="formInline.cycleRole[0].key" placeholder="开始日期">
+                        <el-select v-model="formInline.cycleRole.aTime" placeholder="开始日期">
                             <el-option label="每周一" value="每周一"></el-option>
                             <el-option label="每周二" value="每周二"></el-option>
                             <el-option label="每周三" value="每周三"></el-option>
@@ -126,35 +126,35 @@
                             <el-option label="每周天" value="每周天"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item v-if="formInline.cycleType==1" label="上半月开始日期" required >
-                        <el-select v-model="formInline.cycleRole[1].key1" placeholder="开始日期">
+                    <el-form-item v-if="formInline.cycleType==1" label="上半月日期" required >
+                        <el-select v-model="formInline.cycleRole.aTime" placeholder="请选择">
                             <el-option v-for="i in 15" :label="i" :value="i"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item v-if="formInline.cycleType==1" label="下半月开始日期" required >
-                        <el-select v-model="formInline.cycleRole[1].key2" placeholder="开始日期">
+                    <el-form-item v-if="formInline.cycleType==1" label="下半月日期" required >
+                        <el-select v-model="formInline.cycleRole.bTime" placeholder="请选择">
                             <el-option v-for="i in 15" :label="i+15" :value="i+15"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item v-if="formInline.cycleType==2" label="开始日期" required >
-                        <el-select v-model="formInline.region" placeholder="开始日期">
+                        <el-select v-model="formInline.cycleRole.aTime" placeholder="请选择">
                             <el-option v-for="i in 30" :label="i" :value="i"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item v-if="formInline.cycleType==3" label="开始月份" required >
-                    <el-select v-model="formInline.cycleRole[3].key1" placeholder="开始月份">
+                    <el-select v-model="formInline.cycleRole.aTime" placeholder="开始月份">
                         <el-option label="第一个月" value="第一个月"></el-option>
                         <el-option label="第二个月" value="第二个月"></el-option>
                         <el-option label="第三个月" value="第三个月"></el-option>
                     </el-select>
                 </el-form-item>
                     <el-form-item v-if="formInline.cycleType==3" label="开始日期" required >
-                        <el-select v-model="formInline.cycleRole[3].key2" placeholder="开始日期">
+                        <el-select v-model="formInline.cycleRole.bTime" placeholder="开始日期">
                             <el-option v-for="i in 30" :label="i" :value="i"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item v-if="formInline.cycleType==4" label="开始月份" required >
-                        <el-select v-model="formInline.cycleRole[4].key1" placeholder="开始月份">
+                        <el-select v-model="formInline.cycleRole.aTime" placeholder="开始月份">
                             <el-option label="第一个月" value="第一个月"></el-option>
                             <el-option label="第二个月" value="第二个月"></el-option>
                             <el-option label="第三个月" value="第三个月"></el-option>
@@ -164,13 +164,13 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item v-if="formInline.cycleType==4" label="开始日期" required >
-                        <el-select v-model="formInline.cycleRole[4].key2" placeholder="开始日期">
+                        <el-select v-model="formInline.cycleRole.bTime" placeholder="开始日期">
                             <el-option v-for="i in 30" :label="i" :value="i"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item v-if="formInline.cycleType==5" label="开始日期" required >
                         <el-date-picker
-                                v-model="formInline.cycleRole[5].key"
+                                v-model="formInline.cycleRole.aTime"
                                 format="yyyy-MM-dd"
                                 value-format="yyyy-MM-dd"
                                 @change="changeTimeselect"
@@ -252,27 +252,8 @@
                     endTime:'',
                     cycleType:'',
                     cycleRole:{
-                        0:{
-                            key:'',
-                        },
-                        1:{
-                            key1:'',
-                            key2:''
-                        },
-                        2:{
-                            key:''
-                        },
-                        3:{
-                            key1:'',
-                            key2:''
-                        },
-                        4:{
-                            key1:'',
-                            key2:''
-                        },
-                        5:{
-                            key:'',
-                        }
+                        aTime:'',
+                        bTime:''
                     },
                     finalTime:'',
                     responsibleCompany:'',
@@ -345,6 +326,10 @@
           }
         },
         methods:{
+            changeCycle(val){
+                this.formInline.cycleRole.aTime=''
+                this.formInline.cycleRole.bTime=''
+            },
             changeTimestart(val){
                 this.formInline.startTime = val
             },
@@ -400,7 +385,7 @@
                 }
             },
             //获取保养项目
-            requestmain(){
+            requestmain(str){
                 let vm =this
                 let _i = vm.typeList.findIndex(function (item) {
                     return item.typeCode == vm.formInline.facilityTypeCode
@@ -416,6 +401,14 @@
                 }).then(res=>{
                     if(res.code==200){
                         vm.mainList=res.data.list
+                        if(str){
+                                vm.mainList.forEach(function (item) {
+                                    if(item.projectName==vm.formInline.maintainName){
+                                        vm.formInline.maintainCode = item.id
+
+                                    }
+                                })
+                        }
                     }
                 })
             },
@@ -551,7 +544,7 @@
                     startTime:vm.formInline.startTime,
                     endTime:vm.formInline.endTime,
                     cycleType:vm.formInline.cycleType,
-                    cycleRole:vm.formInline.cycleRole[vm.formInline.cycleType].key1?(vm.formInline.cycleRole[vm.formInline.cycleType].key1+','+vm.formInline.cycleRole[vm.formInline.cycleType].key2):vm.formInline.cycleRole[vm.formInline.cycleType].key,
+                    cycleRole:JSON.parse(vm.formInline.cycleRole),
                     finalTime:vm.formInline.finalTime,
                     responsibleCompany:vm.formInline.responsibleCompany,
                     company:vm.formInline.responsibleCompany==1?vm.formInline.company :JSON.parse(localStorage.getItem('LOGINDATA')).companyName,
@@ -576,24 +569,19 @@
                     vm.typeList.forEach(function (item) {
                         if(item.typeName == vm.editData.maintainPlanDetail.facilityTypeName){
                             vm.formInline.facilityTypeCode = item.typeCode
-                            vm.formInline.facilityTypeName = vm.editData.maintainPlanDetail.typeName
+                            vm.formInline.facilityTypeName = vm.editData.maintainPlanDetail.facilityTypeName
                         }
                     })
                     vm.formInline.maintainType = vm.editData.maintainPlanDetail.maintainType+''
                     vm.tableDataSelect = vm.editData.assetsList.list
-                    vm.requestmain()
-                    vm.formInline.maintainName = vm.editData.maintainPlanDetail.maintainName
-                    setTimeout(function () {
-                        vm.mainList.forEach(function (item) {
-                            if(item.projectName==vm.formInline.maintainName){
-                                vm.formInline.maintainCode = item.id
 
-                            }
-                        })
-                    })
+                    vm.formInline.maintainName = vm.editData.maintainPlanDetail.maintainName
+                    vm.requestmain(true)
+
                     vm.formInline.startTime=vm.editData.maintainPlanDetail.startTime
                     vm.formInline.endTime = vm.editData.maintainPlanDetail.endTime
-                    vm.formInline.cycleType = vm.editData.maintainPlanDetail.cycleType
+                    vm.formInline.cycleType = vm.editData.maintainPlanDetail.cycleType+''
+                    vm.formInline.cycleRole=vm.editData.maintainPlanDetail.cycleRole+''
                     vm.formInline.finalTime = vm.editData.maintainPlanDetail.finalTime
                     vm.formInline.responsibleCompany = vm.editData.maintainPlanDetail.responsibleCompany+''
                     vm.formInline.company=vm.editData.maintainPlanDetail.company

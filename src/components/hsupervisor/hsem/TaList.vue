@@ -18,9 +18,9 @@
                 <el-col :span="21">
                     <div class="grid-content">
                         <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
-                            <el-form-item label="编号">
-                                <el-input v-model="formInline.typeCode" placeholder="设备编号"></el-input>
-                            </el-form-item>
+                            <!--<el-form-item label="编号">-->
+                                <!--<el-input v-model="formInline.typeCode" placeholder="设备编号"></el-input>-->
+                            <!--</el-form-item>-->
                             <el-form-item label="设备类别">
                                 <el-select v-model="formInline.typeCode" placeholder="设备类别">
                                     <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeCode"></el-option>
@@ -72,7 +72,7 @@
                         width="55">
                 </el-table-column>
                 <el-table-column
-                        label="设备编号"
+                        label="编号"
                         prop="typeCode"
                         show-overflow-tooltip>
                 </el-table-column>

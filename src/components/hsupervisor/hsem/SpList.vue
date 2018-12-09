@@ -22,6 +22,9 @@
                         <el-form-item label="处理时间">
                             <el-date-picker
                                     v-model="formInline.starTime"
+                                    format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd"
+                                    @change="changeTimestart"
                                     type="date"
                                     placeholder="开始日期">
                             </el-date-picker>
@@ -29,6 +32,9 @@
                         <el-form-item label="至">
                             <el-date-picker
                                     v-model="formInline.endTime"
+                                    format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd"
+                                    @change="changeTimeend"
                                     type="date"
                                     placeholder="结束日期">
                             </el-date-picker>
@@ -244,6 +250,12 @@
             this.requestType()
         },
         methods:{
+            changeTimestart(val){
+                this.formInline.starTime=val
+            },
+            changeTimeend(val){
+                this.formInline.endTime=val
+            },
             searchClick(){
                 this.requestList()
             },

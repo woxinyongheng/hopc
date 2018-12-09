@@ -115,7 +115,7 @@
             <span slot="title" class="dialogtitle">
                 {{addOrEdit=='edit'?'编辑':'新增'}}页面
               </span>
-            <addPro :editData="editData" :addeditid="addeditid"  :typeList="typeList" @closeHandle="closeAddHandle"></addPro>
+            <addPro :clear="clear" :editData="editData" :addeditid="addeditid"  :typeList="typeList" @closeHandle="closeAddHandle"></addPro>
         </el-dialog>
         <!--查看-->
         <el-dialog
@@ -139,6 +139,7 @@
         name: "MtItem",
         data:function(){
             return{
+                clear:0,
                 //分页
                 total:0,
                 pageSize:10,
@@ -211,6 +212,7 @@
                 this. addeditid=''
                 this.addOrEdit = 'add'
                 this.addproShow = true
+                this.clear++
             },
             editPro(row){
                 let vm =this
@@ -222,7 +224,7 @@
                         vm.addOrEdit = 'edit'
                         vm.addproShow = true
                         vm.editData=res.data
-
+                        vm.clear++
                     }
                 })
 
@@ -294,7 +296,7 @@
                         // vm.addproShow = true
                         vm.editData=res.data
                         vm.prolookShow =true
-
+                        vm.clear++
                     }
                 })
             },
@@ -303,6 +305,7 @@
                 this.prolookShow =false
                 this.addOrEdit = 'edit'
                 this.addproShow = true
+                this.clear++
             },
             //    分页
             pageSizeChange(val){

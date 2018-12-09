@@ -52,6 +52,9 @@
                         <el-form-item label="开始日期">
                             <el-date-picker
                                     v-model="formInline.startDateTime"
+                                    format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd"
+                                    @change="changeTimestart"
                                     type="date"
                                     placeholder="开始日期">
                             </el-date-picker>
@@ -59,6 +62,9 @@
                         <el-form-item label="至">
                             <el-date-picker
                                     v-model="formInline.endDateTime"
+                                    format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd"
+                                    @change="changeTimeend"
                                     type="date"
                                     placeholder="结束日期">
                             </el-date-picker>
@@ -237,6 +243,13 @@
             // this.requestComponeny()
         },
         methods:{
+            //时间参数过滤
+            changeTimestart(val){
+                this.formInline.startDateTime=val
+            },
+            changeTimeend(val){
+                this.formInline.endDateTime=val
+            },
             //筛选
             searchClick(){
                 this.requestList()

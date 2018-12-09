@@ -52,7 +52,7 @@
 <script>
     export default {
         name: "addPro",
-        props:['typeList','editData','addeditid'],
+        props:['typeList','editData','addeditid','clear'],
         data:function () {
             return{
                 formInline: {
@@ -137,7 +137,6 @@
         },
         watch:{
             addeditid:function () {
-                debugger
                 let vm =this
                 if(vm.addeditid){
                     vm.formInline.projectName = vm.editData.data.projectName
@@ -149,6 +148,28 @@
                     })
                     vm.addItemList = vm.editData.details
 
+                }
+            },
+            clear:function () {
+                let vm =this
+                if(vm.addeditid){
+                    vm.formInline.projectName = vm.editData.data.projectName
+                    vm.formInline.projectExplain = vm.editData.data.projectExplain
+                    vm.typeList.forEach(function (item) {
+                        if(item.typeName==vm.editData.data.equipmentType){
+                            vm.formInline.equipmentTypeId = item.typeId
+                        }
+                    })
+                    vm.addItemList = vm.editData.details
+
+                }else{
+                    vm.formInline={
+                        projectName:'',
+                            equipmentTypeId:'',
+                            projectExplain:'',
+
+                    }
+                    vm.addItemList=[{content:''}]
                 }
             }
         }

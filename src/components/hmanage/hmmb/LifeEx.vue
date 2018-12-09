@@ -63,6 +63,9 @@
                             <el-form-item label="到期日期">
                                 <el-date-picker
                                         v-model="formInline.lifeExpectancyStarts"
+                                        format="yyyy-MM-dd"
+                                        value-format="yyyy-MM-dd"
+                                        @change="changeTimestart"
                                         type="date"
                                         placeholder="">
                                 </el-date-picker>
@@ -70,6 +73,9 @@
                             <el-form-item label="至">
                                 <el-date-picker
                                         v-model="formInline.lifeExpectancyEnd"
+                                        format="yyyy-MM-dd"
+                                        value-format="yyyy-MM-dd"
+                                        @change="changeTimeend"
                                         type="date"
                                         placeholder="">
                                 </el-date-picker>
@@ -216,7 +222,7 @@
                 width="1000px"
                 append-to-body>
             <span slot="title" class="dialogtitle">报废处理</span>
-            <scrapTem :operateRow="operateRow" :adminList="adminList" @closeHandle="scrapType=false"></scrapTem>
+            <scrapTem :ltyArr="ltyArr" :scrapeReason="scrapeReason" :operateRow="operateRow" :adminList="adminList" @closeHandle="scrapType=false"></scrapTem>
         </el-dialog>
 
     </div>
@@ -230,6 +236,7 @@
         name: "LifeEx",
         data:function () {
             return{
+                clear:0,
                 //分页
                 total:0,
                 pageSize:10,
@@ -261,7 +268,9 @@
                 scrapType:false,
                 selectData:[],
                 deviceData:[],
-                operateRow:''
+                operateRow:'',
+                scrapeReason:'',
+                ltyArr:''
 
 
             }
@@ -270,8 +279,36 @@
           this.requestList()
             this.requestType()
             this.requestAdmin()
+            this.requestscr()
+            this.requestLty()
         },
         methods:{
+            requestscr(){
+              let vm =this
+              vm.$http.post('maintainPlan/getDictValue',{
+                  dictType:'scrap_reason'
+              }).then(res=>{
+                  if(res.code>0){
+                      vm.scrapeReason=res.data
+                  }
+              })
+            },
+            requestLty(){
+                let vm =this
+                vm.$http.post('maintainPlan/getDictValue',{
+                    dictType:'process_mode'
+                }).then(res=>{
+                    if(res.code>0){
+                        vm.ltyArr=res.data
+                    }
+                })
+            },
+            changeTimestart(val){
+                this.formInline.lifeExpectancyStarts=val
+            },
+            changeTimeend(val){
+                this.formInline.lifeExpectancyEnd=val
+            },
             //重置
             resetSearch(){
                 this.formInline={
@@ -366,9 +403,11 @@
             extendInfo(row){
                 this.operateRow=row
                 this.extendType =true
+                this.clear++
             },
             scrapInfo(row){
                 this.operateRow=row
+                this.clear++
                 this.scrapType=true
             },
             //    分页

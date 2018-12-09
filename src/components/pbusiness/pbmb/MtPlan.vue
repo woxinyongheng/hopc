@@ -49,6 +49,9 @@
                         <el-form-item label="开始日期">
                             <el-date-picker
                                     v-model="formInline.startTime"
+                                    format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd"
+                                    @change="changeTimestart"
                                     type="date"
                                     placeholder="">
                             </el-date-picker>
@@ -56,6 +59,9 @@
                         <el-form-item label="至">
                             <el-date-picker
                                     v-model="formInline.endTime"
+                                    format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd"
+                                    @change="changeTimeend"
                                     type="date"
                                     placeholder="">
                             </el-date-picker>
@@ -208,7 +214,7 @@
                                 width="180px"
                                 label="操作">
                             <template slot-scope="scope">
-                                <span @click="editPlan(scope.row)" class="tablebtn tablebtn-c1">编辑</span>
+                                <!--<span @click="editPlan(scope.row)" class="tablebtn tablebtn-c1">编辑</span>-->
                                 <!--<span @click="deletePlan(scope.row)" class="tablebtn tablebtn-c2">删除</span>-->
                                 <!--<span  @click="submitPlan(scope.row)" class="tablebtn tablebtn-c1">提交</span>-->
                                 <span v-if="scope.row.planAuditState!=1 && scope.row.planAuditState!=2" @click="editPlan(scope.row)" class="tablebtn tablebtn-c1">编辑</span>
@@ -304,6 +310,12 @@
             this.requestArea()
         },
         methods:{
+            changeTimestart(val){
+                this.formInline.starTime=val
+            },
+            changeTimeend(val){
+                this.formInline.endTime=val
+            },
             closeAdd(str){
               this.addplanShow=false
               if(str){

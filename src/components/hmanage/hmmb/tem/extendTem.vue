@@ -13,7 +13,10 @@
                         <el-form-item label="业务日期" required>
                             <el-date-picker
                                     v-model="formInline.businessTime"
-                                    type="date"
+                                    format="yyyy-MM-dd HH:mm:ss"
+                                    value-format="yyyy-MM-dd HH:mm:ss"
+                                    @change="changeTimestart"
+                                    type="datetime"
                                     placeholder="选择日期">
                             </el-date-picker>
                         </el-form-item>
@@ -73,6 +76,10 @@
             }
         },
         methods:{
+            changeTimestart(val){
+                debugger
+                this.formInline.businessTime=val
+            },
             uploadHandle(file,url,type){
                     this.formInline.contentAttachmentUrl=file
                     this.imgurl=url
