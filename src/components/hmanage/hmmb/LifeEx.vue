@@ -281,8 +281,54 @@
             this.requestAdmin()
             this.requestscr()
             this.requestLty()
+            this.initSocket()
+            this.threadPoxi(JSON.parse(localStorage.getItem('LOGINDATA')).id)
         },
         methods:{
+            threadPoxi(agentData) {  // 实际调用的方法
+                let vm = this
+                //参数
+                // const agentData = "mymessage";
+                //若是ws开启状态
+                if (this.websock.readyState === this.websock.OPEN) {
+
+                }
+                // 若是 正在开启状态，则等待300毫秒
+                else if (this.websock.readyState === this.websock.CONNECTING) {
+                    let that = this;//保存当前对象this
+                    setTimeout(function () {
+                        that.websocketsend(agentData)
+                    }, 300);
+                }
+                // 若未开启 ，则等待500毫秒
+                else {
+                    this.initWebSocket();
+                    let that = this;//保存当前对象this
+                    setTimeout(function () {
+                        that.websocketsend(agentData)
+                    }, 500);
+                }
+            },
+            initSocket() {
+                let vm = this
+                //ws地址
+                const wsuri = 'wss://imasdev.logimis.com/webSocket';
+                this.websock = new WebSocket(wsuri);
+                this.websock.onmessage = this.websocketonmessage;
+                this.websock.onclose = this.websocketclose;
+
+            },
+            websocketonmessage(e) { //数据接收
+                let vm = this
+                debugger
+            },
+            websocketsend(agentData) {//数据发送
+                this.websock.send(agentData);
+            },
+            websocketclose(e) {  //关闭
+                let vm =this
+                vm.linkstatus = 'off'  //状态链接
+            },
             requestscr(){
               let vm =this
               vm.$http.post('maintainPlan/getDictValue',{
