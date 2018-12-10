@@ -2,7 +2,7 @@
 <template>
     <div class="jilu">
         <div class="dialogcontent">
-            <p class="label" @click="show1=!show1">保养计划详情<i class="el-icon-arrow-down"></i></p>
+            <p class="label" @click="show1=!show1">保养计划详情<i class="el-icon-arrow-down" @click="backClose"></i></p>
             <div v-if="show1" class="list">
                 <table class="dialogtablebox">
                     <tbody>
@@ -80,9 +80,9 @@
                             <td class="table-title">序号</td>
                             <td class="table-title" colspan="5">保养内容</td>
                         </tr>
-                        <tr v-for="(item,index) in planData.maintainDetail">
+                        <tr v-for="(itemms,index) in planData.maintainDetail">
                             <td class="table-title">{{index+1}}</td>
-                            <td class="table-content" colspan="5"{{item.content}}></td>
+                            <td class="table-content" colspan="5">{{itemms.content}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -217,6 +217,9 @@
             }
         },
         methods:{
+            backClose(){
+                this.$emit('closeHandle',true)
+            },
             closeHandle(){
                 this.requestCheck('1')
             },
