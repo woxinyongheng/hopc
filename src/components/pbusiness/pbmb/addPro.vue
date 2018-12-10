@@ -84,7 +84,7 @@
                         vm.formInline.equipmentTypeId = item.typeId
                     }
                 })
-                vm.addItemList = vm.editData.details
+                vm.addItemList = vm.editData.details.length?vm.editData.details:[{content:''}]
 
             }
         },
@@ -160,7 +160,7 @@
                             vm.formInline.equipmentTypeId = item.typeId
                         }
                     })
-                    vm.addItemList = vm.editData.details
+                    vm.addItemList = vm.editData.details.length?vm.editData.details:[{content:''}]
 
                 }else{
                     vm.formInline={

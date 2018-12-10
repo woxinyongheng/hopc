@@ -301,11 +301,14 @@
                 })
             },
             //查看内部编辑
-            planlookShowHandle(){
+            planlookShowHandle(str){
                 this.prolookShow =false
-                this.addOrEdit = 'edit'
-                this.addproShow = true
-                this.clear++
+                if(str=='edit'){
+                    this.addOrEdit = 'edit'
+                    this.addproShow = true
+                    this.clear++
+                }
+
             },
             //    分页
             pageSizeChange(val){

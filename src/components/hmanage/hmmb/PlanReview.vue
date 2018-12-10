@@ -242,7 +242,7 @@
             <span slot="title" class="dialogtitle">
                 计划审核
               </span>
-            <checkPlan :planData="planData" @closeHandle="closeHandleCheck"></checkPlan>
+            <checkPlan :hideOperate="hideOperate" :planData="planData" @closeHandle="closeHandleCheck"></checkPlan>
         </el-dialog>
     </div>
 </template>
@@ -275,7 +275,8 @@
                 tableData: [],
                 checkPlanShow:false,
                 planData:[],
-                selectData:[]
+                selectData:[],
+                hideOperate:''
 
             }
         },
@@ -401,6 +402,11 @@
                         vm.planData=res.data
                         vm.planData.id=row.id
                         vm.checkPlanShow = true
+                        if(row.planAuditState==2){
+                            vm.hideOperate = true
+                        }else{
+                            vm.hideOperate = false
+                        }
                     }
                 })
 

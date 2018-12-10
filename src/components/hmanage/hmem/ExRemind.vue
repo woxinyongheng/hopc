@@ -161,7 +161,10 @@
               let vm =this
               vm.$http.post('equipmentConfigController/getEquipmentOfCompanyList',{
                   pageSize:vm.pageSize,
-                  currentPage:vm.currentPage
+                  currentPage:vm.currentPage,
+                  // companyCode:vm.formInline.companyCode,
+                  // typeCode:vm.formInline.typeCode,
+                  eqAdminCode:JSON.parse(localStorage.getItem('LOGINDATA')).id
               }).then(res=>{
                   if(res.code==200){
                       vm.total = res.data.sum

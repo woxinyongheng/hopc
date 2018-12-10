@@ -39,22 +39,22 @@
                             <span v-if="planData.maintainPlanDetail.cycleType==4">半年</span>
                             <span v-if="planData.maintainPlanDetail.cycleType==5">年</span>
                         </td>
-                        <td class="table-title"></td>
-                        <td class="table-content"></td>
-                        <td class="table-title"></td>
-                        <td class="table-content"></td>
+                        <td class="table-title">{{titlenStart(planData.maintainPlanDetail.cycleType)}}</td>
+                        <td class="table-content">{{contentStart(planData.maintainPlanDetail.cycleRole.aTime)}}</td>
+                        <td class="table-title">{{titleEnd(planData.maintainPlanDetail.cycleType)}}</td>
+                        <td class="table-content">{{contentEnd(planData.maintainPlanDetail.cycleRole.bTime)}}</td>
                     </tr>
                     <tr>
-                        <td class="table-title">开始日期</td>
-                        <td class="table-content">{{planData.maintainPlanDetail.startTime}}</td>
                         <td class="table-title">完成期限(天)</td>
                         <td class="table-content">{{planData.maintainPlanDetail.finalTime}}</td>
+                        <td class="table-title"></td>
+                        <td class="table-content"></td>
                         <td class="table-title"></td>
                         <td class="table-content"></td>
                     </tr>
                     <tr>
                         <td class="table-title">负责单位</td>
-                        <td class="table-content">{{planData.maintainPlanDetail.responsibleCompany}}</td>
+                        <td class="table-content">{{planData.maintainPlanDetail.responsibleCompany==0?'本部':'外包'}}</td>
                         <td class="table-title"></td>
                         <td class="table-content"></td>
                         <td class="table-title"></td>
@@ -205,7 +205,105 @@
         methods:{
             closeHandle(str){
                 this.$emit('closeHandle',str)
-            }
+            },
+            titlenStart(num){
+                switch (num * 1) {
+                    case 0:
+                        return '开始日期'
+                        break
+                    case 1:
+                        return '上半月日期'
+                        break
+                    case 2:
+                        return '开始日期'
+                        break
+                    case 3:
+                        return '开始月份'
+                        break
+                    case 4:
+                        return '开始月份'
+                        break
+                    case 5:
+                        return '开始日期'
+                        break
+                    default:
+                        break
+                }
+            },
+            titleEnd(num){
+                switch (num * 1) {
+                    case 0:
+                        return ''
+                        break
+                    case 1:
+                        return '下半月日期'
+                        break
+                    case 2:
+                        return ''
+                        break
+                    case 3:
+                        return '开始日期'
+                        break
+                    case 4:
+                        return '开始日期'
+                        break
+                    case 5:
+                        return ''
+                        break
+                    default:
+                        break
+                }
+            },
+            contentStart(num){
+                switch (num * 1) {
+                    case 0:
+                        return '每周'+num
+                        break
+                    case 1:
+                        return '每月'+num+'日'
+                        break
+                    case 2:
+                        return '每月'+num+'号'
+                        break
+                    case 3:
+                        return '第'+num+'月'
+                        break
+                    case 4:
+                        return '第'+num+'月'
+                        break
+                    case 5:
+                        return num
+                        break
+                    default:
+                        return num
+                        break
+                }
+            },
+            contentEnd(num){
+                switch (num * 1) {
+                    case 0:
+                        return ''
+                        break
+                    case 1:
+                        return '每月'+num+'日'
+                        break
+                    case 2:
+                        return ''
+                        break
+                    case 3:
+                        return '每月'+num+'日'
+                        break
+                    case 4:
+                        return '每月'+num+'日'
+                        break
+                    case 5:
+                        return ''
+                        break
+                    default:
+                        return ''
+                        break
+                }
+            },
         },
 
     }

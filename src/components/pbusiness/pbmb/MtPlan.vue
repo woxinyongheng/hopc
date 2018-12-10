@@ -517,6 +517,7 @@
                    if(res.code==200){
                        vm.planlookShow =true
                        vm.planData=res.data
+                       vm.planData.maintainPlanDetail.cycleRole = JSON.parse(vm.planData.maintainPlanDetail.cycleRole)
                    }
                 })
             },

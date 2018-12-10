@@ -173,7 +173,7 @@
                 </table>
             </div>
         </div>
-        <div class="dialogfooter" style="text-align: right">
+        <div class="dialogfooter" style="text-align: right" v-if="!hideOperate">
             <el-button type="primary" size="small" @click="closeHandle">通过</el-button>
 
             <el-button  size="small" @click="backcloseHandle">退回</el-button>
@@ -204,7 +204,7 @@
 <script>
     export default {
         name: "checkPlan",
-        props:['planData'],
+        props:['planData','hideOperate'],
         data:function () {
             return{
                 backShow:false,

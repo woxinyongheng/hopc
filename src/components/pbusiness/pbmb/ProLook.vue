@@ -70,8 +70,8 @@
             }
         },
         methods:{
-            closeHandle(){
-                this.$emit('closeHandle')
+            closeHandle(str){
+                this.$emit('closeHandle',str)
             },
             addList(i){
                 this.addItemList.splice(i, 0, {content:''});
