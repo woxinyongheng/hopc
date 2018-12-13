@@ -91,7 +91,12 @@
                   localStorage.setItem('LIST',JSON.stringify(res.data.menuList))
                   vm.$store.commit('listChange')
                   vm.$store.commit('loginChangeTrue')
-                  let _path = vm.$store.state.itemList[0].list[0].menuHref
+                  let _path =''
+                  if(vm.$store.state.itemList[0].menuHref=='index'){
+                      _path = vm.$store.state.itemList[0].menuHref
+                  }else{
+                      _path = vm.$store.state.itemList[0].list[0].menuHref
+                  }
                   vm.$router.push('/'+_path)
               }else{
                   vm.showLog=true

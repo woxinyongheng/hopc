@@ -3,9 +3,9 @@
         <div class="dialogcontent">
             <div class="list">
                 <el-form :inline="true" :model="formInline" class="demo-form-inline" style="display: flex;justify-content: space-between;margin-left: 25px">
-                    <el-form-item label="记录号">
-                        <el-input disabled v-model="operateRow.assetsCode"></el-input>
-                    </el-form-item>
+                    <!--<el-form-item label="记录号">-->
+                        <!--<el-input disabled v-model="operateRow.assetsCode"></el-input>-->
+                    <!--</el-form-item>-->
                     <el-form-item label="处理人" >
                         <el-input disabled v-model="formInline.user"></el-input>
                     </el-form-item>
@@ -90,7 +90,7 @@
                     return
                 }
                 vm.$http.post('equipmentListController/equipmentWarrantyExpires',{
-                    equipmentId:vm.operateRow.assetsCode,
+                    equipmentId:vm.operateRow.id,
                     businessTime:vm.formInline.businessTime,
                     remarks:vm.formInline.remarks,
                     contentAttachmentUrl:vm.formInline.contentAttachmentUrl,

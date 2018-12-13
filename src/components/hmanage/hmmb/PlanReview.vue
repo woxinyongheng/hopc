@@ -400,6 +400,7 @@
                 }).then(res=>{
                     if(res.code==200){
                         vm.planData=res.data
+                        vm.planData.maintainPlanDetail.cycleRole = JSON.parse(vm.planData.maintainPlanDetail.cycleRole)
                         vm.planData.id=row.id
                         vm.checkPlanShow = true
                         if(row.planAuditState==2){

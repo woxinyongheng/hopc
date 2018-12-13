@@ -27,7 +27,7 @@
                             </el-form-item>
                             <el-form-item label="设备类别">
                                 <el-select v-model="formInline.assetsTypeId" placeholder="设备类别">
-                                    <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeCode"></el-option>
+                                    <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeId"></el-option>
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="设备品牌">

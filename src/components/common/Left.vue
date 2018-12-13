@@ -8,7 +8,14 @@
                 unique-opened
                 text-color="#fff"
                 active-text-color="#66a3ff">
-            <el-submenu v-for="(item,index) in $store.state.itemList" :index="item.menuId+''" :key="index">
+            <el-menu-item  v-for="(item,index) in $store.state.itemList" :index="item.menuId+''" :key="index" v-if="item.menuHref">
+                <template slot="title">
+                    <img class="leftlistimg" src="../../../static/images/list.png" alt="">
+                    <span>{{item.menuName}}</span>
+                </template>
+            </el-menu-item>
+
+            <el-submenu v-for="(item,index) in $store.state.itemList" :index="item.menuId+''" :key="index" v-if="!item.menuHref">
                 <template slot="title">
                     <img class="leftlistimg" src="../../../static/images/list.png" alt="">
                     <span>{{item.menuName}}</span>
@@ -31,19 +38,20 @@
                   children: 'list',
                   label: 'menuName'
               },
-              activePath:sessionStorage.getItem('activePath') || this.$store.state.itemList[0].list[0].menuHref,
+              activePath:sessionStorage.getItem('activePath') || (this.$store.state.itemList[0]?(this.$store.state.itemList[0].menuHref?this.$store.state.itemList[0].menuId:this.$store.state.itemList[0].list[0].menuHref):''),
 
           }
         },
         mounted(){
-
             if(!this.$store.state.itemList){
                 this.$store.commit('listChange')
+                this.activePath = sessionStorage.getItem('activePath') || (this.$store.state.itemList[0]?(this.$store.state.itemList[0].menuHref?this.$store.state.itemList[0].menuId:this.$store.state.itemList[0].list[0].menuHref):'')
             }
         },
         created(){
           if(!this.$store.state.itemList){
             this.$store.commit('listChange')
+              this.activePath = sessionStorage.getItem('activePath') || (this.$store.state.itemList[0]?(this.$store.state.itemList[0].menuHref?this.$store.state.itemList[0].menuId:this.$store.state.itemList[0].list[0].menuHref):'')
           }
         },
         methods:{

@@ -466,22 +466,24 @@
                 this.shebeibaoxiuShow = true
             },
             //    状态控制
-            normalStateClick() {
+            normalStateClick(){
                 this.repirState = ''
-                this.equipmentState = ''
+                this.equipmentState=''
                 this.requestList()
             },
-            commonStateClick() {
-                this.repirState = '0'
-                this.equipmentState = '0'
+            commonStateClick(){
+                this.repirState = ''
+                this.equipmentState='0'
                 this.requestList()
             },
-            pullStateClick() {
-                this.equipmentState = '1'
+            pullStateClick(){
+                this.repirState = ''
+                this.equipmentState='1'
                 this.requestList()
             },
-            repairStateClick() {
+            repairStateClick(){
                 this.repirState = '1'
+                this.equipmentState = ''
                 this.requestList()
 
             },

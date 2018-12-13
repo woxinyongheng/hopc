@@ -408,22 +408,25 @@
                 this.shebeibaoxiuShow=true
             },
             //    状态控制
+            //    状态控制
             normalStateClick(){
                 this.repirState = ''
                 this.equipmentState=''
                 this.requestList()
             },
             commonStateClick(){
-                this.repirState = '0'
+                this.repirState = ''
                 this.equipmentState='0'
                 this.requestList()
             },
             pullStateClick(){
+                this.repirState = ''
                 this.equipmentState='1'
                 this.requestList()
             },
             repairStateClick(){
                 this.repirState = '1'
+                this.equipmentState = ''
                 this.requestList()
 
             },

@@ -11,7 +11,7 @@
                 <el-button plain size="mini" type="success" @click="stateClick('2')">已派工</el-button>
                 <el-button plain size="mini" type="info" @click="stateClick('1')">已挂单</el-button>
                 <el-button plain size="mini" type="warning" @click="stateClick('3')">已完成</el-button>
-                <el-button type="warning" size="mini">导出</el-button>
+                <el-button type="warning" size="mini" @click="exportHandle">导出</el-button>
             </div>
             <div class="pullright">
                 <el-button type="success" size="mini" icon="el-icon-search" @click="filterShow=!filterShow">检索</el-button>
@@ -269,6 +269,20 @@
             this.requestComponeny()
         },
         methods:{
+            //http://218.247.12.45:8099/AppmaintainController/myExportMaintainList?unitCode=BJSYYGLJ&hospitalCode=BJTTYY&roleCode=ybadmin&userId=f132a401f78711e8bfcf00163e03a42c&userName=王聪
+
+            exportHandle(){
+                let vm =this
+                let _ids =[]
+                vm.selectData.forEach(function (item) {
+                    _ids.push(item.id)
+                })
+                vm.$http.post('AppmaintainController/myExportMaintainList',{
+                    overTime:vm.overTime,
+                    state:vm.state,
+                    ids:_ids.length?_ids.join(','):''
+                })
+            },
             changeTimestart(val){
                 this.formInline.starTime=val
             },

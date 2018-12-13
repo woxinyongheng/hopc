@@ -69,7 +69,72 @@
             }
         },
         mounted(){
+            // this.initSocket()
+            // this.threadPoxi(JSON.parse(localStorage.getItem('LOGINDATA')).id)
+          if(JSON.parse(localStorage.getItem('LOGINDATA')).id){
+              this.initSocket()
+              this.threadPoxi(JSON.parse(localStorage.getItem('LOGINDATA')).id)
+          }
+        },
+        methods:{
+            threadPoxi(agentData) {  // 实际调用的方法
+                let vm = this
+                //参数
+                if (this.websock.readyState === this.websock.OPEN) {
 
+                }
+                else if (this.websock.readyState === this.websock.CONNECTING) {
+                    let that = this;//保存当前对象this
+                    setTimeout(function () {
+                        that.websocketsend(agentData)
+                    }, 300);
+                }
+                else {
+                    this.initWebSocket();
+                    let that = this;//保存当前对象this
+                    setTimeout(function () {
+                        that.websocketsend(agentData)
+                    }, 500);
+                }
+            },
+            initSocket() {
+                let vm = this
+                //ws地址
+                const wsuri = 'wss://imasdev.logimis.com/webSocket';
+                this.websock = new WebSocket(wsuri);
+                this.websock.onmessage = this.websocketonmessage;
+                this.websock.onclose = this.websocketclose;
+
+            },
+            websocketonmessage(e) { //数据接收
+                let vm = this
+                let _data = JSON.parse(e.data)
+                if(_data.pushType=='0'){
+                    vm.$notify({
+                        title: '系统消息',
+                        message: _data.message,
+                        duration: 0
+                    });
+                }else if(_data.pushType=='1'){
+                    vm.websocketclose()
+                    localStorage.removeItem('LOGINDATA')
+                    localStorage.removeItem('LIST')
+                    localStorage.removeItem('activePath')
+                    if(sessionStorage.getItem('SESSIONID')){
+                        sessionStorage.removeItem('SESSIONID')
+                    }
+                    vm.$store.commit('loginChangeTrue')
+                    vm.$router.push('/login')
+                }
+
+            },
+            websocketsend(agentData) {//数据发送
+                this.websock.send(agentData);
+            },
+            websocketclose(e) {  //关闭
+                let vm =this
+                vm.linkstatus = 'off'  //状态链接
+            },
         },
         computed:{
             isLogin(){

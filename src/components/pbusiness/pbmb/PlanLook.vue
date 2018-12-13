@@ -39,18 +39,20 @@
                             <span v-if="planData.maintainPlanDetail.cycleType==4">半年</span>
                             <span v-if="planData.maintainPlanDetail.cycleType==5">年</span>
                         </td>
-                        <td class="table-title">{{titlenStart(planData.maintainPlanDetail.cycleType)}}</td>
-                        <td class="table-content">{{contentStart(planData.maintainPlanDetail.cycleRole.aTime)}}</td>
-                        <td class="table-title">{{titleEnd(planData.maintainPlanDetail.cycleType)}}</td>
-                        <td class="table-content">{{contentEnd(planData.maintainPlanDetail.cycleRole.bTime)}}</td>
+                        <td class="table-title"></td>
+                        <td class="table-content"></td>
+                        <td class="table-title"></td>
+                        <td class="table-content"></td>
                     </tr>
                     <tr>
+                        <td class="table-title">{{titlenStart(planData.maintainPlanDetail.cycleType)}}</td>
+                        <td class="table-content">{{contentStart(planData.maintainPlanDetail.cycleType,planData.maintainPlanDetail.cycleRole.aTime)}}</td>
+                        <td class="table-title" v-if="planData.maintainPlanDetail.cycleRole.bTime">{{titleEnd(planData.maintainPlanDetail.cycleType)}}</td>
+                        <td class="table-content" v-if="planData.maintainPlanDetail.cycleRole.bTime">{{contentEnd(planData.maintainPlanDetail.cycleType,planData.maintainPlanDetail.cycleRole.bTime)}}</td>
                         <td class="table-title">完成期限(天)</td>
                         <td class="table-content">{{planData.maintainPlanDetail.finalTime}}</td>
-                        <td class="table-title"></td>
-                        <td class="table-content"></td>
-                        <td class="table-title"></td>
-                        <td class="table-content"></td>
+                        <td class="table-title" v-if="!planData.maintainPlanDetail.cycleRole.bTime"></td>
+                        <td class="table-content" v-if="!planData.maintainPlanDetail.cycleRole.bTime"></td>
                     </tr>
                     <tr>
                         <td class="table-title">负责单位</td>
@@ -254,47 +256,48 @@
                         break
                 }
             },
-            contentStart(num){
+            contentStart(num,atime){
+                let vm =this
                 switch (num * 1) {
                     case 0:
-                        return '每周'+num
+                        return '每周'+vm.timeFilter(atime)
                         break
                     case 1:
-                        return '每月'+num+'日'
+                        return '每月'+atime+'日'
                         break
                     case 2:
-                        return '每月'+num+'号'
+                        return '每月'+atime+'号'
                         break
                     case 3:
-                        return '第'+num+'月'
+                        return '第'+atime+'月'
                         break
                     case 4:
-                        return '第'+num+'月'
+                        return '第'+atime+'月'
                         break
                     case 5:
-                        return num
+                        return atime
                         break
                     default:
-                        return num
+                        return atime
                         break
                 }
             },
-            contentEnd(num){
+            contentEnd(num,btime){
                 switch (num * 1) {
                     case 0:
                         return ''
                         break
                     case 1:
-                        return '每月'+num+'日'
+                        return '每月'+btime+'日'
                         break
                     case 2:
                         return ''
                         break
                     case 3:
-                        return '每月'+num+'日'
+                        return '每月'+btime+'日'
                         break
                     case 4:
-                        return '每月'+num+'日'
+                        return '每月'+btime+'日'
                         break
                     case 5:
                         return ''
@@ -304,6 +307,34 @@
                         break
                 }
             },
+            timeFilter(num){
+                switch (num * 1) {
+                    case 1:
+                        return '一'
+                        break
+                    case 2:
+                        return '二'
+                        break
+                    case 3:
+                        return '三'
+                        break
+                    case 4:
+                        return '四'
+                        break
+                    case 5:
+                        return '五'
+                        break
+                    case 6:
+                        return '六'
+                        break
+                    case 7:
+                        return '七'
+                        break
+                    default:
+                        return ''
+                        break
+                }
+            }
         },
 
     }

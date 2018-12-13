@@ -46,12 +46,14 @@
                         <td class="table-content"></td>
                     </tr>
                     <tr>
-                        <td class="table-title">开始日期</td>
-                        <td class="table-content">{{planData.maintainPlanDetail.startTime}}</td>
+                        <td class="table-title">{{titlenStart(planData.maintainPlanDetail.cycleType)}}</td>
+                        <td class="table-content">{{contentStart(planData.maintainPlanDetail.cycleType,planData.maintainPlanDetail.cycleRole.aTime)}}</td>
+                        <td class="table-title" v-if="planData.maintainPlanDetail.cycleRole.bTime">{{titleEnd(planData.maintainPlanDetail.cycleType)}}</td>
+                        <td class="table-content" v-if="planData.maintainPlanDetail.cycleRole.bTime">{{contentEnd(planData.maintainPlanDetail.cycleType,planData.maintainPlanDetail.cycleRole.bTime)}}</td>
                         <td class="table-title">完成期限(天)</td>
                         <td class="table-content">{{planData.maintainPlanDetail.finalTime}}</td>
-                        <td class="table-title"></td>
-                        <td class="table-content"></td>
+                        <td class="table-title" v-if="!planData.maintainPlanDetail.cycleRole.bTime"></td>
+                        <td class="table-content" v-if="!planData.maintainPlanDetail.cycleRole.bTime"></td>
                     </tr>
                     <tr>
                         <td class="table-title">负责单位</td>
@@ -269,6 +271,133 @@
                 }
                 var currentdate = year + seperator1 + month + seperator1 + strDate;
                 return currentdate;
+            },
+            titlenStart(num){
+                switch (num * 1) {
+                    case 0:
+                        return '开始日期'
+                        break
+                    case 1:
+                        return '上半月日期'
+                        break
+                    case 2:
+                        return '开始日期'
+                        break
+                    case 3:
+                        return '开始月份'
+                        break
+                    case 4:
+                        return '开始月份'
+                        break
+                    case 5:
+                        return '开始日期'
+                        break
+                    default:
+                        break
+                }
+            },
+            titleEnd(num){
+                switch (num * 1) {
+                    case 0:
+                        return ''
+                        break
+                    case 1:
+                        return '下半月日期'
+                        break
+                    case 2:
+                        return ''
+                        break
+                    case 3:
+                        return '开始日期'
+                        break
+                    case 4:
+                        return '开始日期'
+                        break
+                    case 5:
+                        return ''
+                        break
+                    default:
+                        break
+                }
+            },
+            contentStart(num,atime){
+                let vm =this
+                switch (num * 1) {
+                    case 0:
+                        return '每周'+vm.timeFilter(atime)
+                        break
+                    case 1:
+                        return '每月'+atime+'日'
+                        break
+                    case 2:
+                        return '每月'+atime+'号'
+                        break
+                    case 3:
+                        return '第'+atime+'月'
+                        break
+                    case 4:
+                        return '第'+atime+'月'
+                        break
+                    case 5:
+                        return atime
+                        break
+                    default:
+                        return atime
+                        break
+                }
+            },
+            contentEnd(num,btime){
+                switch (num * 1) {
+                    case 0:
+                        return ''
+                        break
+                    case 1:
+                        return '每月'+btime+'日'
+                        break
+                    case 2:
+                        return ''
+                        break
+                    case 3:
+                        return '每月'+btime+'日'
+                        break
+                    case 4:
+                        return '每月'+btime+'日'
+                        break
+                    case 5:
+                        return ''
+                        break
+                    default:
+                        return ''
+                        break
+                }
+            },
+            timeFilter(num){
+                switch (num * 1) {
+                    case 1:
+                        return '一'
+                        break
+                    case 2:
+                        return '二'
+                        break
+                    case 3:
+                        return '三'
+                        break
+                    case 4:
+                        return '四'
+                        break
+                    case 5:
+                        return '五'
+                        break
+                    case 6:
+                        return '六'
+                        break
+                    case 7:
+                        return '七'
+                        break
+                    default:
+                        return ''
+                        break
+                }
             }
         },
 

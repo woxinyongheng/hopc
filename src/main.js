@@ -69,6 +69,8 @@ Vue.prototype.$http = {
                 if(url=='userControl/getRoleListAndStaffList'){
                     param.userName = param.userName
 
+                }else if(url=='outsourcedController/getStaffListByOfficeOrTeam'){
+                    param.userName = ''
                 }else{
                     param.userName = param.userName?param.userName:obj.name
 
