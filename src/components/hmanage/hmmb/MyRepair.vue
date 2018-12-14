@@ -7,8 +7,8 @@
             <div class="pullleft">
                 <el-button size="mini" plain>全部</el-button>
                 <el-button type="danger" plain size="mini" @click="stateHandle('0')">未派工</el-button>
-                <el-button type="success" plain size="mini" @click="stateHandle('2')">已派工</el-button>
-                <el-button type="info" plain size="mini" @click="stateHandle('1')">已挂单</el-button>
+                <el-button type="success" plain size="mini" @click="stateHandle('1')">已派工</el-button>
+                <el-button type="info" plain size="mini" @click="stateHandle('2')">已挂单</el-button>
                 <el-button type="warning" plain size="mini" @click="stateHandle('3')">已完成</el-button>
                 <el-button type="warning" plain size="mini" @click="exportHandle">导出</el-button>
             </div>
@@ -160,9 +160,9 @@
                         label="状态">
                     <template slot-scope="scope">
                         <span v-if="scope.row.state==3" type="success" class="tablebtn-c4">已完成</span>
-                        <span v-if="scope.row.state==2"  type="info" class="tablebtn-c1">已派工</span>
-                        <span v-if="scope.row.state==1"  type="warning" class="tablebtn-c2">已挂单</span>
-                        <span v-if="scope.row.state==0"  type="danger" class="tablebtn-c3">未处理</span>
+                        <span v-if="scope.row.state==2"  type="info" class="tablebtn-c1">已挂单</span>
+                        <span v-if="scope.row.state==1"  type="warning" class="tablebtn-c2">已派工</span>
+                        <span v-if="scope.row.state==0"  type="danger" class="tablebtn-c3">未派工</span>
                     </template>
 
                 </el-table-column>

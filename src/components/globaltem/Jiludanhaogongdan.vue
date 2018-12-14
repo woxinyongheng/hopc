@@ -57,8 +57,8 @@
                     </tbody>
                 </table>
             </div>
-            <p class="label" @click="show3=!show3">挂单信息<i class="el-icon-arrow-down"></i></p>
-            <div v-if="show3" class="list">
+            <p class="label" @click="show3=!show3" v-if="data.paymentTime">挂单信息<i class="el-icon-arrow-down"></i></p>
+            <div v-if="show3 && data.paymentTime" class="list">
                 <table class="dialogtablebox">
                     <tbody>
                         <tr>
@@ -105,12 +105,12 @@
                         <td class="table-content"></td>
                         <td class="table-content" colspan="2">{{data.partsSum}}</td>
                     </tr>
-                    <!--<tr>-->
-                        <!--<td class="table-content">空天滤芯</td>-->
-                        <!--<td class="table-content"></td>-->
-                        <!--<td class="table-content"></td>-->
-                        <!--<td class="table-content" colspan="2"></td>-->
-                    <!--</tr>-->
+                    <tr>
+                        <td class="table-content"></td>
+                        <td class="table-content"></td>
+                        <td class="table-content"></td>
+                        <td class="table-content" colspan="2"></td>
+                    </tr>
                     <tr>
                         <td class="table-content"></td>
                         <td class="table-title">配件支出</td>
