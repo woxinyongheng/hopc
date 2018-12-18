@@ -8,7 +8,7 @@
                 <el-button size="mini" plain @click="stateClick('all')">全部</el-button>
                 <el-button size="mini" plain type="danger" @click="stateClick('0')">未处理</el-button>
                 <el-button size="mini" plain type="success" @click="stateClick('1')">已处理</el-button>
-                <el-button size="mini" plain type="danger" @click="stateClick('3')">延期</el-button>
+                <!--<el-button size="mini" plain type="danger" @click="stateClick('3')">延期</el-button>-->
                 <el-button size="mini" plain type="warning" @click="stateClick('2')">已超时</el-button>
             </div>
             <div class="pullright">
@@ -28,7 +28,7 @@
                             </el-form-item>
                             <el-form-item label="设备类别">
                                 <el-select v-model="formInline.assetsTypeId" placeholder="设备类别">
-                                    <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeCode"></el-option>
+                                    <el-option v-for="(item,index) in typeList" :label="item.typeName" :value="item.typeId"></el-option>
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="设备品牌">
@@ -211,7 +211,7 @@
                 width="1000px"
                 append-to-body>
             <span slot="title" class="dialogtitle">延期使用</span>
-            <extendTem :adminList="adminList" :operateRow="operateRow" @closeHandle="extendType=false"></extendTem>
+            <extendTem :clear="clear" :adminList="adminList" :operateRow="operateRow" @closeHandle="extendType=false"></extendTem>
 
         </el-dialog>
         <!--报废弹框-->
@@ -222,7 +222,7 @@
                 width="1000px"
                 append-to-body>
             <span slot="title" class="dialogtitle">报废处理</span>
-            <scrapTem :ltyArr="ltyArr" :scrapeReason="scrapeReason" :operateRow="operateRow" :adminList="adminList" @closeHandle="scrapType=false"></scrapTem>
+            <scrapTem :clear="clear" :ltyArr="ltyArr" :scrapeReason="scrapeReason" :operateRow="operateRow" :adminList="adminList" @closeHandle="scrapType=false"></scrapTem>
         </el-dialog>
 
     </div>

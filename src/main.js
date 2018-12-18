@@ -66,12 +66,15 @@ Vue.prototype.$http = {
                 param.hospitalCode = obj.hospitalCode
                 param.userId = obj.id
                 param.roleCode = obj.roleCode
-                if(url=='userControl/getRoleListAndStaffList'){
+                if(url.indexOf('userControl/getRoleListAndStaffList')>-1){
                     param.userName = param.userName
 
-                }else if(url=='outsourcedController/getStaffListByOfficeOrTeam'){
+                }else if(url.indexOf('outsourcedController/getStaffListByOfficeOrTeam')>-1){
+
                     param.userName = ''
-                }else{
+                    param.userId = ''
+                    param.roleCode = ''
+                } else{
                     param.userName = param.userName?param.userName:obj.name
 
                 }

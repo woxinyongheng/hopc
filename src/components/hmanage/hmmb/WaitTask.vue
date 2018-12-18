@@ -53,7 +53,7 @@
             <span slot="title" class="dialogtitle">
                 计划审核
               </span>
-            <checkPlan :planData="planData" @closeHandle="checkplanShow=false"></checkPlan>
+            <checkPlan :planData="planData" @closeHandle="closeHandleCheck"></checkPlan>
         </el-dialog>
         <el-dialog
                 title="设备查看"
@@ -94,6 +94,12 @@
             this.requestAdmin()
         },
         methods:{
+            closeHandleCheck(str){
+                this.checkplanShow=false
+                if(str){
+                    this.requestList()
+                }
+            },
             requestList(){
                 let vm =this
                 vm.$http.post('assetsinfoController/getTodoTheWork',{

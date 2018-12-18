@@ -215,7 +215,8 @@
                 show1:true,
                 show2:true,
                 show3:true,
-                show4:true
+                show4:true,
+                ajaxSend:false
             }
         },
         methods:{
@@ -238,7 +239,10 @@
             },
             requestCheck(num){
                 let vm =this
-                debugger
+                if(vm.ajaxSend){
+                    return
+                }
+                vm.ajaxSend = true
                 vm.$http.post('maintainPlanAudit/savePlanAudit',{
                     // auditTime:vm.getNowFormatDate(),
                     maintainPlanId:vm.planData.id,
@@ -247,6 +251,7 @@
                     auditResult:num,
                     callbackReason:vm.backinfo
                 }).then(res=>{
+                    vm.ajaxSend = false
                     if(res.code==200){
                         vm.backShow = false
                         vm.$message({

@@ -1,9 +1,9 @@
 <template>
     <div class="jilu">
         <div class="dialogcontent">
-            <p class="label">编号  wx201808290001</p>
+            <p class="label">编号 {{data.repairCode}}</p>
             <div class="list">
-                <el-steps :active="1" align-center>
+                <el-steps :active="data.repairTime?4:(data.paymentTime?3:(data.assignTime?2:1))" align-center>
                     <el-step title="报修时间" :description="data.reportTime"></el-step>
                     <el-step title="派工时间" :description="data.assignTime"></el-step>
                     <el-step title="挂单时间" :description="data.paymentTime"></el-step>
@@ -42,8 +42,8 @@
                         </tbody>
                     </table>
                 </div>
-            <p class="label" @click="show2=!show2">派工信息<i class="el-icon-arrow-down"></i></p>
-            <div v-if="show2" class="list">
+            <p class="label" @click="show2=!show2" v-if="data.assignTime">派工信息<i class="el-icon-arrow-down"></i></p>
+            <div v-if="show2 && data.assignTime" class="list">
                 <table class="dialogtablebox">
                     <tbody>
                         <tr>

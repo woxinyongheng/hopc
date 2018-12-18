@@ -2,7 +2,7 @@
 <template>
     <div class="jilu">
         <div class="dialogcontent">
-            <p class="label">编号  wx201808290001</p>
+            <p class="label">编号  {{orderData.view.maintainCode}}</p>
             <div class="list">
                 <el-steps :active="1" align-center>
                     <el-step title="任务生成时间" :description="orderData.view.create_time"></el-step>

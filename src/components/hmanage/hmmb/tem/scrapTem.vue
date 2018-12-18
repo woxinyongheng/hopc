@@ -5,9 +5,7 @@
         <div class="dialogcontent">
             <div class="list">
                 <el-form :inline="true" :model="formInline" class="demo-form-inline" style="display: flex;justify-content: space-between;margin-left: 25px">
-                    <el-form-item label="记录号">
-                        <el-input disabled :value="operateRow.assetsCode"></el-input>
-                    </el-form-item>
+
                     <el-form-item label="处理人" >
                         <el-input disabled v-model="formInline.user"></el-input>
                     </el-form-item>
@@ -21,14 +19,17 @@
                                 placeholder="选择日期">
                         </el-date-picker>
                     </el-form-item>
-                </el-form>
-                <el-form :inline="true" :model="formInline" class="demo-form-inline" style="display: flex;justify-content: space-between;margin-left: 25px">
                     <el-form-item label="确认人">
-                        <el-select v-model="formInline.confirmPersonCode" placeholder="确认人">
-                            <el-option v-for="(item,index) in adminList" :label="item.name" :value="item.id"></el-option>
-                        </el-select>
+                    <el-input  v-model="formInline.confirmPersonName"></el-input>
                     </el-form-item>
                 </el-form>
+                <!--<el-form :inline="true" :model="formInline" class="demo-form-inline" style="display: flex;justify-content: space-between;margin-left: 25px">-->
+                    <!--<el-form-item label="确认人">-->
+                        <!--<el-select v-model="formInline.confirmPersonCode" placeholder="确认人">-->
+                            <!--<el-option v-for="(item,index) in adminList" :label="item.name" :value="item.id"></el-option>-->
+                        <!--</el-select>-->
+                    <!--</el-form-item>-->
+                <!--</el-form>-->
                 <el-form ref="form" :model="formInline" label-width="80px"  style="padding-right: 10px">
                     <el-form-item label="处理说明">
                         <el-input type="textarea" v-model="formInline.remarks"></el-input>
@@ -107,7 +108,7 @@
 
     export default {
         name: "scrapTem",
-        props:['operateRow','adminList','clear','scrapeReason','ltyArr'],
+        props:['operateRow','adminList','clear','scrapeReason','ltyArr','clear'],
         data:function () {
             return{
                 formInline: {
@@ -166,12 +167,12 @@
             },
             sureScrap(){
                 let vm =this
-                let _i = vm.adminList.findIndex(function (item) {
-                    return item.id==vm.formInline.confirmPersonCode
-                })
-                if(_i>-1){
-                    vm.formInline.confirmPersonName = vm.adminList[_i].name
-                }
+                // let _i = vm.adminList.findIndex(function (item) {
+                //     return item.id==vm.formInline.confirmPersonCode
+                // })
+                // if(_i>-1){
+                //     vm.formInline.confirmPersonName = vm.adminList[_i].name
+                // }
                 let _r = vm.scrapeReason.findIndex(function (item) {
                     return item.dictValue == vm.formInline.scrapReasonCode
                 })
@@ -189,7 +190,7 @@
 
 
                 vm.$http.post('equipmentListController/equipmentScrapDisposition',{
-                    equipmentId:vm.operateRow.assetsCode,
+                    equipmentId:vm.operateRow.id,
                     businessTime:vm.formInline.businessTime,
                     scrapConfirmPersonName:vm.formInline.scrapConfirmPersonName,
                     scrapHandlePersonName:vm.formInline.scrapHandlePersonName,

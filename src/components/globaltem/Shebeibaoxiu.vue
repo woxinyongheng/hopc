@@ -115,8 +115,8 @@
                     this.formInline.repairAttachmentUrl.push(file)
                     this.imgurl.push(url)
                 }else{
-                    this.formInline.repairContentAttachmentUrl=file
-                    this.audiourl = url
+                    // this.formInline.repairContentAttachmentUrl=file
+                    // this.audiourl = url
                 }
             },
             closeHandle(){
@@ -134,7 +134,7 @@
                     reportPersonPhone:vm.formInline.reportPersonPhone,
                     repairExplain:vm.formInline.repairExplain,
                     repairContentAttachmentUrl:vm.formInline.repairContentAttachmentUrl,
-                    repairAttachmentUrl:vm.formInline.repairAttachmentUrl,
+                    // repairAttachmentUrl:vm.formInline.repairAttachmentUrl,
                     equipmentId:vm.selectData[0].equipmentId,
                     flagkuayu:true
                 }).then(res=>{
