@@ -99,7 +99,7 @@
                     <tr>
                         <td class="table-title" :rowspan="data.partsEmploy.length+2">配件使用</td>
                     </tr>
-                    <tr>
+                    <tr v-for="item in data.partsEmploy">
                         <td class="table-content">{{item.partsName}}</td>
                         <td class="table-content">{{item.partsSum}}</td>
                         <td class="table-content"></td>
