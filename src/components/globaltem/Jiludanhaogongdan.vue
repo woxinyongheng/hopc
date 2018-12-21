@@ -97,20 +97,20 @@
                         <td class="table-content" colspan="5">{{data.repairFinishExplain}}</td>
                     </tr>
                     <tr>
-                        <td class="table-title" rowspan="4">配件使用</td>
+                        <td class="table-title" :rowspan="data.partsEmploy.length+2">配件使用</td>
                     </tr>
                     <tr>
-                        <td class="table-content">{{data.partsName}}</td>
+                        <td class="table-content">{{item.partsName}}</td>
+                        <td class="table-content">{{item.partsSum}}</td>
                         <td class="table-content"></td>
-                        <td class="table-content"></td>
-                        <td class="table-content" colspan="2">{{data.partsSum}}</td>
+                        <td class="table-content" colspan="2">{{item.partsPay}}</td>
                     </tr>
-                    <tr>
-                        <td class="table-content"></td>
-                        <td class="table-content"></td>
-                        <td class="table-content"></td>
-                        <td class="table-content" colspan="2"></td>
-                    </tr>
+                    <!--<tr>-->
+                        <!--<td class="table-content"></td>-->
+                        <!--<td class="table-content"></td>-->
+                        <!--<td class="table-content"></td>-->
+                        <!--<td class="table-content" colspan="2"></td>-->
+                    <!--</tr>-->
                     <tr>
                         <td class="table-content"></td>
                         <td class="table-title">配件支出</td>

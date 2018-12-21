@@ -1,4 +1,5 @@
 import router from './index'
+import store from '../store'
 
 const routerConfig = () => {
   router.beforeEach((to, from, next) => {
@@ -17,7 +18,12 @@ const routerConfig = () => {
       next('/login')
     }
     if(localStorage.getItem('LOGINDATA')&& (toPath == 'Login'||!toPath)){
-      next('/index')
+        if(!store.state.itemList){
+            store.commit('listChange')
+        }
+        let _path = (store.state.itemList[0]?(store.state.itemList[0].menuHref?store.state.itemList[0].menuHref:store.state.itemList[0].list[0].menuHref):'')
+
+            next(_path)
       return
     }
 

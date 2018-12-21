@@ -133,8 +133,8 @@
                     reportPersonName:vm.formInline.reportPersonName,
                     reportPersonPhone:vm.formInline.reportPersonPhone,
                     repairExplain:vm.formInline.repairExplain,
-                    repairContentAttachmentUrl:vm.formInline.repairContentAttachmentUrl,
-                    // repairAttachmentUrl:vm.formInline.repairAttachmentUrl,
+                    // repairContentAttachmentUrl:vm.formInline.repairContentAttachmentUrl,
+                    repairAttachmentUrl:vm.formInline.repairAttachmentUrl,
                     equipmentId:vm.selectData[0].equipmentId,
                     flagkuayu:true
                 }).then(res=>{

@@ -129,7 +129,7 @@
       top: 30%;
       right: 45%;
       img {
-        /*width: 520px;*/
+        width: 580px;
       }
     }
     .nametitle {
@@ -154,7 +154,7 @@
       padding: 10px;
       position: absolute;
       right: 200px;
-      top: 280px;
+      top: 220px;
       background-color: #fff;
       border-top: 8px solid #27bfbd;
       /*margin: 50px auto;*/
