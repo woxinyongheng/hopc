@@ -148,7 +148,7 @@
                 //filter
                 typeList:[],
                 selectData:[],
-                gridspan:24,
+                gridspan:8,
                 lookId:'',
                 roleData:[],
                 formInline:{
@@ -182,6 +182,11 @@
                 vm.$http.post('equipmentConfigController/getDeviceTypeList',{}).then(res=>{
                     if(res.code=='200'){
                         vm.typeList = res.data
+                        if(vm.typeList[0]){
+                            vm.lookId = vm.typeList[0].typeId
+                            vm.requestList()
+                        }
+
                     }
                 })
             },

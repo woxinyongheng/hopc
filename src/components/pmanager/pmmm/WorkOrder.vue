@@ -10,7 +10,7 @@
                 <el-button size="mini" plain type="success" @click="stateHandle('1')">已派工</el-button>
                 <el-button size="mini" plain type="info" @click="stateHandle('2')">已挂单</el-button>
                 <el-button size="mini" plain type="warning" @click="stateHandle('3')">已完成</el-button>
-                <el-button type="warning" size="mini">导出</el-button>
+                <!--<el-button type="warning" size="mini">导出</el-button>-->
             </div>
             <div class="pullright">
                 <el-button type="success" size="mini" icon="el-icon-search" @click="filterShow=!filterShow">检索</el-button>

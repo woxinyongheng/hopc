@@ -64,7 +64,7 @@
 
     export default {
         name: "extendTem",
-        props:['operateRow','adminList'],
+        props:['operateRow','adminList','clear'],
         data:function () {
             return{
                 formInline: {

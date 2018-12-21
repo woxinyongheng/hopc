@@ -71,10 +71,10 @@
         mounted(){
             // this.initSocket()
             // this.threadPoxi(JSON.parse(localStorage.getItem('LOGINDATA')).id)
-          if(JSON.parse(localStorage.getItem('LOGINDATA')).id){
-              this.initSocket()
-              this.threadPoxi(JSON.parse(localStorage.getItem('LOGINDATA')).id)
-          }
+          // if(JSON.parse(localStorage.getItem('LOGINDATA')) && JSON.parse(localStorage.getItem('LOGINDATA')).id){
+          //     this.initSocket()
+          //     this.threadPoxi(JSON.parse(localStorage.getItem('LOGINDATA')).id)
+          // }
         },
         methods:{
             threadPoxi(agentData) {  // 实际调用的方法
@@ -149,6 +149,12 @@
         },
         watch:{
             isLogin:function (val) {
+                if(val){
+                    this.initSocket()
+                    this.threadPoxi(JSON.parse(localStorage.getItem('LOGINDATA')).id)
+                }else{
+                    this.websocketclose()
+                }
                 this.isLoginjudge = val
             },
             isLoading:function (val) {

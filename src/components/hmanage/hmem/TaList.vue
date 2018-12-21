@@ -8,7 +8,7 @@
             <div class="pullleft">
                 <el-button type="success" plain size="mini" @click="syncDevice">同步</el-button>
 
-                <el-button type="warning" size="mini">导出</el-button>
+                <!--<el-button type="warning" size="mini">导出</el-button>-->
             </div>
             <div class="pullright">
                 <el-button type="success" size="mini" icon="el-icon-search" @click="filterShow=!filterShow">检索</el-button>

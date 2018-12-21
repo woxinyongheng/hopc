@@ -20,7 +20,7 @@
       </div>
       <p class="regtitle" v-if="title">{{title}}</p>
       <div class="item" style="margin-top: 60px">
-        <p class="btn" @click="loginClick">登陆</p>
+        <p class="btn" @click="loginClick">登录</p>
       </div>
       <!--<p class="forgetpass">忘记密码</p>-->
       <div class="download">
@@ -153,7 +153,7 @@
       height: 500px;
       padding: 10px;
       position: absolute;
-      right: 300px;
+      right: 200px;
       top: 280px;
       background-color: #fff;
       border-top: 8px solid #27bfbd;
