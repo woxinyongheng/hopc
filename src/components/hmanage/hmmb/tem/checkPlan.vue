@@ -228,6 +228,7 @@
             },
             backcloseHandle(){
                 this.backShow = true
+                this.backinfo=''
             },
             sureBack(){
                 let vm =this

@@ -27,8 +27,8 @@
                 </el-form>
                 <el-form :model="formInline" label-width="80px">
                     <el-form-item label="相关附件">
-                        <img style="width: 148px;height: 148px;vertical-align: middle"  :src="imgurl" alt="">
-                        <upload v-if="!imgurl" style="display: inline-block;vertical-align: middle" @uploadHandle="uploadHandle"></upload>
+                        <img v-for="item in imgurl" style="width: 148px;height: 148px;vertical-align: middle"  :src="item" alt="">
+                        <upload v-if="imgurl.length<3" style="display: inline-block;vertical-align: middle" @uploadHandle="uploadHandle"></upload>
                     </el-form-item>
                 </el-form>
             </div>
@@ -54,9 +54,9 @@
                     user: JSON.parse(localStorage.getItem('LOGINDATA')).name,
                     businessTime: '',
                     remarks:'',
-                    contentAttachmentUrl:''
+                    contentAttachmentUrl:[]
                 },
-                imgurl:''
+                imgurl:[]
             }
         },
         mounted(){
@@ -64,17 +64,17 @@
                 user: JSON.parse(localStorage.getItem('LOGINDATA')).name,
                     businessTime: '',
                     remarks:'',
-                    contentAttachmentUrl:''
+                    contentAttachmentUrl:[]
             }
-            this.imgurl=''
+            this.imgurl=[]
         },
         methods:{
             changeTimestart(val){
                 this.formInline.businessTime=val
             },
             uploadHandle(file,url,type){
-                this.formInline.contentAttachmentUrl=file
-                this.imgurl=url
+                this.formInline.contentAttachmentUrl.push(file)
+                this.imgurl.push(url)
             },
             //    质保到期
             cancleWarr(){
@@ -117,9 +117,9 @@
                     user: JSON.parse(localStorage.getItem('LOGINDATA')).name,
                     businessTime: '',
                     remarks:'',
-                    contentAttachmentUrl:''
+                    contentAttachmentUrl:[]
                 }
-                this.imgurl=''
+                this.imgurl=[]
             }
         }
     }

@@ -172,8 +172,8 @@
                     <el-form-item v-if="formInline.cycleType==5" label="开始日期" required>
                         <el-date-picker
                                 v-model="formInline.cycleRole.aTime"
-                                format="yyyy-MM-dd"
-                                value-format="yyyy-MM-dd"
+                                format="MM-dd"
+                                value-format="MM-dd"
                                 @change="changeTimeselect"
                                 type="date"
                                 placeholder="选择日期">

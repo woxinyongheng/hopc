@@ -34,7 +34,7 @@
 <script>
     export default {
         name: "Fenpeiguanliyuan",
-        props:['judgeUser','deviceData','adminList','componyList'],
+        props:['judgeUser','deviceData','adminList','componyList','clear'],
         data:function () {
             return{
                 formInline: {
@@ -44,6 +44,18 @@
                     typeName:'',
                     companyCode:'',
                     companyName:''
+                }
+            }
+        },
+        watch:{
+            clear:function () {
+                this.formInline= {
+                    eqAdminCode:'',
+                        eqAdminName:'',
+                        remarks: '',
+                        typeName:'',
+                        companyCode:'',
+                        companyName:''
                 }
             }
         },

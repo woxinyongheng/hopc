@@ -64,18 +64,15 @@
             return{
                 isLoginjudge:localStorage.getItem('LOGINDATA'),
                 loading:false,
-                showLeftValue:true
+                showLeftValue:true,
+                websock: null,
 
             }
         },
         mounted(){
-            // this.initSocket()
-            // this.threadPoxi(JSON.parse(localStorage.getItem('LOGINDATA')).id)
-          // if(JSON.parse(localStorage.getItem('LOGINDATA')) && JSON.parse(localStorage.getItem('LOGINDATA')).id){
-          //     this.initSocket()
-          //     this.threadPoxi(JSON.parse(localStorage.getItem('LOGINDATA')).id)
-          // }
+
         },
+
         methods:{
             threadPoxi(agentData) {  // 实际调用的方法
                 let vm = this
@@ -109,6 +106,7 @@
             websocketonmessage(e) { //数据接收
                 let vm = this
                 let _data = JSON.parse(e.data)
+                debugger
                 if(_data.pushType=='0'){
                     vm.$notify({
                         title: '系统消息',
@@ -133,11 +131,25 @@
             },
             websocketclose(e) {  //关闭
                 let vm =this
+                vm.websock.close()
                 vm.linkstatus = 'off'  //状态链接
             },
         },
         computed:{
             isLogin(){
+                let val =this.$store.state.isLogin
+                if(val){
+                    this.initSocket()
+                    this.threadPoxi(JSON.parse(localStorage.getItem('LOGINDATA')).id)
+                    setInterval(function () {
+                        vm.threadPoxi(JSON.parse(localStorage.getItem('LOGINDATA')).id)
+                    },360000)
+                }else{
+                    if(this.websock){
+                        this.websocketclose()
+
+                    }
+                }
                 return this.$store.state.isLogin
             },
             isLoading(){
@@ -149,12 +161,7 @@
         },
         watch:{
             isLogin:function (val) {
-                if(val){
-                    this.initSocket()
-                    this.threadPoxi(JSON.parse(localStorage.getItem('LOGINDATA')).id)
-                }else{
-                    this.websocketclose()
-                }
+
                 this.isLoginjudge = val
             },
             isLoading:function (val) {

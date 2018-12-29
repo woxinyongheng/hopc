@@ -23,6 +23,7 @@
                                 <el-cascader
                                         :options="areaList"
                                         v-model="areaSelect"
+                                        :change-on-select="true"
                                         :props="props">
                                 </el-cascader>
                             </el-form-item>

@@ -135,7 +135,7 @@
             <span slot="title" class="dialogtitle">
                 分配任务管理员
               </span>
-            <feipeiguanliyuan :deviceData="deviceData" :adminList="adminList" @closeShebeiHandle="fenpeiHandle" ></feipeiguanliyuan>
+            <feipeiguanliyuan :clear="clear" :deviceData="deviceData" :adminList="adminList" @closeShebeiHandle="fenpeiHandle" ></feipeiguanliyuan>
         </el-dialog>
         <el-dialog
                 title="编辑页面"
@@ -175,7 +175,8 @@
                 deviceData:{},
                 adminList:[],
                 typeList:[],
-                selectData:[]
+                selectData:[],
+                clear:0
             }
         },
         mounted(){
@@ -262,6 +263,7 @@
             feipeiguanliyuanshowClick(row){
                 this.deviceData = row
                 this.feipeiguanliyuanshow =true
+                this.clear++
             },
             editClick(row){
                 this.deviceData = row

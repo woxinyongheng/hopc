@@ -86,7 +86,7 @@ Vue.prototype.$http = {
             var formdata = new FormData();
             for(var item in param){
                 //设备报修
-                if(item=='repairAttachmentUrl' && param[item].length){
+                if((item=='repairAttachmentUrl' || item =='contentAttachmentUrl') && param[item].length){
                     param[item].forEach(function (i) {
                         formdata.append(item, i);
                     })

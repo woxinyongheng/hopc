@@ -114,7 +114,7 @@
                     <tr>
                         <td class="table-title">相关附件</td>
                         <td class="table-content" colspan="5">
-                            <img v-for="item in orderData.view.repair_attachment_url" src="item" alt="">
+                            <img style="width: 148px;" class="imglist" v-for="item in orderData.view.repair_attachment_url" :src="item" alt="">
 
                         </td>
                     </tr>
@@ -200,6 +200,9 @@
         }
         .dialogfooter{
 
+        }
+        .imglist{
+            width: 148px;
         }
     }
 </style>

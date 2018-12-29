@@ -103,17 +103,17 @@
                     </tr>
                     <tr v-for="item in orderData.partsEmploy">
                         <td class="table-content">{{item.partsName}}</td>
-                        <td class="table-content">{{item.partsSum}}</td>
-                        <td class="table-content"></td>
-                        <td class="table-content" colspan="2">{{item.partsPay}}</td>
+                        <td class="table-content">{{item.partsSum}}件</td>
+                        <td class="table-content">{{item.partsPay}}</td>
+                        <td class="table-content" colspan="2"></td>
                     </tr>
                     <tr>
                         <td class="table-title">维修总支出</td>
-                        <td class="table-content">{{orderData.repairPay}}</td>
+                        <td class="table-content">{{orderData.repairPay}}{{orderData.repairPay?'元':''}}</td>
                         <td class="table-title">配件支出</td>
-                        <td class="table-content">{{orderData.partsPay}}</td>
+                        <td class="table-content">{{orderData.partsPay}}{{orderData.partsPay?'元':''}}</td>
                         <td class="table-title">其他支出</td>
-                        <td class="table-content">{{orderData.servicePay}}</td>
+                        <td class="table-content">{{orderData.servicePay}}{{orderData.servicePay?'元':''}}</td>
                     </tr>
                     <tr>
                         <td class="table-title">语音附件</td>

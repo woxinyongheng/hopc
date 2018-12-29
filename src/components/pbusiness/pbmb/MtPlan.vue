@@ -204,7 +204,7 @@
                                 label="在用状态">
                             <!--cycleType-->
                             <template slot-scope="scope">
-                                <span v-if="scope.row.useState==0" class="tablebtn-c4">启用</span>
+                                <span v-if="scope.row.useState=='0'" class="tablebtn-c4">启用</span>
                                 <span v-if="scope.row.useState==1" class="tablebtn-c3">停用</span>
                             </template>
                         </el-table-column>

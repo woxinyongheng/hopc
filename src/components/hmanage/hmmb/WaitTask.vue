@@ -86,7 +86,7 @@
                 adminList:[],
                 deviceData:'',
                 operateRow:{id:''},
-                planData:''
+                planData:'',
             }
         },
         mounted(){
@@ -137,6 +137,7 @@
                         }).then(res=>{
                             if(res.code==200){
                                 vm.planData=res.data
+                                vm.planData.maintainPlanDetail.cycleRole = JSON.parse(vm.planData.maintainPlanDetail.cycleRole)
                                 vm.planData.id = id
                                 vm.checkplanShow = true
                             }

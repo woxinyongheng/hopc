@@ -3,7 +3,7 @@
         <div class="dialogcontent">
             <div class="list">
                 <el-row :gutter="40">
-                    <el-col :span="6"><div class="grid-content" style="height: 560px;overflow-y: scroll;background-color:#545c64;">
+                    <el-col :span="6"><div class="grid-content" style="height: 550px;overflow-y: scroll;background-color:#545c64;">
                         <el-menu
                                 default-active="0"
                                 class="el-menu-vertical-demo"
@@ -27,7 +27,7 @@
                         </el-menu>
                         <!--<el-tree :data="distributionUserdata" :props="defaultProps"></el-tree>-->
                     </div></el-col>
-                    <el-col :span="18"><div class="grid-content">
+                    <el-col :span="18"><div class="grid-content" style="height: 520px;overflow-y: scroll;">
                         <div class="filter">
                             <el-row style="border-bottom: 10px solid #E9EEF3">
                                 <el-col :span="15"><div class="grid-content">
@@ -109,7 +109,7 @@
 <script>
     export default {
         name: "Renwufenpei",
-        props:['roleTree','selectData'],
+        props:['roleTree','selectData','clear'],
         data:function () {
             return{
                 roleData:[],
@@ -126,7 +126,7 @@
                 pageSize:10,
                 total:0,
                 selectStraff:[],
-                typeNum:1
+                typeNum:''
 
             }
         },
@@ -137,7 +137,7 @@
             this.pageSize=10
             this.total=0
             this.selectStraff=[]
-            this.typeNum=1
+            this.typeNum=''
             this.roleData=[]
         },
         watch:{
@@ -148,7 +148,7 @@
                 this.pageSize=10
                 this.total=0
                 this.selectStraff=[]
-                this.typeNum=1
+                this.typeNum=''
                 this.roleData=[]
             }
         },
@@ -197,7 +197,6 @@
                 let _i = vm.roleTree.findIndex(function (item) {
                     return item.id == arr
                 })
-                debugger
                 vm.typeNum = vm.roleTree[_i].type
                 vm.requestStraff()
 
@@ -236,10 +235,13 @@
 
 <style scoped lang="scss">
     .yonghu{
-        height: 600px;
+        height: 580px;
+        overflow: hidden;
+
         .dialogcontent{
-            height: 580px;
-            overflow-y: scroll;
+            height: 550px;
+            /*overflow-y: scroll;*/
+            /*overflow-x: hidden;*/
             .label{
                 background-color: #E9EEF3;
                 height: 30px;
