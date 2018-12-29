@@ -196,6 +196,8 @@
                         :current-page="1"
                         :page-sizes="[10, 20, 30, 40]"
                         :page-size="100"
+                        @size-change="pageSizeChange"
+                        @current-change="pageCurrentChange"
                         layout="total, sizes, prev, pager, next, jumper"
                         :total="total">
                 </el-pagination>
@@ -308,6 +310,7 @@
                 if(num=='all'){
                     this.state=''
                 }else{
+                    this.overTime = ''
                     this.state=num
 
                 }
@@ -315,6 +318,8 @@
             },
             stateOverClick(num){
                 this.overTime = num
+                this.state=''
+
                 this.requestList()
             },
             //获取列表

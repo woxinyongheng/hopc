@@ -111,6 +111,13 @@
 
                         </td>
                     </tr>
+                    <tr>
+                        <td class="table-title">相关附件</td>
+                        <td class="table-content" colspan="5">
+                            <img v-for="item in orderData.view.repair_attachment_url" src="item" alt="">
+
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -128,10 +135,10 @@
                             <td class="table-title">{{index+1}}</td>
                             <td class="table-content">{{item.content}}</td>
                             <td class="table-content">
-                                <span v-if="item.state==0">未派工</span>
-                                <span v-if="item.state==1">已挂单</span>
-                                <span v-if="item.state==2">已派工</span>
-                                <span v-if="item.state==3">已完成</span>
+                                <span v-if="item.state==0">未完成</span>
+                                <span v-if="item.state==1">已完成</span>
+                                <!--<span v-if="item.state==2">已派工</span>-->
+                                <!--<span v-if="item.state==3">已完成</span>-->
                             </td>
                             <td class="table-content" colspan="3">{{item.remarks}}</td>
                         </tr>

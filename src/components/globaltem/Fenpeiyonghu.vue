@@ -125,23 +125,37 @@
                 currentPage:1,
                 pageSize:10,
                 total:0,
-                selectStraff:[]
+                selectStraff:[],
+                typeNum:1
 
             }
         },
         mounted(){
             this.name=''
+            this.id=''
+            this.currentPage=1
+            this.pageSize=10
+            this.total=0
+            this.selectStraff=[]
+            this.typeNum=1
+            this.roleData=[]
         },
         watch:{
             clear:function () {
                 this.name=''
+                this.id=''
+                this.currentPage=1
+                this.pageSize=10
+                this.total=0
+                this.selectStraff=[]
+                this.typeNum=1
+                this.roleData=[]
             }
         },
         methods:{
             //分配
             sureHandle(){
                 let vm =this
-                debugger
                 if(!vm.selectStraff.length){
                     vm.$message({
                         message: '请选择至少一个用户',
@@ -180,6 +194,11 @@
             selectOffice(arr){
                 let vm =this
                 vm.id = arr
+                let _i = vm.roleTree.findIndex(function (item) {
+                    return item.id == arr
+                })
+                debugger
+                vm.typeNum = vm.roleTree[_i].type
                 vm.requestStraff()
 
             },
@@ -187,7 +206,7 @@
                 let vm =this
                 vm.$http.post(__PATH.BASEPATH+'outsourcedController/getStaffListByOfficeOrTeam',{
                     id:vm.id,
-                    type:1,
+                    type:vm.typeNum,
                     pageSize:vm.pageSize,
                     currentPage:vm.currentPage,
                     name:vm.name

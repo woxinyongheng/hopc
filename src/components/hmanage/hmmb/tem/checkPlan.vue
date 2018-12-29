@@ -57,7 +57,7 @@
                     </tr>
                     <tr>
                         <td class="table-title">负责单位</td>
-                        <td class="table-content">{{planData.maintainPlanDetail.company}}</td>
+                        <td class="table-content">{{planData.maintainPlanDetail.responsibleCompany==0?'本部':(planData.maintainPlanDetail.responsibleCompany==1?'外包':'')}}</td>
                         <td class="table-title"></td>
                         <td class="table-content"></td>
                         <td class="table-title"></td>

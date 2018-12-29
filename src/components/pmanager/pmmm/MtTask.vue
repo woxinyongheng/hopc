@@ -196,6 +196,8 @@
                         :current-page="1"
                         :page-sizes="[10, 20, 30, 40]"
                         :page-size="100"
+                        @size-change="pageSizeChange"
+                        @current-change="pageCurrentChange"
                         layout="total, sizes, prev, pager, next, jumper"
                         :total="total">
                 </el-pagination>
@@ -317,6 +319,7 @@
                 this.requestList()
             },
             stateOverClick(num){
+                this.state=''
                 this.overTime = num
                 this.requestList()
             },

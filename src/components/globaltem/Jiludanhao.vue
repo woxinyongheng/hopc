@@ -3,7 +3,7 @@
         <div class="dialogcontent">
             <p class="label">编号  wx201808290001</p>
             <div class="list">
-                <el-steps :active="1" align-center>
+                <el-steps :active="orderData.repairTime?4:(orderData.assignTime?2:1)" align-center>
                     <el-step title="报修时间" :description="orderData.reportTime"></el-step>
                     <el-step title="派工时间" :description="orderData.assignTime"></el-step>
                     <el-step :title="type=='guadan'?'挂单时间':'维修时间'" :description="orderData.repairTime"></el-step>
@@ -44,8 +44,8 @@
                         </tbody>
                     </table>
                 </div>
-            <p class="label"  @click="show2=!show2">派工信息<i class="el-icon-arrow-down"></i></p>
-            <div class="list" v-if="show2">
+            <p class="label"  @click="show2=!show2" v-if="orderData.assignTime">派工信息<i class="el-icon-arrow-down"></i></p>
+            <div class="list" v-if="show2 && orderData.assignTime">
                 <table class="dialogtablebox">
                     <tbody>
                         <tr>
@@ -59,8 +59,8 @@
                     </tbody>
                 </table>
             </div>
-            <p class="label"  @click="show3=!show3">挂单信息<i class="el-icon-arrow-down"></i></p>
-            <div class="list" v-if="show3">
+            <p class="label"  @click="show3=!show3" v-if="orderData.paymentTime">挂单信息<i class="el-icon-arrow-down"></i></p>
+            <div class="list" v-if="show3 && orderData.paymentTime">
                 <table class="dialogtablebox">
                     <tbody>
                         <tr>
@@ -78,8 +78,8 @@
                     </tbody>
                 </table>
             </div>
-            <p class="label"  @click="show4=!show4">完工信息<i class="el-icon-arrow-down"></i></p>
-            <div class="list" v-if="show4">
+            <p class="label"  @click="show4=!show4 && orderData.repairTime">完工信息<i class="el-icon-arrow-down"></i></p>
+            <div class="list" v-if="show4 && orderData.repairTime">
                 <table class="dialogtablebox">
                     <tbody>
                     <tr>
@@ -99,25 +99,20 @@
                         <td class="table-content" colspan="5">{{orderData.repairFinishExplain}}</td>
                     </tr>
                     <tr>
-                        <td class="table-title" rowspan="4">配件使用</td>
+                        <td class="table-title" :rowspan="orderData.partsEmploy.length+1">配件使用</td>
+                    </tr>
+                    <tr v-for="item in orderData.partsEmploy">
+                        <td class="table-content">{{item.partsName}}</td>
+                        <td class="table-content">{{item.partsSum}}</td>
+                        <td class="table-content"></td>
+                        <td class="table-content" colspan="2">{{item.partsPay}}</td>
                     </tr>
                     <tr>
-                        <td class="table-content"></td>
-                        <td class="table-content"></td>
-                        <td class="table-content"></td>
-                        <td class="table-content" colspan="2"></td>
-                    </tr>
-                    <tr>
-                        <td class="table-content"></td>
-                        <td class="table-content"></td>
-                        <td class="table-content"></td>
-                        <td class="table-content" colspan="2"></td>
-                    </tr>
-                    <tr>
-                        <td class="table-content"></td>
+                        <td class="table-title">维修总支出</td>
+                        <td class="table-content">{{orderData.repairPay}}</td>
                         <td class="table-title">配件支出</td>
                         <td class="table-content">{{orderData.partsPay}}</td>
-                        <td class="table-title">维修服务支出</td>
+                        <td class="table-title">其他支出</td>
                         <td class="table-content">{{orderData.servicePay}}</td>
                     </tr>
                     <tr>

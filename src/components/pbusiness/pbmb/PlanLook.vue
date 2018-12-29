@@ -170,8 +170,8 @@
             </div>
         </div>
         <div class="dialogfooter" style="display: flex;justify-content: space-between">
-            <el-button type="primary" size="small" @click="closeHandle('edit')">编辑</el-button>
-
+            <el-button v-if="lookData.planAuditState!=1 && lookData.planAuditState!=2" type="primary" size="small" @click="closeHandle('edit')">编辑</el-button>
+            <span v-if="!(lookData.planAuditState!=1 && lookData.planAuditState!=2)"></span>
             <el-button  size="small" @click="closeHandle">关闭</el-button>
         </div>
     </div>
@@ -180,7 +180,7 @@
 <script>
     export default {
         name: "PlanLook",
-        props:['planData'],
+        props:['planData','lookData'],
         data:function () {
             return{
                 tableData:[

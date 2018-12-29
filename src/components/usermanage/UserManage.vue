@@ -307,11 +307,11 @@
 
                 }).then(res=>{
                     if(res.code==200){
-                        var arrData = res.data.officeInfoLists
+                        var arrData = res.data
                         var arr=[]
                         var arrChild =[]
                         arrData.forEach(function (item) {
-                            if(item.pid=='#'){
+                            if(item.type=='1'||item.type=='2'){
                                 arr.push(item)
                             }else{
                                 arrChild.push(item)
@@ -360,11 +360,11 @@
 
                 }).then(res=>{
                     if(res.code==200){
-                        var arrData = res.data.officeInfoLists
+                        var arrData = res.data
                         var arr=[]
                         var arrChild =[]
                         arrData.forEach(function (item) {
-                            if(item.pid=='#'){
+                            if(item.type=='1'||item.type=='2'){
                                 arr.push(item)
                             }else{
                                 arrChild.push(item)

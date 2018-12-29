@@ -193,7 +193,7 @@
                     equipmentId:vm.operateRow.id,
                     businessTime:vm.formInline.businessTime,
                     scrapConfirmPersonName:vm.formInline.scrapConfirmPersonName,
-                    scrapHandlePersonName:vm.formInline.scrapHandlePersonName,
+                    scrapHandlePersonName:vm.formInline.scrapHandlePersonCode,
                     confirmPersonCode:vm.formInline.confirmPersonCode,
 
                     confirmPersonName:vm.formInline.confirmPersonName,
@@ -205,7 +205,7 @@
                     scrapReason:vm.formInline.scrapReason,
 
                     monitoringContentAttachmentUrl:vm.formInline.monitoringContentAttachmentUrl,
-                    scrapHandlePersonCode:vm.formInline.scrapHandlePersonCode,
+                    scrapHandlePersonCode:vm.formInline.scrapHandlePersonName,
                     processModeCode:vm.formInline.processModeCode,
                     processModeName:vm.formInline.processModeName,
                     handleContentAttachmentUrl:vm.formInline.handleContentAttachmentUrl,

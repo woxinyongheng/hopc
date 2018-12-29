@@ -259,7 +259,7 @@
             <span slot="title" class="dialogtitle">
                 查看页面
               </span>
-            <PlanLook :planData="planData" @closeHandle="planlookShowHandle"></PlanLook>
+            <PlanLook :planData="planData" :lookData="lookData" @closeHandle="planlookShowHandle"></PlanLook>
         </el-dialog>
     </div>
 </template>
