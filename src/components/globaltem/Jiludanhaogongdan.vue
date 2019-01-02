@@ -101,9 +101,9 @@
                     </tr>
                     <tr v-for="item in data.partsEmploy">
                         <td class="table-content">{{item.partsName}}</td>
-                        <td class="table-content">{{item.partsSum}}</td>
-                        <td class="table-content"></td>
-                        <td class="table-content" colspan="2">{{item.partsPay}}</td>
+                        <td class="table-content">{{item.partsSum}}件</td>
+                        <td class="table-content">{{item.partsPay}}</td>
+                        <td class="table-content" colspan="2"></td>
                     </tr>
                     <tr>
                         <td class="table-title">维修总支出</td>

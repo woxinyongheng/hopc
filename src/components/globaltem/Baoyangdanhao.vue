@@ -4,7 +4,7 @@
         <div class="dialogcontent">
             <p class="label">编号  {{orderData.view.maintainCode}}</p>
             <div class="list">
-                <el-steps :active="1" align-center>
+                <el-steps :active="orderData.view.requirementPlanTime?4:(orderData.view.maintain_time?3:(orderData.view.assign_time?2:1))" align-center>
                     <el-step title="任务生成时间" :description="orderData.view.create_time"></el-step>
                     <el-step title="派工时间" :description="orderData.view.assign_time"></el-step>
                     <el-step title="完工时间" :description="orderData.view.maintain_time"></el-step>

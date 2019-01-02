@@ -123,6 +123,8 @@
                 formInline:{
                     assetsCode:'',
                     assetsName:'',
+                    brandId:'',
+                    model:'',
 
 
                 },
@@ -169,7 +171,10 @@
                     assetsTypeId:vm.typeid,
                     assetsCode:vm.formInline.assetsCode,
                     assetsName:vm.formInline.assetsName,
-                    areaName:vm.tableData.length?vm.tableData[vm.tableData.length-1]:'',
+                    brandId:vm.formInline.brandId,
+                    model:vm.formInline.model,
+                    areaName:vm.areaSelect.length?vm.areaSelect[vm.areaSelect.length-1]:''
+                    // areaName:vm.tableData.length?vm.tableData[vm.tableData.length-1]:'',
                 }).then(res=>{
                     if(res.code==200){
                         vm.total = res.data.count

@@ -106,25 +106,25 @@
             websocketonmessage(e) { //数据接收
                 let vm = this
                 let _data = JSON.parse(e.data)
-                debugger
-                if(_data.pushType=='0'){
-                    vm.$notify({
-                        title: '系统消息',
-                        message: _data.message,
-                        duration: 0
-                    });
-                }else if(_data.pushType=='1'){
-                    vm.websocketclose()
-                    localStorage.removeItem('LOGINDATA')
-                    localStorage.removeItem('LIST')
-                    localStorage.removeItem('activePath')
-                    if(sessionStorage.getItem('SESSIONID')){
-                        sessionStorage.removeItem('SESSIONID')
+                if(_data.userId==JSON.parse(localStorage.getItem('LOGINDATA')).id){
+                    if(_data.pushType=='0'){
+                        vm.$notify({
+                            title: '系统消息',
+                            message: _data.message,
+                            duration: 0
+                        });
+                    }else if(_data.pushType=='1'){
+                        vm.websocketclose()
+                        localStorage.removeItem('LOGINDATA')
+                        localStorage.removeItem('LIST')
+                        localStorage.removeItem('activePath')
+                        if(sessionStorage.getItem('SESSIONID')){
+                            sessionStorage.removeItem('SESSIONID')
+                        }
+                        vm.$store.commit('loginChangeTrue')
+                        vm.$router.push('/login')
                     }
-                    vm.$store.commit('loginChangeTrue')
-                    vm.$router.push('/login')
                 }
-
             },
             websocketsend(agentData) {//数据发送
                 this.websock.send(agentData);
@@ -137,6 +137,7 @@
         },
         computed:{
             isLogin(){
+                let vm =this
                 let val =this.$store.state.isLogin
                 if(val){
                     this.initSocket()

@@ -63,6 +63,12 @@
     position: relative;
 
     color: #666;
+    li{
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
     .title{
         width: 100%;
         white-space: nowrap;
@@ -97,6 +103,10 @@
             height: 40px;
             line-height: 40px;
             font-size: 14px;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
     .mask{
