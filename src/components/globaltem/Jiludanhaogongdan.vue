@@ -76,8 +76,8 @@
                     </tbody>
                 </table>
             </div>
-            <p class="label" @click="show4=!show4">完工信息<i class="el-icon-arrow-down"></i></p>
-            <div v-if="show4" class="list">
+            <p class="label" @click="show4=!show4" v-if="data.repairPersonName">完工信息<i class="el-icon-arrow-down"></i></p>
+            <div v-if="show4  && data.repairPersonName" class="list">
                 <table class="dialogtablebox">
                     <tbody>
                     <tr>

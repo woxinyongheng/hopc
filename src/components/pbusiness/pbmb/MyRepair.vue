@@ -337,7 +337,9 @@
                     assetsTypeId:vm.formInline.assetsTypeId,
                     areaName:vm.areaSelect.length?vm.areaSelect[vm.areaSelect.length-1]:'',
                     liabilityName:vm.formInline.liabilityName,
-                    state:vm.workOrderState
+                    state:vm.workOrderState,
+                    repairCode:vm.formInline.repairCode
+
                 }).then(res=>{
                     if(res.code=='200'){
                         vm.tableData = res.data.list

@@ -139,7 +139,7 @@
             isLogin(){
                 let vm =this
                 let val =this.$store.state.isLogin
-                if(val){
+                if(val && localStorage.getItem('LOGINDATA')){
                     this.initSocket()
                     this.threadPoxi(JSON.parse(localStorage.getItem('LOGINDATA')).id)
                     setInterval(function () {
